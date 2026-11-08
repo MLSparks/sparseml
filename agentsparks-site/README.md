@@ -1,7 +1,8 @@
 # AgentSparks website
 
-A single-page site for AgentSparks: product overview, a link to Auto Startup,
-and a job board with three open roles. It is plain HTML, CSS and JavaScript
+A single-page site for Agent Sparks: the product demo, the agent team, partners,
+status and roadmap (taken from the MLSparks/Auto-startup- repo), and a job board
+with three open roles. It is plain HTML, CSS and JavaScript
 with no build step, so any static host can serve it.
 
 ## Applications database (Google Sheet)
@@ -25,8 +26,8 @@ stays hidden and applicants use the email address shown on each role.
 ## Things to replace
 
 - `APPLY_EMAIL` in `index.html` (currently `careers@agentsparks.ai`).
-- The Auto Startup link: the `href` of `#auto-link` (currently `https://example.com`).
-- Product copy and job descriptions, which are placeholders.
+- Job descriptions, if you want to change them. The "last report" numbers in the
+  status section are copied from the Auto-startup- founder report by hand.
 
 ## Free hosting
 
