@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AgentSparks</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single editorial column; the hero pairs the thesis with a live-looking agent trace, then product, sister startup, and a filterable job board. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#0f1a2e; --muted:#566079; --line:#dde1ea;
+  --accent:#ff6a1a; --accent-ink:#b84300; --cobalt:#2340c8; --chip:#eef1f7;
+  --ok:#1f8a4c;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440; --ok:#5fd18f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440; --ok:#5fd18f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:var(--cobalt)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.08;margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+
+/* nav */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:20px;color:var(--ink);text-decoration:none}
+.logo svg{flex:none}
+.nav nav{display:flex;gap:22px;flex-wrap:wrap}
+.nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px}
+.nav nav a:hover{color:var(--ink)}
+.nav nav a.hiring{color:var(--accent-ink)}
+
+/* hero */
+.hero{padding-block:72px 64px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(40px,6.4vw,76px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lede{font-size:19px;color:var(--muted);max-width:34em;margin:22px 0 30px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px var(--body);padding:12px 20px;border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.ghost{border-color:var(--line);color:var(--ink);background:var(--surface)}
+.btn:hover{transform:translateY(-1px)}
+
+.trace{background:var(--surface);border:1px solid var(--line);border-radius:14px;font-family:var(--mono);font-size:13px;overflow:hidden;min-width:0;box-shadow:0 20px 50px -30px rgba(15,26,46,.45)}
+.trace .bar{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted);font-size:12px}
+.trace ol{list-style:none;margin:0;padding:14px;display:grid;gap:9px;overflow-x:auto}
+.trace li{display:grid;grid-template-columns:62px 1fr;gap:10px;white-space:nowrap}
+.trace .t{color:var(--muted);font-variant-numeric:tabular-nums}
+.trace .k{color:var(--cobalt)}
+.trace .s{color:var(--accent-ink)}
+.trace .ok{color:var(--ok)}
+.trace li{animation:in .5s both}
+.trace li:nth-child(2){animation-delay:.15s}.trace li:nth-child(3){animation-delay:.3s}.trace li:nth-child(4){animation-delay:.45s}.trace li:nth-child(5){animation-delay:.6s}.trace li:nth-child(6){animation-delay:.75s}
+@keyframes in{from{transform:translateY(4px);opacity:.35}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.trace li{animation:none}.btn:hover{transform:none}}
+
+/* sections */
+section.band{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:10px;margin-bottom:36px;max-width:680px}
+.sec-head h2{font-size:clamp(30px,4vw,44px);font-weight:700;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);margin:0;font-size:17px}
+
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.pillar{display:grid;gap:10px;align-content:start;min-width:0}
+.pillar h3{font-size:22px;font-weight:700}
+.pillar p{margin:0;color:var(--muted)}
+.pillar .metric{font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--chip);border-radius:6px;padding:6px 10px;justify-self:start}
+
+/* sister startup */
+.sister{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;background:var(--ink);color:var(--bg);border-radius:20px;padding:36px clamp(20px,4vw,48px)}
+.sister h3{font-size:clamp(24px,3vw,32px);font-weight:700;margin:8px 0 8px}
+.sister p{margin:0;opacity:.8;max-width:40em}
+.sister .eyebrow{color:var(--accent)}
+.sister .btn{background:var(--accent);color:#1b0b00}
+
+/* jobs */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.filters button{font:500 14px var(--body);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filters .count{font-family:var(--mono);font-size:12px;opacity:.7;margin-left:6px}
+.jobs{border-top:1px solid var(--line)}
+.job{border-bottom:1px solid var(--line)}
+.job summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center;padding:20px 4px}
+.job summary::-webkit-details-marker{display:none}
+.job summary:hover h3{color:var(--cobalt)}
+.job h3{font-size:21px;font-weight:700}
+.job .meta{font-size:14px;color:var(--muted);margin-top:4px}
+.tag{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;background:var(--chip);white-space:nowrap}
+.plus{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);transition:transform .2s}
+.job[open] .plus{transform:rotate(45deg)}
+.job .body{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:0 4px 28px}
+.job .body h4{font:600 13px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 8px}
+.job ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.apply{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--chip);border-radius:12px;padding:14px 16px}
+.apply code{font-family:var(--mono);user-select:all;background:var(--surface);padding:4px 8px;border-radius:6px;border:1px solid var(--line)}
+.apply .copy{font:500 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.apply .note{font-size:14px;color:var(--muted)}
+
+/* application form */
+.appform{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+.appform h4{grid-column:1/-1}
+.field{display:grid;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+.field label{font-size:13px;font-weight:600}
+.field input,.field textarea,.field select,.adm-tools select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+.field textarea{min-height:84px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid var(--cobalt);outline-offset:1px}
+.formrow{grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.formmsg{font-size:14px;color:var(--muted)}
+.formmsg.err{color:var(--accent-ink)}
+.mine{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--chip);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:15px}
+
+footer{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  .hero .wrap,.pillars,.job .body{grid-template-columns:1fr}
+  .sister{grid-template-columns:1fr}
+  .hero{padding-block:44px}
+  .job summary{grid-template-columns:1fr auto}
+  .job summary .tag{display:none}
+  .appform{grid-template-columns:1fr}
+}
+</style>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="AgentSparks home">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--ink)"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="var(--accent)"/></svg>
+      AgentSparks
+    </a>
+    <nav aria-label="Main">
+      <a href="#product">Product</a>
+      <a href="#family">Auto Startup</a>
+      <a class="hiring" href="#jobs">We're hiring →</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">AI agents · sparse models · runs on CPU</span>
+        <h1>Agents that think fast and run <em>lean</em>.</h1>
+        <p class="lede">AgentSparks builds AI agents on pruned and quantized models, so they plan, call tools and finish real work on hardware you already own. No GPU fleet required.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#jobs">See open roles</a>
+          <a class="btn ghost" href="#product">How it works</a>
+        </div>
+      </div>
+      <div class="trace" aria-label="Example agent run">
+        <div class="bar"><span>run #4182 · invoice-agent</span><span>8-core CPU</span></div>
+        <ol>
+          <li><span class="t">00.00s</span><span><span class="k">plan</span> read inbox → match POs → file invoices</span></li>
+          <li><span class="t">00.21s</span><span><span class="k">tool</span> mail.search(<span class="s">"invoice"</span>) → 14 results</span></li>
+          <li><span class="t">00.58s</span><span><span class="k">tool</span> erp.lookup_po(<span class="s">"PO-2291"</span>) → match</span></li>
+          <li><span class="t">01.04s</span><span><span class="k">think</span> 2 invoices missing PO, flag for review</span></li>
+          <li><span class="t">01.37s</span><span><span class="k">tool</span> erp.file(12) · slack.post(<span class="s">"#ap"</span>)</span></li>
+          <li><span class="t">01.52s</span><span><span class="ok">done</span> 12 filed · 2 flagged · model 85% sparse</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="product">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Product</span>
+        <h2>Small models, real work</h2>
+        <p>We shrink the model first and then build the agent around it. Most business tasks don't need a frontier-size model on every step.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="metric">prune → quantize → distill</span>
+          <h3>Sparse by default</h3>
+          <p>Our models are optimized with sparsification recipes, so they keep their accuracy while dropping most of their weights.</p>
+        </div>
+        <div class="pillar">
+          <span class="metric">tools · memory · retries</span>
+          <h3>Agents that finish</h3>
+          <p>Planning, tool calls and checks are built in. Every run leaves a readable trace you can audit step by step.</p>
+        </div>
+        <div class="pillar">
+          <span class="metric">on-prem · VPC · laptop</span>
+          <h3>Runs where your data is</h3>
+          <p>Deploy on the CPUs you already have, inside your own network. Your data never has to leave the building.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="family">
+    <div class="wrap">
+      <div class="sister">
+        <div>
+          <span class="eyebrow">Sister startup</span>
+          <h3>Meet Auto Startup</h3>
+          <p>Auto Startup is part of the same family as AgentSparks. Visit them to see what they're building.</p>
+        </div>
+        <a class="btn" id="auto-link" href="https://example.com" target="_blank" rel="noopener">Visit Auto Startup ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="jobs">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Job board · 3 open roles</span>
+        <h2>Three seats. A higher bar than the AI labs.</h2>
+        <p>We hire fewer people than the big AI labs and we're more selective about it. Each role is a founding seat, and we'll fill each one only when we find the right person. We read every application and say yes to very few.</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filter roles by team" hidden></div>
+      <div class="mine" id="my-app" hidden></div>
+      <div class="jobs" id="job-list"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 AgentSparks</span>
+    <span><a href="#jobs">Careers</a> · <a href="#family">Auto Startup</a></span>
+  </div>
+</footer>
+
+<script>
+const APPLY_EMAIL = "careers@agentsparks.ai";
+const JOBS = [
+  {title:"Founding ML Engineer, Agents", team:"Engineering", type:"Full-time", loc:"Remote · US/EU",
+   about:"Own the core agent loop: planning, tool use, memory and evaluation.",
+   do:["Design and ship the agent runtime","Build eval suites from real customer tasks","Tune small models for tool calling"],
+   want:["3+ years shipping ML systems","Strong Python and PyTorch","You've built something with LLM agents"]},
+  {title:"Inference & Sparsity Engineer", team:"Engineering", type:"Full-time", loc:"Remote",
+   about:"Make our models smaller and faster without losing accuracy.",
+   do:["Prune, quantize and distill models with SparseML-style recipes","Profile and speed up CPU inference","Export and benchmark ONNX models"],
+   want:["Experience with model compression or compilers","Comfort with performance profiling","C++ or Rust is a plus"]},
+  {title:"Full-Stack Engineer", team:"Engineering", type:"Full-time", loc:"Remote",
+   about:"Build the console where customers create, run and inspect agents.",
+   do:["Ship the run-trace viewer and agent builder","Own APIs, auth and billing","Work directly with design partners"],
+   want:["TypeScript and React","Backend experience with Python or Go","Product taste and speed"]},
+];
+
+const filtersEl = document.getElementById("filters");
+const listEl = document.getElementById("job-list");
+const teams = ["All", ...new Set(JOBS.map(j => j.team))];
+let active = "All";
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function renderFilters(){
+  filtersEl.innerHTML = teams.map(t => {
+    const n = t === "All" ? JOBS.length : JOBS.filter(j => j.team === t).length;
+    return `<button type="button" data-team="${esc(t)}" aria-pressed="${t===active}">${esc(t)}<span class="count">${n}</span></button>`;
+  }).join("");
+}
+function renderJobs(){
+  const shown = JOBS.filter(j => active === "All" || j.team === active);
+  listEl.innerHTML = shown.map((j,i) => `
+    <details class="job" id="job-${i}">
+      <summary>
+        <div><h3>${esc(j.title)}</h3><div class="meta">${esc(j.team)} · ${esc(j.loc)}</div></div>
+        <span class="tag">${esc(j.type)}</span>
+        <span class="plus" aria-hidden="true">+</span>
+      </summary>
+      <div class="body">
+        <p style="grid-column:1/-1;margin:0">${esc(j.about)}</p>
+        <div><h4>What you'll do</h4><ul>${j.do.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div><h4>What we look for</h4><ul>${j.want.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        <form class="appform" data-role="${esc(j.title)}" data-i="${i}" hidden novalidate>
+          <h4>Apply for this role</h4>
+          <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
+          <div class="field"><label for="a-name-${i}">Full name</label><input id="a-name-${i}" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="a-email-${i}">Email</label><input id="a-email-${i}" name="email" type="email" autocomplete="email" required></div>
+          <div class="field wide"><label for="a-link-${i}">CV, GitHub or portfolio link</label><input id="a-link-${i}" name="link" type="url" placeholder="https://" required></div>
+          <div class="field wide"><label for="a-note-${i}">The best thing you've built, in a few lines</label><textarea id="a-note-${i}" name="note" maxlength="2000"></textarea></div>
+          <div class="formrow"><button class="btn primary" type="submit">Send application</button><span class="formmsg" role="status"></span></div>
+        </form>
+        <div class="apply">
+          <span>Or email your CV or GitHub to</span>
+          <code>${APPLY_EMAIL}</code>
+          <button type="button" class="copy" data-email="${APPLY_EMAIL}">Copy address</button>
+          <span class="note">Put "${esc(j.title)}" in the subject line. Show us the best thing you've built.</span>
+        </div>
+      </div>
+    </details>`).join("");
+}
+filtersEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-team]"); if(!b) return;
+  active = b.dataset.team; renderFilters(); renderJobs();
+});
+listEl.addEventListener("click", e => {
+  const b = e.target.closest("button.copy"); if(!b) return;
+  const done = () => { b.textContent = "Copied"; setTimeout(()=> b.textContent = "Copy address", 1600); };
+  try {
+    navigator.clipboard.writeText(b.dataset.email).then(done, () => selectCode(b));
+  } catch { selectCode(b); }
+});
+function selectCode(b){
+  const code = b.previousElementSibling; const r = document.createRange(); r.selectNodeContents(code);
+  const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Press Ctrl+C";
+}
+renderFilters(); renderJobs();
+
+/* ---------- applications -> Google Sheet ---------- */
+// Paste your Google Apps Script web app URL here (see README.md).
+// While it is empty, the form stays hidden and people apply by email.
+const SHEET_ENDPOINT = "";
+const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
+if (SHEET_ENDPOINT) document.querySelectorAll("form.appform[data-role]").forEach(f => f.hidden = false);
+listEl.addEventListener("submit", async e => {
+  const f = e.target.closest("form.appform[data-role]"); if (!f) return;
+  e.preventDefault();
+  const msg = f.querySelector(".formmsg");
+  const v = n => f.elements[n].value.trim();
+  if (!v("name") || !v("email") || !f.elements.email.checkValidity() || !safeUrl(v("link"))) {
+    msg.className = "formmsg err"; msg.textContent = "Add your name, a valid email and a link that starts with https://."; return;
+  }
+  const btn = f.querySelector("button[type=submit]"); btn.disabled = true;
+  msg.className = "formmsg"; msg.textContent = "Sending…";
+  try {
+    await fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: new URLSearchParams({
+      role: f.dataset.role, name: v("name"), email: v("email"), link: v("link"), note: v("note"), website: v("website")
+    })});
+    msg.textContent = "Application received. We'll be in touch if it's a fit.";
+    f.reset();
+  } catch {
+    msg.className = "formmsg err"; msg.textContent = "Couldn't send right now. Please email us instead.";
+  } finally { btn.disabled = false; }
+});
+</script>
+
+</body>
+</html>
