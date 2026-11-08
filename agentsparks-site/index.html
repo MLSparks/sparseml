@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<title>AgentSparks</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>AgentSparks</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -128,29 +127,6 @@ section.band{padding-block:72px;border-top:1px solid var(--line)}
 .formmsg.err{color:var(--accent-ink)}
 .mine{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--chip);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:15px}
 
-/* applicants database (editors only) */
-#applicants .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:grid;gap:2px;min-width:120px}
-.stat b{font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
-.stat span{font-size:13px;color:var(--muted)}
-.adm-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:end}
-.adm-tools .field{min-width:170px}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-table{border-collapse:collapse;width:100%;font-size:14px;min-width:820px}
-th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--chip)}
-tr:last-child td{border-bottom:0}
-td .sub{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
-td select{font:14px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 6px}
-.st{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:var(--muted)}
-.st[data-s="New"]{background:var(--cobalt)}.st[data-s="Interview"]{background:var(--accent)}.st[data-s="Offer"]{background:var(--ok)}
-.del{font:500 13px var(--body);border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:5px 10px;cursor:pointer}
-.del.arm{color:var(--accent-ink);border-color:var(--accent-ink)}
-.empty{padding:28px;text-align:center;color:var(--muted)}
-details.log{margin-top:18px}
-details.log summary{cursor:pointer;font-weight:600;color:var(--cobalt)}
-details.log .appform{margin-top:12px}
-
 footer{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:14px}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
@@ -173,7 +149,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <nav aria-label="Main">
       <a href="#product">Product</a>
       <a href="#family">Auto Startup</a>
-      <a href="#applicants" id="nav-applicants" hidden>Applicants</a>
       <a class="hiring" href="#jobs">We're hiring →</a>
     </nav>
   </div>
@@ -258,38 +233,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     </div>
   </section>
 
-  <section class="band" id="applicants" hidden>
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="eyebrow">Applicants database · editors only</span>
-        <h2>Who applied</h2>
-        <p>Every application sent from this page lands here. Only you and people with Editor access can see this section. Applicants only see their own entry.</p>
-      </div>
-      <div class="stats" id="adm-stats"></div>
-      <div class="adm-tools">
-        <div class="field"><label for="f-role">Role</label><select id="f-role"></select></div>
-        <div class="field"><label for="f-status">Status</label><select id="f-status"></select></div>
-        <div class="field" style="flex:1;min-width:200px"><label for="f-q">Search</label><input id="f-q" type="search" placeholder="Name or email"></div>
-      </div>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>Applicant</th><th>Role</th><th>Links &amp; note</th><th>Applied</th><th>Status</th><th></th></tr></thead>
-          <tbody id="adm-rows"><tr><td colspan="6" class="empty">Loading applications…</td></tr></tbody>
-        </table>
-      </div>
-      <details class="log">
-        <summary>Log an application you received by email</summary>
-        <form class="appform" id="log-form" novalidate>
-          <div class="field"><label for="log-name">Name</label><input id="log-name" required></div>
-          <div class="field"><label for="log-email">Email</label><input id="log-email" type="email" required></div>
-          <div class="field"><label for="log-role">Role</label><select id="log-role"></select></div>
-          <div class="field"><label for="log-link">CV, GitHub or portfolio link</label><input id="log-link" type="url" placeholder="https://"></div>
-          <div class="field wide"><label for="log-note">Note</label><textarea id="log-note"></textarea></div>
-          <div class="formrow"><button class="btn primary" type="submit">Add to database</button><span class="formmsg" id="log-msg"></span></div>
-        </form>
-      </details>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -343,6 +286,7 @@ function renderJobs(){
         <div><h4>What we look for</h4><ul>${j.want.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
         <form class="appform" data-role="${esc(j.title)}" data-i="${i}" hidden novalidate>
           <h4>Apply for this role</h4>
+          <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" hidden>
           <div class="field"><label for="a-name-${i}">Full name</label><input id="a-name-${i}" name="name" autocomplete="name" required></div>
           <div class="field"><label for="a-email-${i}">Email</label><input id="a-email-${i}" name="email" type="email" autocomplete="email" required></div>
           <div class="field wide"><label for="a-link-${i}">CV, GitHub or portfolio link</label><input id="a-link-${i}" name="link" type="url" placeholder="https://" required></div>
@@ -375,138 +319,32 @@ function selectCode(b){
 }
 renderFilters(); renderJobs();
 
-/* ---------- applications database ---------- */
-const STATUSES = ["New","Reviewing","Interview","Offer","Rejected"];
-const ROLES = JOBS.map(j => j.title);
-let db = null, user = null, myId = null, isAdmin = false;
-const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}); } catch { return ""; } };
+/* ---------- applications -> Google Sheet ---------- */
+// Paste your Google Apps Script web app URL here (see README.md).
+// While it is empty, the form stays hidden and people apply by email.
+const SHEET_ENDPOINT = "";
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
-
-async function initData(){
-  if (!window.claude?.use) return;
-  try { [user, db] = await Promise.all([claude.use("user"), claude.use("db")]); } catch {}
-  if (!db || !user) return;
-  const [canWrite, admin, id] = await Promise.all([user.can("data.write"), user.canEdit(), user.id()]);
-  myId = id; isAdmin = !!admin;
-  if (myId && canWrite !== false) {
-    document.querySelectorAll("form.appform[data-role]").forEach(f => f.hidden = false);
-    watchMine();
-  }
-  if (isAdmin) startAdmin();
-}
-
-/* applicant side */
-function watchMine(){
-  const box = document.getElementById("my-app");
-  db.doc("applications/" + myId).onSnapshot(snap => {
-    if (!snap.exists) { box.hidden = true; return; }
-    const a = snap.data();
-    box.hidden = false;
-    box.textContent = "";
-    const s = document.createElement("span");
-    s.textContent = `You applied for ${a.role} on ${fmtDate(a.submittedAt)}. Status: ${a.status || "New"}. Sending another application replaces this one.`;
-    box.append(s);
-  }, () => { box.hidden = true; });
-}
+if (SHEET_ENDPOINT) document.querySelectorAll("form.appform[data-role]").forEach(f => f.hidden = false);
 listEl.addEventListener("submit", async e => {
   const f = e.target.closest("form.appform[data-role]"); if (!f) return;
   e.preventDefault();
   const msg = f.querySelector(".formmsg");
   const v = n => f.elements[n].value.trim();
-  if (!v("name") || !f.elements.email.checkValidity() || !v("email") || !safeUrl(v("link"))) {
+  if (!v("name") || !v("email") || !f.elements.email.checkValidity() || !safeUrl(v("link"))) {
     msg.className = "formmsg err"; msg.textContent = "Add your name, a valid email and a link that starts with https://."; return;
   }
   const btn = f.querySelector("button[type=submit]"); btn.disabled = true;
   msg.className = "formmsg"; msg.textContent = "Sending…";
   try {
-    await db.doc("applications/" + myId).set({
-      role: f.dataset.role, name: v("name").slice(0,120), email: v("email").slice(0,200),
-      link: v("link").slice(0,500), note: v("note").slice(0,2000),
-      status: "New", source: "Website", submittedAt: new Date().toISOString()
-    });
+    await fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: new URLSearchParams({
+      role: f.dataset.role, name: v("name"), email: v("email"), link: v("link"), note: v("note"), website: v("website")
+    })});
     msg.textContent = "Application received. We'll be in touch if it's a fit.";
     f.reset();
-  } catch (err) {
-    msg.className = "formmsg err";
-    msg.textContent = err?.code === "invalid_argument"
-      ? "Your access to this page doesn't allow applying here. Please email us instead."
-      : "Couldn't send right now. Try again in a minute, or email us.";
+  } catch {
+    msg.className = "formmsg err"; msg.textContent = "Couldn't send right now. Please email us instead.";
   } finally { btn.disabled = false; }
 });
-
-/* editor side */
-const apps = new Map();
-function startAdmin(){
-  document.getElementById("applicants").hidden = false;
-  document.getElementById("nav-applicants").hidden = false;
-  const opt = (v,l) => `<option value="${esc(v)}">${esc(l)}</option>`;
-  document.getElementById("f-role").innerHTML = opt("","All roles") + ROLES.map(r => opt(r,r)).join("");
-  document.getElementById("f-status").innerHTML = opt("","All statuses") + STATUSES.map(s => opt(s,s)).join("");
-  document.getElementById("log-role").innerHTML = ROLES.map(r => opt(r,r)).join("");
-  ["f-role","f-status","f-q"].forEach(id => document.getElementById(id).addEventListener("input", renderAdmin));
-  const rows = document.getElementById("adm-rows");
-  const timer = setTimeout(() => { if (!apps.size) rows.innerHTML = `<tr><td colspan="6" class="empty">The database is taking a while to answer. It will fill in when it connects.</td></tr>`; }, 10000);
-  db.collection("applications").onSnapshot(snap => {
-    clearTimeout(timer);
-    apps.clear();
-    snap.docs.forEach(d => apps.set(d.id, d.data()));
-    renderAdmin();
-  }, err => {
-    clearTimeout(timer);
-    rows.innerHTML = `<tr><td colspan="6" class="empty">Couldn't load applications (${esc(err?.code || "error")}). Reopen the page to try again.</td></tr>`;
-  });
-}
-function renderAdmin(){
-  const all = [...apps.entries()].sort((a,b) => String(b[1].submittedAt).localeCompare(String(a[1].submittedAt)));
-  const stats = [["Total", all.length], ["New", all.filter(([,a]) => (a.status||"New") === "New").length],
-    ...ROLES.map(r => [r, all.filter(([,a]) => a.role === r).length])];
-  document.getElementById("adm-stats").innerHTML = stats.map(([l,n]) => `<div class="stat"><b>${n}</b><span>${esc(l)}</span></div>`).join("");
-  const fr = document.getElementById("f-role").value, fs = document.getElementById("f-status").value,
-        q = document.getElementById("f-q").value.trim().toLowerCase();
-  const shown = all.filter(([,a]) => (!fr || a.role === fr) && (!fs || (a.status||"New") === fs) &&
-    (!q || `${a.name} ${a.email}`.toLowerCase().includes(q)));
-  const rows = document.getElementById("adm-rows");
-  if (!all.length) { rows.innerHTML = `<tr><td colspan="6" class="empty">No applications yet. They'll appear here as soon as someone applies, or add one you got by email below.</td></tr>`; return; }
-  if (!shown.length) { rows.innerHTML = `<tr><td colspan="6" class="empty">No applications match these filters.</td></tr>`; return; }
-  rows.innerHTML = shown.map(([id,a]) => {
-    const link = safeUrl(a.link), st = a.status || "New";
-    return `<tr data-id="${esc(id)}">
-      <td><strong>${esc(a.name||"(no name)")}</strong><div class="sub">${esc(a.email||"")}</div></td>
-      <td>${esc(a.role||"")}<div class="sub">${esc(a.source||"")}</div></td>
-      <td style="max-width:320px">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${esc(link)}</a>` : ""}<div class="sub">${esc(a.note||"")}</div></td>
-      <td style="white-space:nowrap">${esc(fmtDate(a.submittedAt))}</td>
-      <td style="white-space:nowrap"><span class="st" data-s="${esc(st)}"></span><select aria-label="Status for ${esc(a.name||"applicant")}" data-act="status">${STATUSES.map(s => `<option${s===st?" selected":""}>${s}</option>`).join("")}</select></td>
-      <td><button type="button" class="del" data-act="del">Delete</button></td>
-    </tr>`;
-  }).join("");
-}
-const admRows = document.getElementById("adm-rows");
-admRows.addEventListener("change", async e => {
-  const sel = e.target.closest("select[data-act=status]"); if (!sel) return;
-  const id = sel.closest("tr").dataset.id;
-  try { await db.doc("applications/" + id).update({ status: sel.value }); }
-  catch { sel.value = apps.get(id)?.status || "New"; }
-});
-admRows.addEventListener("click", async e => {
-  const b = e.target.closest("button[data-act=del]"); if (!b) return;
-  if (!b.classList.contains("arm")) { b.classList.add("arm"); b.textContent = "Confirm delete"; setTimeout(() => { b.classList.remove("arm"); b.textContent = "Delete"; }, 4000); return; }
-  b.disabled = true;
-  try { await db.doc("applications/" + b.closest("tr").dataset.id).delete(); } catch { b.disabled = false; b.textContent = "Couldn't delete"; }
-});
-document.getElementById("log-form").addEventListener("submit", async e => {
-  e.preventDefault();
-  const g = id => document.getElementById(id).value.trim(), msg = document.getElementById("log-msg");
-  if (!g("log-name") || !g("log-email")) { msg.className = "formmsg err"; msg.textContent = "Add at least a name and an email."; return; }
-  try {
-    await db.doc("applications/manual-" + Date.now()).set({
-      role: g("log-role"), name: g("log-name"), email: g("log-email"), link: g("log-link"), note: g("log-note"),
-      status: "New", source: "Email", submittedAt: new Date().toISOString()
-    });
-    msg.className = "formmsg"; msg.textContent = "Added."; e.target.reset();
-  } catch { msg.className = "formmsg err"; msg.textContent = "Couldn't add it. Try again."; }
-});
-
-initData();
 </script>
 
 </body>
