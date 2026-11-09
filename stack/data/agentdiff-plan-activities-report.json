@@ -1,0 +1,4767 @@
+{
+  "task": {
+    "id": "plan-activities",
+    "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+    "expected": null
+  },
+  "a": {
+    "agent": {
+      "name": "activities-small",
+      "model": "activities-small",
+      "version": "sparkrun"
+    },
+    "outcome": {
+      "success": false,
+      "answer": "Planned great activities",
+      "score": 0.0,
+      "termination": null
+    },
+    "totals": {
+      "input_tokens": 210,
+      "output_tokens": 9,
+      "cost_usd": 0.0002,
+      "latency_s": 0.0
+    },
+    "steps": [
+      {
+        "index": 0,
+        "type": "reason",
+        "name": "claimed_done",
+        "input": "",
+        "output": "Planned great activities",
+        "tokens": 219,
+        "latency_s": 0.0,
+        "quality": null,
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      },
+      {
+        "index": 1,
+        "type": "reason",
+        "name": "verification",
+        "input": "independent checks",
+        "output": "activities found: 0 activities",
+        "tokens": 0,
+        "latency_s": 0.0,
+        "quality": "bad",
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      },
+      {
+        "index": 2,
+        "type": "answer",
+        "name": "answer",
+        "input": "",
+        "output": "Planned great activities",
+        "tokens": 0,
+        "latency_s": 0.0,
+        "quality": null,
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      }
+    ],
+    "trace_id": "sparkrun-trip.activities-L0",
+    "run_id": "r1",
+    "schema_version": 1,
+    "tools": [
+      {
+        "name": "plan_activities"
+      }
+    ],
+    "budget": {},
+    "token_accounting": {}
+  },
+  "b": {
+    "agent": {
+      "name": "activities-strong",
+      "model": "activities-strong",
+      "version": "sparkrun"
+    },
+    "outcome": {
+      "success": true,
+      "answer": "Planned activities",
+      "score": 1.0,
+      "termination": null
+    },
+    "totals": {
+      "input_tokens": 519,
+      "output_tokens": 30,
+      "cost_usd": 0.006,
+      "latency_s": 0.002
+    },
+    "steps": [
+      {
+        "index": 0,
+        "type": "tool_call",
+        "name": "plan_activities",
+        "input": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+        "output": "4 activities for $116",
+        "tokens": 269,
+        "latency_s": 0.0,
+        "quality": null,
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null,
+        "input_tokens": 246,
+        "output_tokens": 23
+      },
+      {
+        "index": 1,
+        "type": "reason",
+        "name": "claimed_done",
+        "input": "",
+        "output": "Planned activities",
+        "tokens": 280,
+        "latency_s": 0.002,
+        "quality": null,
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      },
+      {
+        "index": 2,
+        "type": "reason",
+        "name": "verification",
+        "input": "independent checks",
+        "output": "all checks passed",
+        "tokens": 0,
+        "latency_s": 0.0,
+        "quality": "good",
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      },
+      {
+        "index": 3,
+        "type": "answer",
+        "name": "answer",
+        "input": "",
+        "output": "Planned activities",
+        "tokens": 0,
+        "latency_s": 0.0,
+        "quality": null,
+        "note": null,
+        "model": null,
+        "tokens_basis": null,
+        "error": null,
+        "effect": null,
+        "span": null,
+        "reward": null,
+        "value": null,
+        "advantage": null
+      }
+    ],
+    "trace_id": "sparkrun-trip.activities-L1",
+    "run_id": "r1",
+    "schema_version": 1,
+    "tools": [
+      {
+        "name": "plan_activities"
+      }
+    ],
+    "budget": {},
+    "token_accounting": {}
+  },
+  "alignment": [
+    {
+      "a_index": null,
+      "b_index": 0,
+      "op": "b_only",
+      "similarity": 0.0
+    },
+    {
+      "a_index": 0,
+      "b_index": 1,
+      "op": "match",
+      "similarity": 1.0,
+      "eval": {
+        "similarity": {
+          "type_match": true,
+          "name_jaccard": 1.0,
+          "input_jaccard": 1.0
+        },
+        "delta": {
+          "tokens": 61,
+          "latency_s": 0.002,
+          "cost_usd": 0.00286
+        },
+        "quality": {
+          "a": null,
+          "b": null,
+          "verdict": "equal"
+        },
+        "propagation": {
+          "a": 0.0,
+          "b": 0.0
+        }
+      }
+    },
+    {
+      "a_index": 1,
+      "b_index": 2,
+      "op": "drift",
+      "similarity": 1.0,
+      "eval": {
+        "similarity": {
+          "type_match": true,
+          "name_jaccard": 1.0,
+          "input_jaccard": 1.0
+        },
+        "delta": {
+          "tokens": 0,
+          "latency_s": 0.0,
+          "cost_usd": 0.0
+        },
+        "quality": {
+          "a": "bad",
+          "b": "good",
+          "verdict": "a_degraded"
+        },
+        "propagation": {
+          "a": 0.0,
+          "b": 0.25
+        }
+      }
+    },
+    {
+      "a_index": 2,
+      "b_index": 3,
+      "op": "match",
+      "similarity": 1.0,
+      "eval": {
+        "similarity": {
+          "type_match": true,
+          "name_jaccard": 1.0,
+          "input_jaccard": 1.0
+        },
+        "delta": {
+          "tokens": 0,
+          "latency_s": 0.0,
+          "cost_usd": 0.0
+        },
+        "quality": {
+          "a": null,
+          "b": null,
+          "verdict": "equal"
+        },
+        "propagation": {
+          "a": 0.0,
+          "b": 0.0
+        }
+      }
+    }
+  ],
+  "divergences": [
+    {
+      "rank": 1,
+      "a_index": null,
+      "b_index": 0,
+      "kind": "tool_selection",
+      "summary": "Agent A skipped 1 step(s) that Agent B performed, where Agent B called tool \"plan_activities\" with \"{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}\".",
+      "downstream": {
+        "extra_steps_b": 1,
+        "extra_tokens_b": 330,
+        "extra_latency_s_b": 0.002,
+        "caused_failure": true,
+        "failed_agent": "a"
+      }
+    },
+    {
+      "rank": 2,
+      "a_index": 1,
+      "b_index": 2,
+      "kind": "reasoning",
+      "summary": "Agent A reasoned \"independent checks\" (annotated bad) while Agent B reasoned \"independent checks\".",
+      "downstream": {
+        "extra_steps_b": 0,
+        "extra_tokens_b": 0,
+        "extra_latency_s_b": 0.0,
+        "caused_failure": false,
+        "failed_agent": null
+      }
+    }
+  ],
+  "attribution": {
+    "failed_agent": "a",
+    "root_cause_step": 1,
+    "chain": [
+      1,
+      2
+    ],
+    "category": "tool_selection",
+    "explanation": "Agent A diverged at step 1 because it made an incorrect tool call (bad-quality: \"verification\"). That divergence carried directly into the final answer. The answer emitted at step 2 was wrong, so the failure is attributed to tool_selection at step 1."
+  },
+  "answer_eval": {
+    "expected": null,
+    "diff_ab": [
+      [
+        "eq",
+        "Planned "
+      ],
+      [
+        "del",
+        "great "
+      ],
+      [
+        "eq",
+        "activities"
+      ]
+    ],
+    "a_vs_expected": {
+      "coverage": null,
+      "verdict": "unknown"
+    },
+    "b_vs_expected": {
+      "coverage": null,
+      "verdict": "unknown"
+    }
+  },
+  "metrics_delta": {
+    "steps": {
+      "a": 3,
+      "b": 4
+    },
+    "tokens": {
+      "a": 219,
+      "b": 549
+    },
+    "cost_usd": {
+      "a": 0.0002,
+      "b": 0.006
+    },
+    "latency_s": {
+      "a": 0.0,
+      "b": 0.002
+    },
+    "tool_calls": {
+      "a": 0,
+      "b": 1
+    },
+    "searches": {
+      "a": 0,
+      "b": 0
+    }
+  },
+  "success_analysis": {
+    "winner": "b",
+    "basis": "outcome",
+    "winning_decisions": [
+      {
+        "step_index": 0,
+        "agent": "activities-strong",
+        "kind": "tool_selection",
+        "decision": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+        "counterpart": "no corresponding step (activities-small)",
+        "why": "the right tool for the data actually in hand",
+        "impact": {
+          "avoided_extra_steps": 0,
+          "avoided_tokens": 0,
+          "avoided_latency_s": 0.0,
+          "avoided_failure": true
+        }
+      },
+      {
+        "step_index": 2,
+        "agent": "activities-strong",
+        "kind": "reasoning",
+        "decision": "independent checks",
+        "counterpart": "reasoned \"independent checks\" (annotated bad) (activities-small)",
+        "why": "avoided a bad-quality step; verified reasoning held up downstream",
+        "impact": {
+          "avoided_extra_steps": 0,
+          "avoided_tokens": 0,
+          "avoided_latency_s": 0.0,
+          "avoided_failure": false
+        }
+      }
+    ],
+    "narrative": "activities-strong won on outcome over activities-small. Key decision at step 0 (tool_selection): \"{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}\" versus no corresponding step (activities-small). Altogether its choices avoided the failure that followed."
+  },
+  "uncertainty": {
+    "available": false
+  },
+  "semantic": {
+    "methods": [
+      "tfidf_cosine",
+      "claim_provenance"
+    ],
+    "rows": [
+      {
+        "row": 1,
+        "a_index": 0,
+        "b_index": 1,
+        "lexical": 1.0,
+        "semantic": 0.8615
+      },
+      {
+        "row": 2,
+        "a_index": 1,
+        "b_index": 2,
+        "lexical": 1.0,
+        "semantic": 0.5156
+      },
+      {
+        "row": 3,
+        "a_index": 2,
+        "b_index": 3,
+        "lexical": 1.0,
+        "semantic": 0.8078
+      }
+    ],
+    "first_semantic_break": null,
+    "claims": [
+      {
+        "id": "c1",
+        "kind": "money",
+        "value": "$116",
+        "normalized": "116",
+        "matches_expected": null,
+        "a_steps": [],
+        "b_steps": [
+          0
+        ],
+        "origin": {
+          "agent": "b",
+          "step": 0,
+          "source": null
+        }
+      }
+    ],
+    "conflicts": [],
+    "intents": {
+      "a": [
+        {
+          "step": 0,
+          "intent": "decide"
+        },
+        {
+          "step": 1,
+          "intent": "decide"
+        },
+        {
+          "step": 2,
+          "intent": "commit"
+        }
+      ],
+      "b": [
+        {
+          "step": 0,
+          "intent": "transform"
+        },
+        {
+          "step": 1,
+          "intent": "decide"
+        },
+        {
+          "step": 2,
+          "intent": "decide"
+        },
+        {
+          "step": 3,
+          "intent": "commit"
+        }
+      ],
+      "missing": {
+        "a": [
+          "transform"
+        ],
+        "b": []
+      }
+    },
+    "grounding": {
+      "a": {
+        "claims_total": 0,
+        "claims_grounded": 0,
+        "score": 1.0,
+        "ungrounded": []
+      },
+      "b": {
+        "claims_total": 0,
+        "claims_grounded": 0,
+        "score": 1.0,
+        "ungrounded": []
+      }
+    },
+    "independence": [],
+    "contradictions": [],
+    "narrative": "Row 2 shows similar wording but drifting meaning (lexical 1.00 vs semantic 0.52)."
+  },
+  "counterfactual": {
+    "premise": "had activities-small made activities-strong's decision at step 1",
+    "splice": {
+      "prefix_steps": [
+        0
+      ],
+      "adopted_from": "b",
+      "adopted_steps": [
+        2,
+        3
+      ]
+    },
+    "estimate": {
+      "outcome": "success",
+      "steps": 3,
+      "steps_delta": 0,
+      "tokens": 219,
+      "tokens_delta": 0,
+      "latency_s": 0.0,
+      "latency_delta_s": 0.0,
+      "cost_usd": 0.0002,
+      "cost_delta_usd": 0.0
+    },
+    "confidence": "low",
+    "narrative": "Had activities-small reasoned \"independent checks\" at step 1 (as activities-strong did), the estimated run is 3 steps, 219 tokens, 0s — at no extra cost — and ends in success."
+  },
+  "shapley": {
+    "available": true,
+    "metric": "tokens",
+    "loser": "activities-small",
+    "winner": "activities-strong",
+    "regions": 2,
+    "method": "exact",
+    "total_saving": -269.0,
+    "allocations": [
+      {
+        "region": 1,
+        "rank": 2,
+        "kind": "reasoning",
+        "summary": "Agent A reasoned \"independent checks\" (annotated bad) while Agent B reasoned \"independent checks\".",
+        "alignment_rows": [
+          2
+        ],
+        "shapley": 0.0,
+        "share": -0.0,
+        "caused_failure": false
+      },
+      {
+        "region": 0,
+        "rank": 1,
+        "kind": "tool_selection",
+        "summary": "Agent A skipped 1 step(s) that Agent B performed, where Agent B called tool \"plan_activities\" with \"{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}\".",
+        "alignment_rows": [
+          0
+        ],
+        "shapley": -269.0,
+        "share": 1.0,
+        "caused_failure": true
+      }
+    ],
+    "efficiency_check": 0.0,
+    "outcome_attributable": true,
+    "outcome_note": "exactly one divergence was causal, so the outcome is attributable to it",
+    "narrative": "Fixing every divergence would have saved -269 tokens. The largest single share is -0% (0), from the reasoning divergence at region 1. The remaining 1 decision(s) split the rest, so fixing only the largest recovers part of the gap, not all of it."
+  },
+  "process": {
+    "a": {
+      "termination": {
+        "reason": "undeclared",
+        "declared": false,
+        "steps": 3,
+        "max_steps": null,
+        "at_step_limit": false,
+        "budget_used": null,
+        "under_budget_pressure": false
+      },
+      "side_effects": {
+        "writes": 0,
+        "reads": 0,
+        "write_steps": [],
+        "writes_before_any_read": 0,
+        "blind_write_steps": [],
+        "unclassified": 0,
+        "basis": "declared"
+      },
+      "repeats": {
+        "redundant_stretches": [],
+        "longest_redundant_stretch": 0,
+        "redundant_steps": 0,
+        "redundant_basis": "a stretch is 3+ consecutive tool steps whose every (call, observation) pair had been seen earlier in the run: the agent doing again what it had already done. Scattered repeats are not counted — those are a file read twice",
+        "repeated_calls": 0,
+        "repeated_steps": [],
+        "cycles": 0,
+        "cycle_share": 0.0,
+        "tool_steps": 0,
+        "cycle_steps": [],
+        "no_information_steps": 0,
+        "no_information_detail": []
+      },
+      "loops": {
+        "longest_repeated_block": {
+          "period": 0,
+          "repeats": 0,
+          "starts_at": null,
+          "length": 0
+        },
+        "max_call_multiplicity": 0,
+        "call_multiplicity_share": 0.0,
+        "tool_steps": 0,
+        "looping": false,
+        "basis": "looping when a block turns 3+ times or covers 6+ steps, or when one call is made 3+ times and is 10%+ of the tool steps; here, no block repeats and no call is made more than 0 time(s) over 0 tool step(s)"
+      },
+      "recovery": {
+        "errors": 0,
+        "error_steps": [],
+        "recovery_attempts": 0,
+        "recovered": 0,
+        "abandoned_after_error": 0,
+        "moved_on_after_error": 0,
+        "recovery_rate": null,
+        "window": 5,
+        "basis": "inferred from observation text",
+        "rule": "recovered means the same tool returned within 5 tool step(s); going on to other work is 'moved on', and an error with no tool step after it is 'abandoned'"
+      },
+      "grounding": {
+        "calls": 0,
+        "schema_checked": true,
+        "undeclared_tool_calls": 0,
+        "undeclared_tool_steps": [],
+        "schema_grounding": null,
+        "arguments_checked": 0,
+        "arguments_without_source": 0,
+        "argument_provenance": null,
+        "invented_arguments": []
+      },
+      "schema": {
+        "measurable": false,
+        "checked": 0,
+        "violations": 0,
+        "detail": [],
+        "validity": null,
+        "note": "no tool parameter schemas declared; call validity unchecked"
+      },
+      "false_success": {
+        "flagged": false,
+        "verdict": "no contradiction",
+        "claim_phrases": [],
+        "write_tools_offered": false,
+        "writes": 0,
+        "measurable": true
+      },
+      "gap": {
+        "success": false,
+        "verdict": "failed but clean",
+        "flags": {
+          "false_success": false,
+          "looped": false,
+          "loop_block": false,
+          "repeated_calls": false,
+          "no_information_steps": false,
+          "swallowed_error": false,
+          "blind_write": false,
+          "budget_pressure": false,
+          "undeclared_tools": false,
+          "invented_arguments": false,
+          "schema_violation": false
+        },
+        "raised": [],
+        "clean": true,
+        "narrative": "activities-small failed, yet nothing in its process went visibly wrong — no loops, no errors, no unsourced arguments. Either the mistake is in content this analysis cannot see, or the grader is wrong; a clean failure is worth checking the oracle over."
+      },
+      "agent": "activities-small"
+    },
+    "b": {
+      "termination": {
+        "reason": "undeclared",
+        "declared": false,
+        "steps": 4,
+        "max_steps": null,
+        "at_step_limit": false,
+        "budget_used": null,
+        "under_budget_pressure": false
+      },
+      "side_effects": {
+        "writes": 0,
+        "reads": 1,
+        "write_steps": [],
+        "writes_before_any_read": 0,
+        "blind_write_steps": [],
+        "unclassified": 1,
+        "basis": "declared"
+      },
+      "repeats": {
+        "redundant_stretches": [],
+        "longest_redundant_stretch": 0,
+        "redundant_steps": 0,
+        "redundant_basis": "a stretch is 3+ consecutive tool steps whose every (call, observation) pair had been seen earlier in the run: the agent doing again what it had already done. Scattered repeats are not counted — those are a file read twice",
+        "repeated_calls": 0,
+        "repeated_steps": [],
+        "cycles": 0,
+        "cycle_share": 0.0,
+        "tool_steps": 1,
+        "cycle_steps": [],
+        "no_information_steps": 0,
+        "no_information_detail": []
+      },
+      "loops": {
+        "longest_repeated_block": {
+          "period": 0,
+          "repeats": 0,
+          "starts_at": null,
+          "length": 0
+        },
+        "max_call_multiplicity": 1,
+        "call_multiplicity_share": 1.0,
+        "tool_steps": 1,
+        "looping": false,
+        "basis": "looping when a block turns 3+ times or covers 6+ steps, or when one call is made 3+ times and is 10%+ of the tool steps; here, no block repeats and no call is made more than 1 time(s) over 1 tool step(s)"
+      },
+      "recovery": {
+        "errors": 0,
+        "error_steps": [],
+        "recovery_attempts": 0,
+        "recovered": 0,
+        "abandoned_after_error": 0,
+        "moved_on_after_error": 0,
+        "recovery_rate": null,
+        "window": 5,
+        "basis": "inferred from observation text",
+        "rule": "recovered means the same tool returned within 5 tool step(s); going on to other work is 'moved on', and an error with no tool step after it is 'abandoned'"
+      },
+      "grounding": {
+        "calls": 1,
+        "schema_checked": true,
+        "undeclared_tool_calls": 0,
+        "undeclared_tool_steps": [],
+        "schema_grounding": 1.0,
+        "arguments_checked": 0,
+        "arguments_without_source": 0,
+        "argument_provenance": null,
+        "invented_arguments": []
+      },
+      "schema": {
+        "measurable": false,
+        "checked": 0,
+        "violations": 0,
+        "detail": [],
+        "validity": null,
+        "note": "no tool parameter schemas declared; call validity unchecked"
+      },
+      "false_success": {
+        "flagged": false,
+        "verdict": "no contradiction",
+        "claim_phrases": [],
+        "write_tools_offered": false,
+        "writes": 0,
+        "measurable": true
+      },
+      "gap": {
+        "success": true,
+        "verdict": "passed cleanly",
+        "flags": {
+          "false_success": false,
+          "looped": false,
+          "loop_block": false,
+          "repeated_calls": false,
+          "no_information_steps": false,
+          "swallowed_error": false,
+          "blind_write": false,
+          "budget_pressure": false,
+          "undeclared_tools": false,
+          "invented_arguments": false,
+          "schema_violation": false
+        },
+        "raised": [],
+        "clean": true,
+        "narrative": "activities-strong passed and nothing in the trace contradicts it — no loops, no unrecovered errors, no blind writes."
+      },
+      "agent": "activities-strong"
+    },
+    "differing_flags": [],
+    "shared_flags": [],
+    "narrative": "Both runs are process-clean: nothing in either trace loops, errors out unrecovered, or writes blind."
+  },
+  "tradeoff": {
+    "agents": {
+      "a": "activities-small",
+      "b": "activities-strong"
+    },
+    "success": {
+      "a": false,
+      "b": true
+    },
+    "spend": {
+      "a": {
+        "tokens": 219,
+        "cost_usd": 0.0002,
+        "latency_s": 0.0,
+        "steps": 3
+      },
+      "b": {
+        "tokens": 549,
+        "cost_usd": 0.006,
+        "latency_s": 0.002,
+        "steps": 4
+      }
+    },
+    "spend_delta_b_minus_a": {
+      "tokens": 330,
+      "cost_usd": 0.0058,
+      "latency_s": 0.002,
+      "steps": 1
+    },
+    "caveat": "one task, one run per side: every figure here is descriptive of this pair only, with no interval — batch-level exchange rates live in the aggregate",
+    "case": "price_of_correctness",
+    "dominant": "activities-strong",
+    "price_of_correctness": {
+      "tokens": 330,
+      "cost_usd": 0.0058,
+      "latency_s": 0.002,
+      "steps": 1
+    },
+    "statement": "activities-strong is right; activities-small is not. The correct answer cost +0.00s, +330 tokens, $+0.0058 over activities-small's run. activities-small reaching its answer faster is not a saving — it is the same task still unsolved."
+  },
+  "efficiency": {
+    "a": {
+      "agent": "activities-small",
+      "context_growth": {
+        "turns": 3,
+        "step_tokens_total": 219,
+        "cumulative_step_tokens": [
+          219,
+          219,
+          219
+        ],
+        "input_tokens": 210,
+        "output_tokens": 9,
+        "prompt_tokens_estimate": 54,
+        "basis": "estimated",
+        "assumptions": [
+          "each turn re-sends the full prior conversation (the standard chat-completion pattern)",
+          "prompt tokens estimated as len(prompt)/4 — the per-turn input split is not logged",
+          "assumes each turn re-sends the full prior conversation and that a stable-prefix prompt cache hits 100% of the re-send — a ceiling, not a forecast"
+        ],
+        "tokens_note": null,
+        "measurable": true,
+        "reason": null,
+        "unique_content_estimate": 63,
+        "resend_overhead_tokens": 147,
+        "resend_share": 0.7,
+        "prompt_cache_absorbable_tokens": 147
+      },
+      "result_cache": {
+        "calls": 0,
+        "cacheable_repeats": [],
+        "count": 0,
+        "excluded_retries_after_error": 0,
+        "repeats_with_different_results": 0,
+        "recoverable": {
+          "tokens": null,
+          "tokens_basis": null,
+          "tokens_reason": "no cacheable repeats",
+          "latency_s": null,
+          "latency_reason": "no cacheable repeats"
+        },
+        "assumption": "assumes a 100% hit rate on identical (tool, arguments) calls with identical results — the figure is a ceiling, not a forecast"
+      },
+      "parallel_reads": {
+        "runs": [],
+        "count": 0,
+        "total_wall_clock_saving_s": null,
+        "breaks": [],
+        "method": "textual and conservative: any provenance link, error, duplicate, non-read effect or unparseable arguments breaks the run",
+        "assumption": "assumes the independent reads are issued concurrently and complete in the time of the slowest — a ceiling, not a forecast"
+      },
+      "latency": {
+        "measurable": false,
+        "reason": "no step recorded a latency — unmeasurable, not fast",
+        "step_latency_total_s": 0.0,
+        "top": [],
+        "gini": null,
+        "concentrated": false,
+        "top_share": null,
+        "note": null
+      },
+      "throughput": {
+        "median_tokens_per_s": null,
+        "steps_measured": 0,
+        "per_step": [],
+        "steps_excluded": {
+          "estimated": 0,
+          "undeclared": 1,
+          "no_latency": 0,
+          "no_tokens": 2
+        },
+        "reason": "unmeasurable: token basis undeclared on every step — an unlabelled count cannot be verified as a measurement",
+        "numerator_note": "steps[].tokens — SCHEMA does not split step tokens into input/output, so this is a processing rate, not a pure generation rate",
+        "model_telemetry_sources": []
+      },
+      "opportunities": [
+        {
+          "kind": "prompt_cache",
+          "evidence": {
+            "turns": 3,
+            "input_tokens": 210,
+            "unique_content_estimate": 63,
+            "resend_share": 0.7
+          },
+          "saving": {
+            "tokens": 147,
+            "latency_s": null,
+            "cost_usd": 0.000134
+          },
+          "saving_notes": {
+            "latency_s": "prompt caching cuts token cost; its latency effect is provider-dependent and not estimable from this log"
+          },
+          "basis": "estimated",
+          "assumption": "assumes each turn re-sends the full prior conversation and that a stable-prefix prompt cache hits 100% of the re-send — a ceiling, not a forecast",
+          "action": "Cache the conversation prefix — ~147 of 210 input tokens (70%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)",
+          "rank": 1
+        }
+      ]
+    },
+    "b": {
+      "agent": "activities-strong",
+      "context_growth": {
+        "turns": 4,
+        "step_tokens_total": 549,
+        "cumulative_step_tokens": [
+          269,
+          549,
+          549,
+          549
+        ],
+        "input_tokens": 519,
+        "output_tokens": 30,
+        "prompt_tokens_estimate": 54,
+        "basis": "estimated",
+        "assumptions": [
+          "each turn re-sends the full prior conversation (the standard chat-completion pattern)",
+          "prompt tokens estimated as len(prompt)/4 — the per-turn input split is not logged",
+          "assumes each turn re-sends the full prior conversation and that a stable-prefix prompt cache hits 100% of the re-send — a ceiling, not a forecast"
+        ],
+        "tokens_note": null,
+        "measurable": true,
+        "reason": null,
+        "unique_content_estimate": 84,
+        "resend_overhead_tokens": 435,
+        "resend_share": 0.8382,
+        "prompt_cache_absorbable_tokens": 435
+      },
+      "result_cache": {
+        "calls": 1,
+        "cacheable_repeats": [],
+        "count": 0,
+        "excluded_retries_after_error": 0,
+        "repeats_with_different_results": 0,
+        "recoverable": {
+          "tokens": null,
+          "tokens_basis": null,
+          "tokens_reason": "no cacheable repeats",
+          "latency_s": null,
+          "latency_reason": "no cacheable repeats"
+        },
+        "assumption": "assumes a 100% hit rate on identical (tool, arguments) calls with identical results — the figure is a ceiling, not a forecast"
+      },
+      "parallel_reads": {
+        "runs": [],
+        "count": 0,
+        "total_wall_clock_saving_s": null,
+        "breaks": [
+          {
+            "index": 0,
+            "reason": "not a confirmed read (effect 'read', basis 'assumed')"
+          }
+        ],
+        "method": "textual and conservative: any provenance link, error, duplicate, non-read effect or unparseable arguments breaks the run",
+        "assumption": "assumes the independent reads are issued concurrently and complete in the time of the slowest — a ceiling, not a forecast"
+      },
+      "latency": {
+        "measurable": true,
+        "reason": null,
+        "step_latency_total_s": 0.002,
+        "top": [
+          {
+            "index": 1,
+            "name": "claimed_done",
+            "latency_s": 0.002,
+            "share": 1.0
+          },
+          {
+            "index": 0,
+            "name": "plan_activities",
+            "latency_s": 0.0,
+            "share": 0.0
+          },
+          {
+            "index": 2,
+            "name": "verification",
+            "latency_s": 0.0,
+            "share": 0.0
+          }
+        ],
+        "gini": 0.75,
+        "top_share": 1.0,
+        "concentrated": false,
+        "note": null
+      },
+      "throughput": {
+        "median_tokens_per_s": null,
+        "steps_measured": 0,
+        "per_step": [],
+        "steps_excluded": {
+          "estimated": 0,
+          "undeclared": 2,
+          "no_latency": 0,
+          "no_tokens": 2
+        },
+        "reason": "unmeasurable: token basis undeclared on every step — an unlabelled count cannot be verified as a measurement",
+        "numerator_note": "steps[].tokens — SCHEMA does not split step tokens into input/output, so this is a processing rate, not a pure generation rate",
+        "model_telemetry_sources": []
+      },
+      "opportunities": [
+        {
+          "kind": "prompt_cache",
+          "evidence": {
+            "turns": 4,
+            "input_tokens": 519,
+            "unique_content_estimate": 84,
+            "resend_share": 0.8382
+          },
+          "saving": {
+            "tokens": 435,
+            "latency_s": null,
+            "cost_usd": 0.004754
+          },
+          "saving_notes": {
+            "latency_s": "prompt caching cuts token cost; its latency effect is provider-dependent and not estimable from this log"
+          },
+          "basis": "estimated",
+          "assumption": "assumes each turn re-sends the full prior conversation and that a stable-prefix prompt cache hits 100% of the re-send — a ceiling, not a forecast",
+          "action": "Cache the conversation prefix — ~435 of 519 input tokens (84%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)",
+          "rank": 1
+        }
+      ]
+    },
+    "narrative": "activities-small: cache the conversation prefix — ~147 of 210 input tokens (70%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling). activities-strong: cache the conversation prefix — ~435 of 519 input tokens (84%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)."
+  },
+  "diagnosis": {
+    "version": 1,
+    "mode": "single_failure",
+    "subject": "a",
+    "subject_name": "activities-small",
+    "verdict": "activities-small: best explained by divergence — the run went wrong at step 2, a tool_selection decision that the other agent made differently; on observable evidence (2 item(s))",
+    "hypotheses": [
+      {
+        "kind": "divergence",
+        "statement": "the run went wrong at step 2, a tool_selection decision that the other agent made differently",
+        "supports": [
+          "E1",
+          "E2"
+        ],
+        "contradicts": [],
+        "score": 0.55,
+        "status": "leading",
+        "category": "tool_selection",
+        "root": 2,
+        "agent": "a",
+        "evidence_classes": {
+          "observable": 2,
+          "annotation": 0,
+          "stated": 0
+        },
+        "id": "H1",
+        "discriminator": "splice the other agent's decision at the divergent step and re-run (the counterfactual section estimates the result of exactly that)"
+      },
+      {
+        "kind": "grader_or_label",
+        "statement": "the grader or task label, rather than the agent, may be wrong — but no expected answer is recorded, so this cannot be tested from the trace",
+        "supports": [],
+        "contradicts": [],
+        "score": null,
+        "status": "untestable",
+        "agent": "a",
+        "evidence_classes": {
+          "observable": 0,
+          "annotation": 0,
+          "stated": 0
+        },
+        "id": "H2",
+        "discriminator": "re-grade this run by hand: the emitted answer is quoted in the evidence — if a person reads it as correct, the label is wrong, not the agent"
+      }
+    ],
+    "leading": "H1",
+    "margin": 0.55,
+    "evidence": [
+      {
+        "id": "E1",
+        "type": "span",
+        "agent": "a",
+        "step": 2,
+        "field": "output",
+        "quote": "Planned great activities",
+        "signal": "the divergent tool_selection step",
+        "basis": "measured",
+        "evidence_class": "observable"
+      },
+      {
+        "id": "E2",
+        "type": "metric",
+        "path": "counterfactual.estimate.outcome",
+        "value": "success",
+        "signal": "splicing the other decision at this step is estimated to succeed",
+        "basis": "estimated",
+        "evidence_class": "observable"
+      }
+    ],
+    "causal_account": [
+      {
+        "step": 2,
+        "happened": "the account starts here (answer step)",
+        "evidence": [
+          "E1"
+        ]
+      }
+    ],
+    "decisive_step": {
+      "step": 2,
+      "criterion": "earliest step whose correction is expected to flip the outcome",
+      "basis": "the divergent decision; fused evidence places nothing earlier",
+      "reason": null,
+      "point_of_no_return": 2,
+      "window": {
+        "earliest": 2,
+        "point_of_no_return": 2,
+        "steps": 1
+      },
+      "verification": "hypothesized",
+      "replay_recipe": {
+        "side": "a",
+        "step": 2,
+        "correction": "take the decision the passing run took at this step",
+        "expects": "the outcome flips to success",
+        "replays": "≥3 — agent policies are stochastic; one rollout proves nothing"
+      },
+      "joint_candidates": [],
+      "overdetermined": null
+    },
+    "contradictions": [],
+    "confidence": {
+      "level": "medium",
+      "n": 1,
+      "basis": "single pair (n=1); the ranking is consistent but one comparison cannot rule out task-specific luck",
+      "verified": "hypothesized"
+    }
+  },
+  "internals": {
+    "available": false,
+    "reason": "no step carries model internals; record them with the harness's Neuronpedia hook (or a scripted SAE) to see which features separate the runs"
+  },
+  "reading": {
+    "a": {
+      "version": 2,
+      "agent": "activities-small",
+      "task": "plan-activities",
+      "outcome": {
+        "success": false,
+        "termination": "undeclared",
+        "answer": "Planned great activities"
+      },
+      "phases": [
+        {
+          "intent": "decide",
+          "steps": [
+            0,
+            1
+          ],
+          "summary": "2 steps — chose a direction (claimed_done, verification)"
+        },
+        {
+          "intent": "commit",
+          "steps": [
+            2
+          ],
+          "summary": "1 step — committed to an answer (answer)"
+        }
+      ],
+      "what_happened": [
+        {
+          "step": 0,
+          "type": "reason",
+          "name": "claimed_done",
+          "intent": "decide",
+          "role": "feeds_answer",
+          "feeds_answer": true,
+          "invented_argument": false,
+          "evidence": "R1"
+        },
+        {
+          "step": 1,
+          "type": "reason",
+          "name": "verification",
+          "intent": "decide",
+          "role": "feeds_answer",
+          "feeds_answer": true,
+          "invented_argument": false,
+          "evidence": "R2"
+        },
+        {
+          "step": 2,
+          "type": "answer",
+          "name": "answer",
+          "intent": "commit",
+          "role": "answer",
+          "feeds_answer": false,
+          "invented_argument": false,
+          "evidence": "R3"
+        }
+      ],
+      "rests_on": [],
+      "answer_basis": {
+        "status": "no_typed_values",
+        "basis_steps": [],
+        "basis_complete_at": null,
+        "steps_after_basis_complete": null,
+        "fetches_after_basis_complete": null,
+        "spent_steps": [],
+        "looked_again_steps": [],
+        "atoms": 0,
+        "supported": 0
+      },
+      "validity": {
+        "status": "clean",
+        "reason": null,
+        "harness_terminated": false,
+        "tool_failure_rate": {
+          "failed": 0,
+          "calls": 0,
+          "rate": null
+        },
+        "environment_error_steps": [],
+        "answer_without_basis": false,
+        "expected_leaked": false,
+        "leak_steps": []
+      },
+      "phase_checks": {
+        "first_write_before_any_read": false,
+        "verification_after_last_write": null,
+        "verification_step": null,
+        "regression_cycles": 0,
+        "cycles": [],
+        "writes": [],
+        "reads": [],
+        "refs": []
+      },
+      "errors": [],
+      "critical_error": {
+        "step": null,
+        "why": "no error occurred",
+        "verification": null,
+        "replay_recipe": null
+      },
+      "why_it_ended": {
+        "success": false,
+        "termination": "undeclared",
+        "declared": false,
+        "verdict_basis": "no expected answer is recorded — the outcome is the grader's verdict alone",
+        "grounds": [
+          "R4"
+        ]
+      },
+      "what_it_means": [
+        {
+          "kind": "unverified",
+          "statement": "no step checked the work before the answer was committed",
+          "steps": [
+            2
+          ],
+          "evidence": [
+            "R5"
+          ],
+          "evidence_class": "observable"
+        },
+        {
+          "kind": "annotated_weakness",
+          "statement": "1 step(s) carry a weak/bad quality mark",
+          "steps": [
+            1
+          ],
+          "evidence": [
+            "R6"
+          ],
+          "evidence_class": "annotation"
+        }
+      ],
+      "take_forward": [
+        {
+          "at_step": 2,
+          "what": "no step checked the work before the answer was committed",
+          "instead": "add a verification step before committing the answer",
+          "action": "add a verification step before committing the answer",
+          "because": "unverified",
+          "steps": [
+            2
+          ],
+          "refs": [
+            "R5"
+          ],
+          "replay_recipe": {
+            "step": 2,
+            "correction": "add a verification step before committing the answer",
+            "expects": "the outcome flips",
+            "replays": "≥3 — agent policies are stochastic"
+          },
+          "conditional_on_validity": false
+        },
+        {
+          "at_step": 1,
+          "what": "1 step(s) carry a weak/bad quality mark",
+          "instead": "review the annotated steps by hand — the marks are someone's judgement, not a measurement",
+          "action": "review the annotated steps by hand — the marks are someone's judgement, not a measurement",
+          "because": "annotated_weakness",
+          "steps": [
+            1
+          ],
+          "refs": [
+            "R6"
+          ],
+          "replay_recipe": {
+            "step": 1,
+            "correction": "review the annotated steps by hand — the marks are someone's judgement, not a measurement",
+            "expects": "the outcome flips",
+            "replays": "≥3 — agent policies are stochastic"
+          },
+          "conditional_on_validity": false
+        }
+      ],
+      "confidence": {
+        "level": "medium",
+        "n": 1,
+        "basis": "1 of 2 finding(s) rest on observable events; capped at medium: a single observation cannot rule out luck",
+        "verified": "n/a"
+      },
+      "evidence": [
+        {
+          "id": "R1",
+          "type": "span",
+          "step": 0,
+          "field": "output",
+          "quote": "Planned great activities",
+          "note": "step 0 feeds_answer",
+          "evidence_class": "stated"
+        },
+        {
+          "id": "R2",
+          "type": "span",
+          "step": 1,
+          "field": "output",
+          "quote": "activities found: 0 activities",
+          "note": "step 1 feeds_answer",
+          "evidence_class": "stated"
+        },
+        {
+          "id": "R3",
+          "type": "span",
+          "step": 2,
+          "field": "output",
+          "quote": "Planned great activities",
+          "note": "step 2 answer",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R4",
+          "type": "fact",
+          "path": "outcome.termination",
+          "value": "undeclared",
+          "note": "termination not declared by the harness",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R5",
+          "type": "fact",
+          "path": "reading.phases.intents",
+          "value": [
+            "commit",
+            "decide"
+          ],
+          "note": "intents present in the run",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R6",
+          "type": "fact",
+          "path": "steps[1].quality",
+          "value": "bad",
+          "note": "quality annotation on the log",
+          "evidence_class": "annotation"
+        }
+      ],
+      "summary": "activities-small took 3 step(s) and failed. 2 step(s) measurably fed the answer. Findings: no step checked the work before the answer was committed; 1 step(s) carry a weak/bad quality mark."
+    },
+    "b": {
+      "version": 2,
+      "agent": "activities-strong",
+      "task": "plan-activities",
+      "outcome": {
+        "success": true,
+        "termination": "undeclared",
+        "answer": "Planned activities"
+      },
+      "phases": [
+        {
+          "intent": "transform",
+          "steps": [
+            0
+          ],
+          "summary": "1 step — acted with a tool (plan_activities)"
+        },
+        {
+          "intent": "decide",
+          "steps": [
+            1,
+            2
+          ],
+          "summary": "2 steps — chose a direction (claimed_done, verification)"
+        },
+        {
+          "intent": "commit",
+          "steps": [
+            3
+          ],
+          "summary": "1 step — committed to an answer (answer)"
+        }
+      ],
+      "what_happened": [
+        {
+          "step": 0,
+          "type": "tool_call",
+          "name": "plan_activities",
+          "intent": "transform",
+          "role": "feeds_answer",
+          "feeds_answer": true,
+          "invented_argument": false,
+          "evidence": "R1"
+        },
+        {
+          "step": 1,
+          "type": "reason",
+          "name": "claimed_done",
+          "intent": "decide",
+          "role": "feeds_answer",
+          "feeds_answer": true,
+          "invented_argument": false,
+          "evidence": "R2"
+        },
+        {
+          "step": 2,
+          "type": "reason",
+          "name": "verification",
+          "intent": "decide",
+          "role": "decide",
+          "feeds_answer": false,
+          "invented_argument": false,
+          "evidence": "R3"
+        },
+        {
+          "step": 3,
+          "type": "answer",
+          "name": "answer",
+          "intent": "commit",
+          "role": "answer",
+          "feeds_answer": false,
+          "invented_argument": false,
+          "evidence": "R4"
+        }
+      ],
+      "rests_on": [],
+      "answer_basis": {
+        "status": "no_typed_values",
+        "basis_steps": [],
+        "basis_complete_at": null,
+        "steps_after_basis_complete": null,
+        "fetches_after_basis_complete": null,
+        "spent_steps": [],
+        "looked_again_steps": [],
+        "atoms": 0,
+        "supported": 0
+      },
+      "validity": {
+        "status": "clean",
+        "reason": null,
+        "harness_terminated": false,
+        "tool_failure_rate": {
+          "failed": 0,
+          "calls": 1,
+          "rate": 0.0
+        },
+        "environment_error_steps": [],
+        "answer_without_basis": false,
+        "expected_leaked": false,
+        "leak_steps": []
+      },
+      "phase_checks": {
+        "first_write_before_any_read": false,
+        "verification_after_last_write": null,
+        "verification_step": null,
+        "regression_cycles": 0,
+        "cycles": [],
+        "writes": [],
+        "reads": [
+          0
+        ],
+        "refs": []
+      },
+      "errors": [],
+      "critical_error": {
+        "step": null,
+        "why": "no error occurred",
+        "verification": null,
+        "replay_recipe": null
+      },
+      "why_it_ended": {
+        "success": true,
+        "termination": "undeclared",
+        "declared": false,
+        "verdict_basis": "no expected answer is recorded — the outcome is the grader's verdict alone",
+        "grounds": [
+          "R5"
+        ]
+      },
+      "what_it_means": [
+        {
+          "kind": "unverified",
+          "statement": "no step checked the work before the answer was committed",
+          "steps": [
+            3
+          ],
+          "evidence": [
+            "R6"
+          ],
+          "evidence_class": "observable"
+        }
+      ],
+      "take_forward": [
+        {
+          "at_step": 3,
+          "what": "no step checked the work before the answer was committed",
+          "instead": "add a verification step before committing the answer",
+          "action": "add a verification step before committing the answer",
+          "because": "unverified",
+          "steps": [
+            3
+          ],
+          "refs": [
+            "R6"
+          ],
+          "replay_recipe": {
+            "step": 3,
+            "correction": "add a verification step before committing the answer",
+            "expects": "the outcome flips",
+            "replays": "≥3 — agent policies are stochastic"
+          },
+          "conditional_on_validity": false
+        }
+      ],
+      "confidence": {
+        "level": "medium",
+        "n": 1,
+        "basis": "1 of 1 finding(s) rest on observable events; capped at medium: a single observation cannot rule out luck",
+        "verified": "n/a"
+      },
+      "evidence": [
+        {
+          "id": "R1",
+          "type": "span",
+          "step": 0,
+          "field": "output",
+          "quote": "4 activities for $116",
+          "note": "step 0 feeds_answer",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R2",
+          "type": "span",
+          "step": 1,
+          "field": "output",
+          "quote": "Planned activities",
+          "note": "step 1 feeds_answer",
+          "evidence_class": "stated"
+        },
+        {
+          "id": "R3",
+          "type": "span",
+          "step": 2,
+          "field": "output",
+          "quote": "all checks passed",
+          "note": "step 2 decide",
+          "evidence_class": "stated"
+        },
+        {
+          "id": "R4",
+          "type": "span",
+          "step": 3,
+          "field": "output",
+          "quote": "Planned activities",
+          "note": "step 3 answer",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R5",
+          "type": "fact",
+          "path": "outcome.termination",
+          "value": "undeclared",
+          "note": "termination not declared by the harness",
+          "evidence_class": "observable"
+        },
+        {
+          "id": "R6",
+          "type": "fact",
+          "path": "reading.phases.intents",
+          "value": [
+            "commit",
+            "decide",
+            "transform"
+          ],
+          "note": "intents present in the run",
+          "evidence_class": "observable"
+        }
+      ],
+      "summary": "activities-strong took 4 step(s) and succeeded. 2 step(s) measurably fed the answer. Findings: no step checked the work before the answer was committed."
+    }
+  },
+  "timing": {
+    "a": {
+      "measurable": false,
+      "reason": "no step recorded a latency — unmeasurable, not fast",
+      "timeline": {
+        "measurable": false,
+        "reason": "no step records when it began",
+        "basis": "reconstructed",
+        "span_s": null,
+        "sum_s": 0.0,
+        "overlap_s": null,
+        "concurrent_steps": null,
+        "recorded_starts": 0,
+        "steps": 3,
+        "reading": "This run's clock is reconstructed: each step is placed by summing the durations before it, which reads the run as strictly sequential. Nothing here says it was. One field per step — when it began — turns that assumption into a measurement."
+      },
+      "total_s": 0.0,
+      "steps": [],
+      "by_category": {},
+      "by_tool": {},
+      "wasted_s": 0.0,
+      "wasted_share": null,
+      "slowest": [],
+      "rationale": "activities-small: no step latency was recorded, so where its time went cannot be attributed."
+    },
+    "b": {
+      "measurable": true,
+      "total_s": 0.002,
+      "steps": [
+        {
+          "index": 0,
+          "type": "tool_call",
+          "name": "plan_activities",
+          "latency_s": 0.0,
+          "share": 0.0,
+          "category": "tool",
+          "role": "feeds_answer",
+          "wasted": null,
+          "wasted_label": null,
+          "retry_of": null,
+          "tokens": 269
+        },
+        {
+          "index": 1,
+          "type": "reason",
+          "name": "claimed_done",
+          "latency_s": 0.002,
+          "share": 1.0,
+          "category": "think",
+          "role": "feeds_answer",
+          "wasted": null,
+          "wasted_label": null,
+          "retry_of": null,
+          "tokens": 280
+        },
+        {
+          "index": 2,
+          "type": "reason",
+          "name": "verification",
+          "latency_s": 0.0,
+          "share": 0.0,
+          "category": "think",
+          "role": "decide",
+          "wasted": null,
+          "wasted_label": null,
+          "retry_of": null,
+          "tokens": 0
+        },
+        {
+          "index": 3,
+          "type": "answer",
+          "name": "answer",
+          "latency_s": 0.0,
+          "share": 0.0,
+          "category": "answer",
+          "role": "answer",
+          "wasted": null,
+          "wasted_label": null,
+          "retry_of": null,
+          "tokens": 0
+        }
+      ],
+      "by_category": {
+        "think": {
+          "seconds": 0.002,
+          "share": 1.0
+        },
+        "tool": {
+          "seconds": 0.0,
+          "share": 0.0
+        },
+        "answer": {
+          "seconds": 0.0,
+          "share": 0.0
+        }
+      },
+      "by_tool": {
+        "plan_activities": {
+          "calls": 1,
+          "seconds": 0.0,
+          "wasted_calls": 0,
+          "wasted_seconds": 0.0,
+          "share": 0.0
+        }
+      },
+      "wasted_s": 0.0,
+      "wasted_share": 0.0,
+      "slowest": [
+        {
+          "index": 1,
+          "name": "claimed_done",
+          "type": "reason",
+          "latency_s": 0.002,
+          "share": 1.0,
+          "wasted": null
+        },
+        {
+          "index": 0,
+          "name": "plan_activities",
+          "type": "tool_call",
+          "latency_s": 0.0,
+          "share": 0.0,
+          "wasted": null
+        },
+        {
+          "index": 2,
+          "name": "verification",
+          "type": "reason",
+          "latency_s": 0.0,
+          "share": 0.0,
+          "wasted": null
+        }
+      ],
+      "tokens_per_s": 274500.0,
+      "rationale": "activities-strong took 0.00s over 4 step(s); 100% thinking. No step is marked as wasted. The slowest step was 1 (claimed_done, 0.00s, 100% of the run).",
+      "timeline": {
+        "measurable": false,
+        "reason": "no step records when it began",
+        "basis": "reconstructed",
+        "span_s": null,
+        "sum_s": 0.002,
+        "overlap_s": null,
+        "concurrent_steps": null,
+        "recorded_starts": 0,
+        "steps": 4,
+        "reading": "This run's clock is reconstructed: each step is placed by summing the durations before it, which reads the run as strictly sequential. Nothing here says it was. One field per step — when it began — turns that assumption into a measurement."
+      },
+      "basis": "step latencies as recorded; wasted = the reading's roles (no information, repeat, dead end, error) and steps after the answer's basis was complete"
+    },
+    "delta": null,
+    "narrative": "Time cannot be compared: at least one run recorded no step latencies."
+  },
+  "horizon": {
+    "a": {
+      "measurable": false,
+      "total_s": 0.0,
+      "steps": 3,
+      "subdivisions": 2,
+      "spans": 1,
+      "agents": [],
+      "depth": 3,
+      "tree": {
+        "kind": "run",
+        "key": "run",
+        "label": "activities-small",
+        "agent": "activities-small",
+        "from": 0,
+        "to": 2,
+        "count": 3,
+        "seconds": 0.0,
+        "wasted_s": 0,
+        "wasted_steps": 0,
+        "tokens": 219,
+        "tool_calls": 0,
+        "tools": {},
+        "top_tool": null,
+        "errors": 0,
+        "fault": true,
+        "decisive": true,
+        "values": [],
+        "children": [
+          {
+            "kind": "episode",
+            "key": "ep:root:0",
+            "label": "decide",
+            "agent": "activities-small",
+            "from": 0,
+            "to": 1,
+            "count": 2,
+            "seconds": 0.0,
+            "wasted_s": 0,
+            "wasted_steps": 0,
+            "tokens": 219,
+            "tool_calls": 0,
+            "tools": {},
+            "top_tool": null,
+            "errors": 0,
+            "fault": true,
+            "decisive": false,
+            "values": [],
+            "children": [
+              {
+                "kind": "step",
+                "key": "step:0",
+                "label": "claimed_done",
+                "agent": "activities-small",
+                "from": 0,
+                "to": 0,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 219,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": false,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "reason",
+                "wasted": null,
+                "wasted_label": null
+              },
+              {
+                "kind": "step",
+                "key": "step:1",
+                "label": "verification",
+                "agent": "activities-small",
+                "from": 1,
+                "to": 1,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 0,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": true,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "reason",
+                "wasted": null,
+                "wasted_label": null
+              }
+            ],
+            "phase": "decide"
+          },
+          {
+            "kind": "episode",
+            "key": "ep:root:2",
+            "label": "commit · answer",
+            "agent": "activities-small",
+            "from": 2,
+            "to": 2,
+            "count": 1,
+            "seconds": 0.0,
+            "wasted_s": 0,
+            "wasted_steps": 0,
+            "tokens": 0,
+            "tool_calls": 0,
+            "tools": {},
+            "top_tool": null,
+            "errors": 0,
+            "fault": true,
+            "decisive": true,
+            "values": [],
+            "children": [
+              {
+                "kind": "step",
+                "key": "step:2",
+                "label": "answer",
+                "agent": "activities-small",
+                "from": 2,
+                "to": 2,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 0,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": true,
+                "decisive": true,
+                "values": [],
+                "children": [],
+                "type": "answer",
+                "wasted": null,
+                "wasted_label": null
+              }
+            ],
+            "phase": "commit"
+          }
+        ],
+        "own_steps": 3,
+        "delegations": 0
+      },
+      "summary": "activities-small: 3 step(s) in 2 subdivision(s); the decisive step is inside 'commit · answer' (steps 2–2).",
+      "basis": "subdivisions = the reading's phases, split again wherever the agent framed or decided; spans = step.span as recorded (none recorded means the root agent acted throughout); seconds as recorded, wasted per the reading",
+      "graph": {
+        "nodes": [
+          {
+            "agent": "activities-small",
+            "delegations": 0,
+            "steps": 3,
+            "seconds": 0.0,
+            "wasted_s": 0.0,
+            "errors": 0,
+            "tool_calls": 0,
+            "fault": true,
+            "decisive": true,
+            "root": true
+          }
+        ],
+        "edges": []
+      },
+      "blame": {
+        "agent": "activities-small",
+        "step": 2,
+        "step_name": "answer",
+        "span": "run",
+        "delegated_by": null,
+        "depth": 0,
+        "part": "commit · answer",
+        "chain": [
+          "activities-small"
+        ],
+        "sentence": "The decisive step is activities-small's own step 2, answer — not a sub-agent's, in the part 'commit · answer'."
+      }
+    },
+    "b": {
+      "measurable": true,
+      "total_s": 0.002,
+      "steps": 4,
+      "subdivisions": 3,
+      "spans": 1,
+      "agents": [],
+      "depth": 3,
+      "tree": {
+        "kind": "run",
+        "key": "run",
+        "label": "activities-strong",
+        "agent": "activities-strong",
+        "from": 0,
+        "to": 3,
+        "count": 4,
+        "seconds": 0.002,
+        "wasted_s": 0,
+        "wasted_steps": 0,
+        "tokens": 549,
+        "tool_calls": 1,
+        "tools": {
+          "plan_activities": 1
+        },
+        "top_tool": "plan_activities",
+        "errors": 0,
+        "fault": false,
+        "decisive": false,
+        "values": [],
+        "children": [
+          {
+            "kind": "episode",
+            "key": "ep:root:0",
+            "label": "transform · plan_activities",
+            "agent": "activities-strong",
+            "from": 0,
+            "to": 0,
+            "count": 1,
+            "seconds": 0.0,
+            "wasted_s": 0,
+            "wasted_steps": 0,
+            "tokens": 269,
+            "tool_calls": 1,
+            "tools": {
+              "plan_activities": 1
+            },
+            "top_tool": "plan_activities",
+            "errors": 0,
+            "fault": false,
+            "decisive": false,
+            "values": [],
+            "children": [
+              {
+                "kind": "step",
+                "key": "step:0",
+                "label": "plan_activities",
+                "agent": "activities-strong",
+                "from": 0,
+                "to": 0,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 269,
+                "tool_calls": 1,
+                "tools": {
+                  "plan_activities": 1
+                },
+                "top_tool": "plan_activities",
+                "errors": 0,
+                "fault": false,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "tool_call",
+                "wasted": null,
+                "wasted_label": null
+              }
+            ],
+            "phase": "transform"
+          },
+          {
+            "kind": "episode",
+            "key": "ep:root:1",
+            "label": "decide",
+            "agent": "activities-strong",
+            "from": 1,
+            "to": 2,
+            "count": 2,
+            "seconds": 0.002,
+            "wasted_s": 0,
+            "wasted_steps": 0,
+            "tokens": 280,
+            "tool_calls": 0,
+            "tools": {},
+            "top_tool": null,
+            "errors": 0,
+            "fault": false,
+            "decisive": false,
+            "values": [],
+            "children": [
+              {
+                "kind": "step",
+                "key": "step:1",
+                "label": "claimed_done",
+                "agent": "activities-strong",
+                "from": 1,
+                "to": 1,
+                "count": 1,
+                "seconds": 0.002,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 280,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": false,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "reason",
+                "wasted": null,
+                "wasted_label": null
+              },
+              {
+                "kind": "step",
+                "key": "step:2",
+                "label": "verification",
+                "agent": "activities-strong",
+                "from": 2,
+                "to": 2,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 0,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": false,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "reason",
+                "wasted": null,
+                "wasted_label": null
+              }
+            ],
+            "phase": "decide"
+          },
+          {
+            "kind": "episode",
+            "key": "ep:root:3",
+            "label": "commit · answer",
+            "agent": "activities-strong",
+            "from": 3,
+            "to": 3,
+            "count": 1,
+            "seconds": 0.0,
+            "wasted_s": 0,
+            "wasted_steps": 0,
+            "tokens": 0,
+            "tool_calls": 0,
+            "tools": {},
+            "top_tool": null,
+            "errors": 0,
+            "fault": false,
+            "decisive": false,
+            "values": [],
+            "children": [
+              {
+                "kind": "step",
+                "key": "step:3",
+                "label": "answer",
+                "agent": "activities-strong",
+                "from": 3,
+                "to": 3,
+                "count": 1,
+                "seconds": 0.0,
+                "wasted_s": 0,
+                "wasted_steps": 0,
+                "tokens": 0,
+                "tool_calls": 0,
+                "tools": {},
+                "top_tool": null,
+                "errors": 0,
+                "fault": false,
+                "decisive": false,
+                "values": [],
+                "children": [],
+                "type": "answer",
+                "wasted": null,
+                "wasted_label": null
+              }
+            ],
+            "phase": "commit"
+          }
+        ],
+        "own_steps": 4,
+        "delegations": 0
+      },
+      "summary": "activities-strong: 4 step(s) in 3 subdivision(s); the longest, 'decide' (steps 1–2), took 0.00s — 100% of the run.",
+      "basis": "subdivisions = the reading's phases, split again wherever the agent framed or decided; spans = step.span as recorded (none recorded means the root agent acted throughout); seconds as recorded, wasted per the reading",
+      "graph": {
+        "nodes": [
+          {
+            "agent": "activities-strong",
+            "delegations": 0,
+            "steps": 4,
+            "seconds": 0.002,
+            "wasted_s": 0.0,
+            "errors": 0,
+            "tool_calls": 1,
+            "fault": false,
+            "decisive": false,
+            "root": true
+          }
+        ],
+        "edges": []
+      },
+      "blame": null
+    },
+    "diff": {
+      "nodes": [
+        {
+          "agent": "root",
+          "in": "both",
+          "a": {
+            "agent": "activities-small",
+            "delegations": 0,
+            "steps": 3,
+            "seconds": 0.0,
+            "wasted_s": 0.0,
+            "errors": 0,
+            "tool_calls": 0,
+            "fault": true,
+            "decisive": true,
+            "root": true
+          },
+          "b": {
+            "agent": "activities-strong",
+            "delegations": 0,
+            "steps": 4,
+            "seconds": 0.002,
+            "wasted_s": 0.0,
+            "errors": 0,
+            "tool_calls": 1,
+            "fault": false,
+            "decisive": false,
+            "root": true
+          },
+          "delta": {
+            "delegations": 0,
+            "steps": 1,
+            "seconds": 0.002,
+            "wasted_s": 0.0,
+            "errors": 0
+          }
+        }
+      ],
+      "edges": [],
+      "only_a": [],
+      "only_b": [],
+      "uneven": [],
+      "same_agents": true,
+      "same_shape": true
+    },
+    "narrative": "The decisive step is activities-small's own step 2, answer — not a sub-agent's, in the part 'commit · answer'. Both runs organised the work the same way: the same agents, delegated the same number of times."
+  },
+  "impact": {
+    "version": 1,
+    "a": {
+      "measurable": true,
+      "total_s": 0.0,
+      "total_steps": 3,
+      "clusters": [
+        {
+          "id": "c0",
+          "from": 0,
+          "to": 0,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-small",
+          "agents": [
+            "activities-small"
+          ],
+          "impact": 0.0556,
+          "score": 0.5,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": false,
+            "tokens": 219
+          },
+          "why": "219 tokens, nothing else notable",
+          "label": "thinking",
+          "marks": []
+        },
+        {
+          "id": "c1",
+          "from": 1,
+          "to": 1,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-small",
+          "agents": [
+            "activities-small"
+          ],
+          "impact": 0.8333,
+          "score": 7.5,
+          "kind": "hot",
+          "reasons": {
+            "fault_steps": 1,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": true,
+            "answer": false,
+            "tokens": 0
+          },
+          "why": "on the fault's path; the first divergence; 1 divergence row",
+          "label": "thinking",
+          "marks": [
+            {
+              "step": 1,
+              "kind": "fault",
+              "label": "on the fault's path (verification)"
+            },
+            {
+              "step": 1,
+              "kind": "divergence",
+              "label": "divergence #2 — the first"
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "from": 2,
+          "to": 2,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-small",
+          "agents": [
+            "activities-small"
+          ],
+          "impact": 1.0,
+          "score": 9.0,
+          "kind": "hot",
+          "reasons": {
+            "fault_steps": 1,
+            "decisive": true,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": true,
+            "tokens": 0
+          },
+          "why": "decisive step; on the fault's path; the answer",
+          "label": "the answer",
+          "marks": [
+            {
+              "step": 2,
+              "kind": "decisive",
+              "label": "decisive step (answer)"
+            },
+            {
+              "step": 2,
+              "kind": "fault",
+              "label": "on the fault's path (answer)"
+            },
+            {
+              "step": 2,
+              "kind": "answer",
+              "label": "the answer"
+            }
+          ]
+        }
+      ],
+      "hot": [
+        "c2",
+        "c1"
+      ],
+      "lanes": [
+        {
+          "agent": "activities-small",
+          "depth": 0,
+          "parent": null,
+          "clusters": [
+            "c0",
+            "c1",
+            "c2"
+          ]
+        }
+      ],
+      "scale": "pair",
+      "narrative": "activities-small: 3 clusters over 3 steps (no latency recorded); the hot ones are c2 (activities-small, steps 2–2: decisive step; on the fault's path; the answer) and c1 (activities-small, steps 1–1: on the fault's path; the first divergence; 1 divergence row)."
+    },
+    "b": {
+      "measurable": true,
+      "total_s": 0.002,
+      "total_steps": 4,
+      "clusters": [
+        {
+          "id": "c0",
+          "from": 0,
+          "to": 0,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.5534,
+          "score": 4.9804,
+          "kind": "hot",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": true,
+            "answer": false,
+            "tokens": 269
+          },
+          "why": "the first divergence; 1 divergence row",
+          "label": "plan_activities",
+          "marks": [
+            {
+              "step": 0,
+              "kind": "divergence",
+              "label": "divergence #1 — the first"
+            }
+          ]
+        },
+        {
+          "id": "c1",
+          "from": 1,
+          "to": 1,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.002,
+          "seconds": 0.002,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.0556,
+          "score": 0.5004,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": false,
+            "tokens": 280
+          },
+          "why": "280 tokens, nothing else notable",
+          "label": "thinking",
+          "marks": []
+        },
+        {
+          "id": "c2",
+          "from": 2,
+          "to": 2,
+          "steps": 1,
+          "start_s": 0.002,
+          "end_s": 0.002,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.1667,
+          "score": 1.5,
+          "kind": "work",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": false,
+            "answer": false,
+            "tokens": 0
+          },
+          "why": "1 divergence row",
+          "label": "thinking",
+          "marks": [
+            {
+              "step": 2,
+              "kind": "divergence",
+              "label": "divergence #2"
+            }
+          ]
+        },
+        {
+          "id": "c3",
+          "from": 3,
+          "to": 3,
+          "steps": 1,
+          "start_s": 0.002,
+          "end_s": 0.002,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.1111,
+          "score": 1.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": true,
+            "tokens": 0
+          },
+          "why": "the answer",
+          "label": "the answer",
+          "marks": [
+            {
+              "step": 3,
+              "kind": "answer",
+              "label": "the answer"
+            }
+          ]
+        }
+      ],
+      "hot": [
+        "c0"
+      ],
+      "lanes": [
+        {
+          "agent": "activities-strong",
+          "depth": 0,
+          "parent": null,
+          "clusters": [
+            "c0",
+            "c1",
+            "c2",
+            "c3"
+          ]
+        }
+      ],
+      "scale": "pair",
+      "narrative": "activities-strong: 4 clusters over 4 steps and 0.00s; the hot one is c0 (activities-strong, steps 0–0: the first divergence; 1 divergence row); 100% of the wall-clock sits in quiet clusters."
+    },
+    "narrative": "on the shared scale activities-small has 2 hot clusters against 1 for activities-strong; activities-small's hottest is c2 in activities-small (steps 2–2, impact 1.00: decisive step; on the fault's path; the answer); activities-strong's hottest is c0 in activities-strong (steps 0–0, impact 0.55: the first divergence; 1 divergence row); quiet clusters hold activities-strong 100% of the wall-clock."
+  },
+  "trust": {
+    "version": 1,
+    "a": {
+      "behaviour": {
+        "steps": 3,
+        "tool_calls": 0,
+        "distinct_tools": 0,
+        "tools": {},
+        "thinking_steps": 2,
+        "answered": true,
+        "termination": null,
+        "stopped_by": "unknown",
+        "loops": 0,
+        "retries": 0,
+        "errors": 0,
+        "sub_agents": 0,
+        "delegations": 0,
+        "max_depth": 0
+      },
+      "permissions": {
+        "effects": {
+          "read": 0,
+          "write": 0,
+          "undeclared": 0
+        },
+        "writes_without_read": 0,
+        "verify_after_write": null,
+        "forbidden_calls": [],
+        "forbidden_patterns": [],
+        "external": 0,
+        "mcp_servers": [],
+        "handoffs": 0,
+        "framework": null
+      },
+      "determinism": {
+        "replay_verification": "hypothesized",
+        "replay_reproduced": null,
+        "run_consistency": null,
+        "temperature": null
+      },
+      "data": {
+        "schema_version": 1,
+        "adapter": null,
+        "synthetic": false,
+        "graded_by": "ungraded",
+        "latency_measured_share": 0.0,
+        "tokens_measured_share": 0.0,
+        "effects_declared_share": null,
+        "spans_recorded": false,
+        "steps": 3,
+        "tool_steps": 0
+      },
+      "grade": {
+        "score": 0.75,
+        "label": "medium",
+        "reasons": [
+          "−0.10: latency recorded on 0% of steps, under 50%",
+          "−0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated)",
+          "−0.05: the decisive step on this side is hypothesized, not replay-verified"
+        ]
+      },
+      "narrative": "activities-small made 0 tool call(s) over 3 step(s); answered; termination undeclared; 0 read(s), 0 write(s), no forbidden call; data: adapter unknown, graded by ungraded, latency recorded on 0% and tokens measured on 0% of steps; trust medium (0.75: −0.10: latency recorded on 0% of steps, under 50%; −0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated); −0.05: the decisive step on this side is hypothesized, not replay-verified)."
+    },
+    "b": {
+      "behaviour": {
+        "steps": 4,
+        "tool_calls": 1,
+        "distinct_tools": 1,
+        "tools": {
+          "plan_activities": 1
+        },
+        "thinking_steps": 2,
+        "answered": true,
+        "termination": null,
+        "stopped_by": "unknown",
+        "loops": 0,
+        "retries": 0,
+        "errors": 0,
+        "sub_agents": 0,
+        "delegations": 0,
+        "max_depth": 0
+      },
+      "permissions": {
+        "effects": {
+          "read": 1,
+          "write": 0,
+          "undeclared": 1
+        },
+        "writes_without_read": 0,
+        "verify_after_write": null,
+        "forbidden_calls": [],
+        "forbidden_patterns": [],
+        "external": 0,
+        "mcp_servers": [],
+        "handoffs": 0,
+        "framework": null
+      },
+      "determinism": {
+        "replay_verification": null,
+        "replay_reproduced": null,
+        "run_consistency": null,
+        "temperature": null
+      },
+      "data": {
+        "schema_version": 1,
+        "adapter": null,
+        "synthetic": false,
+        "graded_by": "ungraded",
+        "latency_measured_share": 0.25,
+        "tokens_measured_share": 0.0,
+        "effects_declared_share": 0.0,
+        "spans_recorded": false,
+        "steps": 4,
+        "tool_steps": 1
+      },
+      "grade": {
+        "score": 0.8,
+        "label": "high",
+        "reasons": [
+          "−0.10: latency recorded on 25% of steps, under 50%",
+          "−0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated)"
+        ]
+      },
+      "narrative": "activities-strong made 1 tool call(s) over 4 step(s) (plan_activities ×1); answered; termination undeclared; 1 read(s), 0 write(s), no forbidden call; data: adapter unknown, graded by ungraded, latency recorded on 25% and tokens measured on 0% of steps; trust high (0.80: −0.10: latency recorded on 25% of steps, under 50%; −0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated))."
+    },
+    "policy_applied": false,
+    "narrative": "activities-strong is the more trustworthy run (high 0.80 against activities-small's medium 0.75): activities-small loses −0.10: latency recorded on 0% of steps, under 50%; −0.05: the decisive step on this side is hypothesized, not replay-verified. activities-small made 0 tool call(s) to activities-strong's 1; neither declared why it stopped; writes 0 against 0, no forbidden call on either side. Data: neither run is marked synthetic; latency recorded on 0% of activities-small's steps and 25% of activities-strong's; tokens measured on 0% in both.",
+    "note": "counts over the steps: tool_calls = tool_call and search steps; effects declared by the step or the tool table, else inferred from the tool name (undeclared = not declared); a step counts as measured only when its tokens_basis says so and as timed only with a recorded latency; the grade is the rubric in agentdiff.trust.RUBRIC, every deduction a reason"
+  },
+  "tools_profile": {
+    "version": 1,
+    "a": {
+      "measurable": false,
+      "agent": "activities-small",
+      "tools": {},
+      "order": [],
+      "totals": {
+        "tool_calls": 0,
+        "distinct_tools": 0,
+        "repeats": 0,
+        "retries": 0,
+        "errors": 0,
+        "wasted_calls": 0,
+        "external_calls": 0,
+        "agents_touching": 0,
+        "last_write_step": null
+      }
+    },
+    "b": {
+      "measurable": true,
+      "agent": "activities-strong",
+      "tools": {
+        "plan_activities": {
+          "name": "plan_activities",
+          "calls": 1,
+          "repeats": 0,
+          "retries": 0,
+          "max_identical_run": 1,
+          "identical_run_at": null,
+          "errors": 0,
+          "wasted_calls": 0,
+          "wasted_s": 0.0,
+          "seconds": 0.0,
+          "agents": {
+            "activities-strong": 1
+          },
+          "first_step": 0,
+          "last_step": 0,
+          "fault_calls": 0,
+          "decisive": false,
+          "fed_answer": 1,
+          "effects": {
+            "undeclared": 1
+          },
+          "external": false,
+          "samples": {
+            "inputs": [
+              "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}"
+            ],
+            "outputs": [
+              "4 activities for $116"
+            ]
+          },
+          "steps": [
+            {
+              "step": 0,
+              "error": false,
+              "wasted": false,
+              "agent": "activities-strong",
+              "seconds": 0.0
+            }
+          ],
+          "distinct_inputs": 1,
+          "mean_s": 0.0,
+          "max_s": 0.0,
+          "wasted_share": 0.0,
+          "error_rate": 0.0
+        }
+      },
+      "order": [
+        "plan_activities"
+      ],
+      "totals": {
+        "tool_calls": 1,
+        "distinct_tools": 1,
+        "repeats": 0,
+        "retries": 0,
+        "errors": 0,
+        "wasted_calls": 0,
+        "external_calls": 0,
+        "agents_touching": 1,
+        "last_write_step": null
+      }
+    },
+    "tools": [
+      {
+        "name": "plan_activities",
+        "a": null,
+        "b": {
+          "name": "plan_activities",
+          "calls": 1,
+          "repeats": 0,
+          "retries": 0,
+          "max_identical_run": 1,
+          "identical_run_at": null,
+          "errors": 0,
+          "wasted_calls": 0,
+          "wasted_s": 0.0,
+          "seconds": 0.0,
+          "agents": {
+            "activities-strong": 1
+          },
+          "first_step": 0,
+          "last_step": 0,
+          "fault_calls": 0,
+          "decisive": false,
+          "fed_answer": 1,
+          "effects": {
+            "undeclared": 1
+          },
+          "external": false,
+          "samples": {
+            "inputs": [
+              "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}"
+            ],
+            "outputs": [
+              "4 activities for $116"
+            ]
+          },
+          "steps": [
+            {
+              "step": 0,
+              "error": false,
+              "wasted": false,
+              "agent": "activities-strong",
+              "seconds": 0.0
+            }
+          ],
+          "distinct_inputs": 1,
+          "mean_s": 0.0,
+          "max_s": 0.0,
+          "wasted_share": 0.0,
+          "error_rate": 0.0
+        },
+        "delta_calls": -1,
+        "only": "b",
+        "agents": [
+          "activities-strong"
+        ]
+      }
+    ],
+    "suggestions": [
+      {
+        "kind": "missing_tool",
+        "tool": "plan_activities",
+        "for": "activities-small",
+        "text": "Use plan_activities: activities-strong called it 1× (first at step 0, 1 result(s) fed its answer); activities-small never did.",
+        "weight": 2.2,
+        "evidence": {
+          "calls": 1,
+          "first_step": 0,
+          "fed_answer": 1
+        },
+        "status": "suggested — a hypothesis until a replay flips the outcome"
+      }
+    ],
+    "narrative": "activities-small made 0 tool call(s) over 0 tool(s) (0 repeat(s), 0 error(s), 0 wasted); activities-strong 1 over 1 (0 repeat(s), 0 error(s), 0 wasted); only activities-strong used plan_activities; 1 suggestion(s) for the next prompt, the first: Use plan_activities."
+  },
+  "verdict_card": {
+    "version": 1,
+    "lines": [
+      {
+        "key": "verdict",
+        "text": "activities-strong solved plan-activities; activities-small failed.",
+        "source": "outcome"
+      },
+      {
+        "key": "cause",
+        "text": "step 2 of activities-small (tool_selection, hypothesized): the run went wrong at step 2, a tool_selection decision that the other agent made differently",
+        "source": "diagnosis.decisive_step; mechanism from the leading hypothesis",
+        "step": 2,
+        "side": "a"
+      },
+      {
+        "key": "cost",
+        "text": "activities-small spent 330 tokens and 1 step less than activities-strong — faster to nothing",
+        "source": "tradeoff.spend_delta_b_minus_a"
+      },
+      {
+        "key": "fix",
+        "text": "activities-small — at step 2: add a verification step before committing the answer",
+        "source": "reading.a.take_forward[at the decisive step]",
+        "step": 2,
+        "side": "a"
+      },
+      {
+        "key": "confidence",
+        "text": "medium — single pair (n=1); the ranking is consistent but one comparison cannot rule out task-specific luck; the decisive step is hypothesized, not replay-verified",
+        "source": "diagnosis.confidence"
+      }
+    ]
+  },
+  "feedback": {
+    "version": 1,
+    "task_id": "plan-activities",
+    "failing_side": "a",
+    "failing_agent": "activities-small",
+    "step_labels": [
+      {
+        "side": "a",
+        "agent": "activities-small",
+        "step": 0,
+        "type": "reason",
+        "name": "claimed_done",
+        "labels": [
+          {
+            "label": "fed_answer",
+            "source": "reading.what_happened.role"
+          }
+        ]
+      },
+      {
+        "side": "a",
+        "agent": "activities-small",
+        "step": 1,
+        "type": "reason",
+        "name": "verification",
+        "labels": [
+          {
+            "label": "fault_carried",
+            "source": "attribution.chain",
+            "mechanism": null
+          },
+          {
+            "label": "fed_answer",
+            "source": "reading.what_happened.role"
+          }
+        ]
+      },
+      {
+        "side": "a",
+        "agent": "activities-small",
+        "step": 2,
+        "type": "answer",
+        "name": "answer",
+        "labels": [
+          {
+            "label": "fault_enters",
+            "source": "diagnosis.decisive_step"
+          }
+        ]
+      },
+      {
+        "side": "b",
+        "agent": "activities-strong",
+        "step": 0,
+        "type": "tool_call",
+        "name": "plan_activities",
+        "labels": [
+          {
+            "label": "fed_answer",
+            "source": "reading.what_happened.role"
+          }
+        ]
+      },
+      {
+        "side": "b",
+        "agent": "activities-strong",
+        "step": 1,
+        "type": "reason",
+        "name": "claimed_done",
+        "labels": [
+          {
+            "label": "fed_answer",
+            "source": "reading.what_happened.role"
+          }
+        ]
+      },
+      {
+        "side": "b",
+        "agent": "activities-strong",
+        "step": 2,
+        "type": "reason",
+        "name": "verification",
+        "labels": [
+          {
+            "label": "clean",
+            "source": "no finding names this step"
+          }
+        ]
+      },
+      {
+        "side": "b",
+        "agent": "activities-strong",
+        "step": 3,
+        "type": "answer",
+        "name": "answer",
+        "labels": [
+          {
+            "label": "clean",
+            "source": "no finding names this step"
+          }
+        ]
+      }
+    ],
+    "preference_pair": {
+      "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+      "task_id": "plan-activities",
+      "expected": null,
+      "chosen": {
+        "agent": "activities-strong",
+        "side": "b",
+        "basis": "the reconciled splice: the failing run's prefix, then the passing run from the decisive step — an estimate, not a replayed trajectory",
+        "turns": [
+          {
+            "from": "a",
+            "step": 0,
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned great activities"
+          },
+          {
+            "from": "b",
+            "step": 2,
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "all checks passed"
+          },
+          {
+            "from": "b",
+            "step": 3,
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned activities"
+          }
+        ]
+      },
+      "rejected": {
+        "agent": "activities-small",
+        "side": "a",
+        "basis": "the failing run, verbatim",
+        "turns": [
+          {
+            "from": "a",
+            "step": 0,
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned great activities"
+          },
+          {
+            "from": "a",
+            "step": 1,
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "activities found: 0 activities"
+          },
+          {
+            "from": "a",
+            "step": 2,
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned great activities"
+          }
+        ]
+      },
+      "diverges_at": {
+        "side": "a",
+        "step": 2,
+        "verification": "hypothesized"
+      },
+      "estimate": {
+        "outcome": "success",
+        "steps": 3,
+        "steps_delta": 0,
+        "tokens": 219,
+        "tokens_delta": 0,
+        "latency_s": 0.0,
+        "latency_delta_s": 0.0,
+        "cost_usd": 0.0002,
+        "cost_delta_usd": 0.0
+      },
+      "confidence": "low"
+    },
+    "prompt_suggestions": [
+      {
+        "text": "Before the final answer, check it against the task as posed and against the values observed in this run.",
+        "kind": "unverified",
+        "derived_from": {
+          "finding": "no step checked the work before the answer was committed",
+          "instead": "add a verification step before committing the answer",
+          "refs": [
+            "R5"
+          ],
+          "at_step": 2
+        },
+        "test": {
+          "step": 2,
+          "correction": "add a verification step before committing the answer",
+          "expects": "the outcome flips",
+          "replays": "≥3 — agent policies are stochastic"
+        },
+        "status": "suggested — a hypothesis until a replay flips the outcome"
+      },
+      {
+        "text": "For this kind of task, use answer rather than answer.",
+        "kind": "tool_selection",
+        "derived_from": {
+          "finding": "Agent A diverged at step 1 because it made an incorrect tool call (bad-quality: \"verification\"). That divergence carried directly into the final answer. The answer emitted at step 2 was wrong, so the failure is attributed to tool_selection at step 1.",
+          "refs": [],
+          "at_step": 1,
+          "tools": {
+            "failing_tool": "answer",
+            "passing_tool": "answer"
+          }
+        },
+        "test": {
+          "side": "a",
+          "step": 2,
+          "correction": "take the decision the passing run took at this step",
+          "expects": "the outcome flips to success",
+          "replays": "≥3 — agent policies are stochastic; one rollout proves nothing"
+        },
+        "status": "suggested — a hypothesis until a replay flips the outcome"
+      }
+    ],
+    "reward_shaping": [
+      {
+        "event": "fault_enters",
+        "sign": -1,
+        "count": 1,
+        "basis": "the decisive step: the earliest correction expected to flip the outcome"
+      },
+      {
+        "event": "fault_carried",
+        "sign": -1,
+        "count": 1,
+        "basis": "a step that carried the fault forward (causal account)"
+      },
+      {
+        "event": "fed_answer",
+        "sign": 1,
+        "count": 4,
+        "basis": "a step whose output measurably entered the answer"
+      }
+    ],
+    "note": "derived from the report as written: labels from the reading and the diagnosis, the pair from the outcomes (or the counterfactual splice, an estimate), suggestions from the findings' kinds — test each with `agentdiff replay` before it becomes a rule"
+  },
+  "rl": {
+    "version": 1,
+    "measurable": true,
+    "source": "shaped",
+    "gamma": 0.99,
+    "a": {
+      "agent": "activities-small",
+      "measurable": true,
+      "source": "shaped",
+      "steps": 3,
+      "return": -6.0,
+      "discounted_return": -5.8508,
+      "positive": 2,
+      "negative": 1,
+      "zero": 0,
+      "seconds": 0.0,
+      "success": false,
+      "rewards": [
+        {
+          "step": 0,
+          "reward": 1.0,
+          "cum": 1.0,
+          "to_go": -6.0,
+          "discounted_to_go": -5.8508,
+          "credit": 0.0,
+          "labels": [
+            "fed_answer"
+          ],
+          "agent": "activities-small",
+          "kind": "reason",
+          "name": "claimed_done",
+          "value": null,
+          "advantage": null,
+          "why": "fed answer"
+        },
+        {
+          "step": 1,
+          "reward": 1.0,
+          "cum": 2.0,
+          "to_go": -7.0,
+          "discounted_to_go": -6.92,
+          "credit": 0.0,
+          "labels": [
+            "fault_carried",
+            "fed_answer"
+          ],
+          "agent": "activities-small",
+          "kind": "reason",
+          "name": "verification",
+          "value": null,
+          "advantage": null,
+          "why": "fed answer"
+        },
+        {
+          "step": 2,
+          "reward": -8.0,
+          "cum": -6.0,
+          "to_go": -8.0,
+          "discounted_to_go": -8.0,
+          "credit": 0.0,
+          "labels": [
+            "fault_enters"
+          ],
+          "agent": "activities-small",
+          "kind": "answer",
+          "name": "answer",
+          "value": null,
+          "advantage": null,
+          "why": "fault enters, answer failed"
+        }
+      ],
+      "largest": [
+        {
+          "step": 2,
+          "reward": -8.0,
+          "why": "fault enters, answer failed"
+        },
+        {
+          "step": 0,
+          "reward": 1.0,
+          "why": "fed answer"
+        },
+        {
+          "step": 1,
+          "reward": 1.0,
+          "why": "fed answer"
+        }
+      ],
+      "credit": {
+        "source": "shapley",
+        "metric": "tokens",
+        "top": [],
+        "total": 0.0
+      },
+      "clusters": [
+        {
+          "id": "c0",
+          "from": 0,
+          "to": 1,
+          "steps": 2,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-small",
+          "agents": [
+            "activities-small"
+          ],
+          "impact": 0.0074,
+          "score": 2.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 1,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": true,
+            "answer": false,
+            "tokens": 219,
+            "reward": 2.0,
+            "positive": 2,
+            "negative": 0,
+            "credit": 0.0,
+            "fault_labels": 0
+          },
+          "why": "reward +2 over 2 positive steps and 0 negative",
+          "label": "thinking",
+          "marks": []
+        },
+        {
+          "id": "c1",
+          "from": 2,
+          "to": 2,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-small",
+          "agents": [
+            "activities-small"
+          ],
+          "impact": 0.037,
+          "score": 10.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 1,
+            "decisive": true,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": true,
+            "tokens": 0,
+            "reward": -8.0,
+            "positive": 0,
+            "negative": 1,
+            "credit": 0.0,
+            "fault_labels": 1
+          },
+          "why": "reward −8 over 0 positive steps and 1 negative; decisive step; 1 fault label; the answer",
+          "label": "the answer",
+          "marks": [
+            {
+              "step": 2,
+              "kind": "decisive",
+              "label": "decisive step (answer)"
+            },
+            {
+              "step": 2,
+              "kind": "reward−",
+              "label": "reward −8: fault enters, answer failed"
+            },
+            {
+              "step": 2,
+              "kind": "answer",
+              "label": "the answer"
+            }
+          ]
+        }
+      ],
+      "narrative": "activities-small: return −6 over 3 steps (shaped): 1 negative step, 2 positive; the largest penalty at step 2 (−8, fault enters, answer failed); the largest reward at step 0 (+1, fed answer); no step carries credit."
+    },
+    "b": {
+      "agent": "activities-strong",
+      "measurable": true,
+      "source": "shaped",
+      "steps": 4,
+      "return": 7.0,
+      "discounted_return": 6.8415,
+      "positive": 3,
+      "negative": 0,
+      "zero": 1,
+      "seconds": 0.002,
+      "success": true,
+      "rewards": [
+        {
+          "step": 0,
+          "reward": 1.0,
+          "cum": 1.0,
+          "to_go": 7.0,
+          "discounted_to_go": 6.8415,
+          "credit": -269.0,
+          "labels": [
+            "fed_answer"
+          ],
+          "agent": "activities-strong",
+          "kind": "tool_call",
+          "name": "plan_activities",
+          "value": null,
+          "advantage": null,
+          "why": "fed answer"
+        },
+        {
+          "step": 1,
+          "reward": 1.0,
+          "cum": 2.0,
+          "to_go": 6.0,
+          "discounted_to_go": 5.9005,
+          "credit": 0.0,
+          "labels": [
+            "fed_answer"
+          ],
+          "agent": "activities-strong",
+          "kind": "reason",
+          "name": "claimed_done",
+          "value": null,
+          "advantage": null,
+          "why": "fed answer"
+        },
+        {
+          "step": 2,
+          "reward": 0.0,
+          "cum": 2.0,
+          "to_go": 5.0,
+          "discounted_to_go": 4.95,
+          "credit": 0.0,
+          "labels": [
+            "clean"
+          ],
+          "agent": "activities-strong",
+          "kind": "reason",
+          "name": "verification",
+          "value": null,
+          "advantage": null,
+          "why": "nothing labelled"
+        },
+        {
+          "step": 3,
+          "reward": 5.0,
+          "cum": 7.0,
+          "to_go": 5.0,
+          "discounted_to_go": 5.0,
+          "credit": 0.0,
+          "labels": [
+            "clean"
+          ],
+          "agent": "activities-strong",
+          "kind": "answer",
+          "name": "answer",
+          "value": null,
+          "advantage": null,
+          "why": "answer succeeded"
+        }
+      ],
+      "largest": [
+        {
+          "step": 3,
+          "reward": 5.0,
+          "why": "answer succeeded"
+        },
+        {
+          "step": 0,
+          "reward": 1.0,
+          "why": "fed answer"
+        },
+        {
+          "step": 1,
+          "reward": 1.0,
+          "why": "fed answer"
+        }
+      ],
+      "credit": {
+        "source": "shapley",
+        "metric": "tokens",
+        "top": [
+          {
+            "step": 0,
+            "credit": -269.0
+          }
+        ],
+        "total": -269.0
+      },
+      "clusters": [
+        {
+          "id": "c0",
+          "from": 0,
+          "to": 0,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.0,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 1.0,
+          "score": 270.0,
+          "kind": "hot",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": true,
+            "answer": false,
+            "tokens": 269,
+            "reward": 1.0,
+            "positive": 1,
+            "negative": 0,
+            "credit": -269.0,
+            "fault_labels": 0
+          },
+          "why": "reward +1 over 1 positive step and 0 negative; credit −269 tokens",
+          "label": "plan_activities",
+          "marks": []
+        },
+        {
+          "id": "c1",
+          "from": 1,
+          "to": 1,
+          "steps": 1,
+          "start_s": 0.0,
+          "end_s": 0.002,
+          "seconds": 0.002,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.0037,
+          "score": 1.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": false,
+            "tokens": 280,
+            "reward": 1.0,
+            "positive": 1,
+            "negative": 0,
+            "credit": 0.0,
+            "fault_labels": 0
+          },
+          "why": "reward +1 over 1 positive step and 0 negative",
+          "label": "thinking",
+          "marks": []
+        },
+        {
+          "id": "c2",
+          "from": 2,
+          "to": 2,
+          "steps": 1,
+          "start_s": 0.002,
+          "end_s": 0.002,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.0,
+          "score": 0.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 1,
+            "first_divergence": false,
+            "answer": false,
+            "tokens": 0,
+            "reward": 0.0,
+            "positive": 0,
+            "negative": 0,
+            "credit": 0.0,
+            "fault_labels": 0
+          },
+          "why": "no reward",
+          "label": "thinking",
+          "marks": []
+        },
+        {
+          "id": "c3",
+          "from": 3,
+          "to": 3,
+          "steps": 1,
+          "start_s": 0.002,
+          "end_s": 0.002,
+          "seconds": 0.0,
+          "lane": "activities-strong",
+          "agents": [
+            "activities-strong"
+          ],
+          "impact": 0.0185,
+          "score": 5.0,
+          "kind": "quiet",
+          "reasons": {
+            "fault_steps": 0,
+            "decisive": false,
+            "errors": 0,
+            "retries": 0,
+            "wasted_s": 0.0,
+            "milestones": [],
+            "divergence_rows": 0,
+            "first_divergence": false,
+            "answer": true,
+            "tokens": 0,
+            "reward": 5.0,
+            "positive": 1,
+            "negative": 0,
+            "credit": 0.0,
+            "fault_labels": 0
+          },
+          "why": "reward +5 over 1 positive step and 0 negative; the answer",
+          "label": "the answer",
+          "marks": [
+            {
+              "step": 3,
+              "kind": "reward+",
+              "label": "reward +5: answer succeeded"
+            },
+            {
+              "step": 3,
+              "kind": "answer",
+              "label": "the answer"
+            }
+          ]
+        }
+      ],
+      "narrative": "activities-strong: return 7 over 4 steps (shaped): 0 negative steps, 3 positive; the largest reward at step 3 (+5, answer succeeded); credit −269 tokens on 1 step in activities-strong."
+    },
+    "preference": {
+      "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+      "task_id": "plan-activities",
+      "expected": null,
+      "chosen": {
+        "agent": "activities-strong",
+        "side": "b",
+        "basis": "the reconciled splice: the failing run's prefix, then the passing run from the decisive step — an estimate, not a replayed trajectory",
+        "turns": [
+          {
+            "from": "a",
+            "step": 0,
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned great activities"
+          },
+          {
+            "from": "b",
+            "step": 2,
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "all checks passed"
+          },
+          {
+            "from": "b",
+            "step": 3,
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned activities"
+          }
+        ]
+      },
+      "rejected": {
+        "agent": "activities-small",
+        "side": "a",
+        "basis": "the failing run, verbatim",
+        "turns": [
+          {
+            "from": "a",
+            "step": 0,
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned great activities"
+          },
+          {
+            "from": "a",
+            "step": 1,
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "activities found: 0 activities"
+          },
+          {
+            "from": "a",
+            "step": 2,
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned great activities"
+          }
+        ]
+      },
+      "diverges_at": {
+        "side": "a",
+        "step": 2,
+        "verification": "hypothesized"
+      },
+      "estimate": {
+        "outcome": "success",
+        "steps": 3,
+        "steps_delta": 0,
+        "tokens": 219,
+        "tokens_delta": 0,
+        "latency_s": 0.0,
+        "latency_delta_s": 0.0,
+        "cost_usd": 0.0002,
+        "cost_delta_usd": 0.0
+      },
+      "confidence": "low"
+    },
+    "narrative": "activities-strong earned more: return 7 against −6 for activities-small (shaped); the returns part at step 2 (activities-small −6 against 2 so far); credit splits +0 tokens to activities-small and −269 tokens to activities-strong; preference: activities-strong chosen (the reconciled splice: the failing run's prefix, then the passing run from the decisive step — an estimate, not a replayed trajectory), activities-small rejected.",
+    "audit": {
+      "version": 1,
+      "measurable": true,
+      "reason": null,
+      "gamma": 0.99,
+      "scope": "pair",
+      "episodes_n": 2,
+      "policies": [
+        "activities-small",
+        "activities-strong"
+      ],
+      "reward": {
+        "measurable": true,
+        "reason": null,
+        "episodes_n": 2,
+        "episodes": [
+          {
+            "agent": "activities-small",
+            "task_id": "plan-activities",
+            "run_id": "r1",
+            "side": "a",
+            "success": false,
+            "steps": 3,
+            "seconds": 0.0,
+            "return": -6.0,
+            "shaping_return": 2.0,
+            "last_reward": -8.0,
+            "flagged": false
+          },
+          {
+            "agent": "activities-strong",
+            "task_id": "plan-activities",
+            "run_id": "r1",
+            "side": "b",
+            "success": true,
+            "steps": 4,
+            "seconds": 0.002,
+            "return": 7.0,
+            "shaping_return": 2.0,
+            "last_reward": 5.0,
+            "flagged": false
+          }
+        ],
+        "disagreement": {
+          "measurable": true,
+          "reason": null,
+          "passed": 1,
+          "failed": 1,
+          "unknown": 0,
+          "scopes": {
+            "pooled": {
+              "pairs_n": 1,
+              "inversions": 0,
+              "ties": 0,
+              "inversion_rate": 0.0,
+              "separation": 13.0,
+              "basis": "the return, every episode against every other",
+              "tasks": {}
+            },
+            "by_task": {
+              "basis": "the return, within each task (returns on different tasks are not on a common scale)",
+              "pairs_n": 1,
+              "inversions": 0,
+              "ties": 0,
+              "inversion_rate": 0.0,
+              "separation": 13.0,
+              "tasks": {
+                "plan-activities": {
+                  "pairs_n": 1,
+                  "inversions": 0,
+                  "ties": 0,
+                  "inversion_rate": 0.0,
+                  "separation": 13.0,
+                  "passed": 1,
+                  "failed": 1
+                }
+              }
+            },
+            "shaping": {
+              "basis": "the return with the last step removed, within each task",
+              "pairs_n": 1,
+              "inversions": 0,
+              "ties": 1,
+              "inversion_rate": 0.0,
+              "separation": 0.0,
+              "tasks": {
+                "plan-activities": {
+                  "pairs_n": 1,
+                  "inversions": 0,
+                  "ties": 1,
+                  "inversion_rate": 0.0,
+                  "separation": 0.0,
+                  "passed": 1,
+                  "failed": 1
+                }
+              }
+            }
+          },
+          "findings": [],
+          "findings_n": 0,
+          "flagged": [],
+          "findings_basis": null,
+          "by_policy": [
+            {
+              "task_id": "plan-activities",
+              "policies": {
+                "activities-small": {
+                  "episodes_n": 1,
+                  "mean_return": -6.0,
+                  "passed": 0,
+                  "pass_rate": 0.0
+                },
+                "activities-strong": {
+                  "episodes_n": 1,
+                  "mean_return": 7.0,
+                  "passed": 1,
+                  "pass_rate": 1.0
+                }
+              },
+              "delta_mean_return": 13.0,
+              "delta_pass_rate": 1.0,
+              "disagrees": false,
+              "status": null
+            }
+          ],
+          "note": "within every task the return separates the outcomes cleanly — no failed episode out-earns a passing one in 1 ordered pair; and the shaping alone, with the last step taken out, orders them the same way; each finding is a signal to investigate, not a proven defect"
+        },
+        "rank_agreement": {
+          "measurable": false,
+          "reason": "two episodes: a rank correlation over two points is ±1 whatever the returns are, so there is nothing here to report",
+          "spearman": null,
+          "spearman_shaping": null,
+          "n": 2,
+          "ceiling": null,
+          "per_agent": {},
+          "note": ""
+        },
+        "concentration": {
+          "measurable": true,
+          "reason": null,
+          "episodes": [
+            {
+              "agent": "activities-small",
+              "task_id": "plan-activities",
+              "run_id": "r1",
+              "side": "a",
+              "steps": 3,
+              "total_abs": 10.0,
+              "largest_step": 2,
+              "largest": -8.0,
+              "largest_share": 0.8,
+              "last_share": 0.8,
+              "nonzero": 3,
+              "peakedness": 2.4,
+              "last_is_largest": true,
+              "kind": "terminal_dominated"
+            },
+            {
+              "agent": "activities-strong",
+              "task_id": "plan-activities",
+              "run_id": "r1",
+              "side": "b",
+              "steps": 4,
+              "total_abs": 7.0,
+              "largest_step": 3,
+              "largest": 5.0,
+              "largest_share": 0.7143,
+              "last_share": 0.7143,
+              "nonzero": 3,
+              "peakedness": 2.14,
+              "last_is_largest": true,
+              "kind": "terminal_dominated"
+            }
+          ],
+          "mean_largest_share": 0.7571,
+          "mean_last_share": 0.7571,
+          "mean_peakedness": 2.27,
+          "mean_paid_share": 0.875,
+          "kinds": {
+            "terminal": 0,
+            "terminal_dominated": 2,
+            "peaked": 0,
+            "dense": 0,
+            "empty": 0
+          },
+          "kind": "terminal_dominated",
+          "note": "the largest step carries 75.72% of an episode's total absolute reward on average (2.27× what an even spread over its paid steps would give) and the last step 75.72%, with 87.50% of steps paid anything at all; this is a terminal payoff with a dense cost term underneath it: the outcome arrives as one large number at the last step and every step before it pays only a small cost, so the return agrees with the outcome mostly through that one number"
+        },
+        "unearned": {
+          "measurable": true,
+          "reason": null,
+          "episodes_covered": 2,
+          "episodes_n": 2,
+          "steps_labelled": 7,
+          "positive_while_bad": 1,
+          "negative_while_good": 0,
+          "by_label": {
+            "fault_carried": {
+              "activities-small": {
+                "steps": 1,
+                "reward": 1.0,
+                "kind": "positive_while_bad"
+              }
+            }
+          },
+          "rows": [
+            {
+              "agent": "activities-small",
+              "task_id": "plan-activities",
+              "run_id": "r1",
+              "side": "a",
+              "kind": "positive_while_bad",
+              "status": "signal",
+              "step": 1,
+              "reward": 1.0,
+              "labels": [
+                "fault_carried",
+                "fed_answer"
+              ],
+              "step_kind": "reason",
+              "name": "verification",
+              "why": "paid 1 while labelled fault_carried"
+            }
+          ],
+          "note": "1 step of 7 labelled steps was paid while labelled bad, and 0 were punished while labelled good — each is a place the shaping and the reading disagree, and a signal to investigate rather than a proven defect"
+        },
+        "cost": {
+          "measurable": true,
+          "reason": null,
+          "per_agent": {
+            "activities-small": {
+              "episodes_n": 1,
+              "return_total": -6.0,
+              "steps_total": 3,
+              "seconds_total": 0.0,
+              "mean_return": -6.0,
+              "return_per_step": -2.0,
+              "return_per_second": null,
+              "mean_steps": 3.0
+            },
+            "activities-strong": {
+              "episodes_n": 1,
+              "return_total": 7.0,
+              "steps_total": 4,
+              "seconds_total": 0.002,
+              "mean_return": 7.0,
+              "return_per_step": 1.75,
+              "return_per_second": 3500.0,
+              "mean_steps": 4.0
+            }
+          },
+          "note": "activities-strong earns 1.75 per step and 3500 per second; activities-small earns −2 per step — return per step separates a better policy from a longer one"
+        },
+        "tools": {
+          "measurable": true,
+          "reason": null,
+          "per_agent": {
+            "activities-strong": {
+              "tools": {
+                "plan_activities": {
+                  "calls": 1,
+                  "positive": 1.0,
+                  "negative": 0.0,
+                  "net": 1.0,
+                  "paid": 1,
+                  "punished": 0,
+                  "positive_share": 1.0,
+                  "negative_share": null
+                }
+              },
+              "positive_total": 1.0,
+              "negative_total": -0.0,
+              "top_tool": "plan_activities",
+              "top_share": 1.0,
+              "tools_n": 1
+            }
+          },
+          "findings": [
+            {
+              "agent": "activities-strong",
+              "kind": "single_tool_reward",
+              "status": "signal",
+              "tool": "plan_activities",
+              "share": 1.0,
+              "calls": 1,
+              "why": "100% of activities-strong's tool-mediated positive reward flows through plan_activities: a policy earning through one tool is a fragile policy"
+            }
+          ],
+          "note": "activities-strong earns most through plan_activities; 1 tool step carried a reward"
+        },
+        "narrative": "The return and the outcome never disagree within a task, over 1 ordered pair; the reward is terminal-dominated: the largest step carries 75.71% and the last step 75.71% of an episode's absolute reward on average, over 87.50% of steps paid anything at all; 1 step paid while labelled bad and 0 punished while labelled good, of 7 labelled steps."
+      },
+      "critic": {
+        "measurable": false,
+        "reason": "no step of the 2 episodes carries a value estimate, so there is no prediction to score",
+        "gamma": 0.99,
+        "n": 0,
+        "episodes_covered": 0,
+        "episodes_n": 2,
+        "overall": {},
+        "per_agent": {},
+        "deciles": [],
+        "residual_bins": [],
+        "points": [],
+        "advantages": {
+          "measurable": false,
+          "reason": "no step records an advantage of its own; the advantages in the episode arrays are derived here from value and reward, so checking them would only check this module against itself",
+          "definition": "advantage = discounted return-to-go (γ) − value",
+          "checked": 0,
+          "recorded": 0,
+          "inconsistent": 0,
+          "episodes": [],
+          "max_error": null,
+          "tolerance": 0.001,
+          "note": ""
+        },
+        "narrative": "",
+        "note": ""
+      },
+      "narrative": "The return and the outcome never disagree within a task, over 1 ordered pair; the reward is terminal-dominated: the largest step carries 75.71% and the last step 75.71% of an episode's absolute reward on average, over 87.50% of steps paid anything at all; 1 step paid while labelled bad and 0 punished while labelled good, of 7 labelled steps. No step of the 2 episodes carries a value estimate, so there is no prediction to score.",
+      "caveat": "Every finding here is a signal to investigate, not a proven defect: a failed episode with a high return may be a hard task rather than a gamed one, and a badly calibrated critic early in training is expected. Each one names the task, the run and the step so it can be checked."
+    }
+  },
+  "budget": {
+    "version": 1,
+    "measurable": true,
+    "reason": null,
+    "a": {
+      "measurable": true,
+      "reason": null,
+      "tokens": {
+        "total": 219,
+        "by_kind": {
+          "plan": 0,
+          "reason": 219,
+          "search": 0,
+          "retrieve": 0,
+          "read": 0,
+          "tool_call": 0,
+          "answer": 0
+        },
+        "by_tool": {},
+        "measured": 0,
+        "estimated": 0,
+        "unknown": 219,
+        "unknown_steps": 0,
+        "cached": null,
+        "cached_steps": 0,
+        "integrity": {
+          "ok": true,
+          "checks": []
+        },
+        "basis": "steps[].tokens summed; tokens_basis says measured|estimated per step, unknown when absent"
+      },
+      "io": {
+        "measurable": true,
+        "reason": null,
+        "input_tokens": 210,
+        "output_tokens": 9,
+        "steps": 0,
+        "of_steps": 3,
+        "source": "totals"
+      },
+      "cost_usd": {
+        "measurable": true,
+        "reason": null,
+        "value": 0.0002,
+        "source": "totals"
+      },
+      "burn": [
+        [
+          0,
+          "reason",
+          "claimed_done",
+          219,
+          219
+        ],
+        [
+          1,
+          "reason",
+          "verification",
+          0,
+          219
+        ],
+        [
+          2,
+          "answer",
+          "answer",
+          0,
+          219
+        ]
+      ],
+      "burn_capped": false,
+      "burn_note": null,
+      "top": [
+        {
+          "index": 0,
+          "kind": "reason",
+          "name": "claimed_done",
+          "tokens": 219,
+          "share": 1.0
+        }
+      ],
+      "waste": {
+        "after_last_evidence": 219,
+        "in_errored_calls": 0,
+        "in_repeats": 0,
+        "in_retries": 0,
+        "basis": "after_last_evidence: signals are recorded but none is positive, so every step before the answer counts; in_errored_calls: steps with error true; in_repeats: fetches repeating an earlier (name, input), the agent asking twice; in_retries: fetches the harness re-ran (attempt > 1), which is the platform's cost and not the agent's — 0 where the trace numbers no attempts, which is not a measurement"
+      },
+      "per_second": {
+        "measurable": false,
+        "reason": "no step recorded a latency",
+        "value": null,
+        "seconds": null
+      },
+      "synthetic": false,
+      "narrative": "activities-small spent 219 tokens over 3 steps: 100% on reason; 219 unlabelled; the heaviest step was 0 (claimed_done, 219 tokens, 100%); 219 after the last evidence, 0 in errored calls and 0 in repeats."
+    },
+    "b": {
+      "measurable": true,
+      "reason": null,
+      "tokens": {
+        "total": 549,
+        "by_kind": {
+          "plan": 0,
+          "reason": 280,
+          "search": 0,
+          "retrieve": 0,
+          "read": 0,
+          "tool_call": 269,
+          "answer": 0
+        },
+        "by_tool": {
+          "plan_activities": 269
+        },
+        "measured": 0,
+        "estimated": 0,
+        "unknown": 549,
+        "unknown_steps": 0,
+        "cached": null,
+        "cached_steps": 0,
+        "integrity": {
+          "ok": true,
+          "checks": []
+        },
+        "basis": "steps[].tokens summed; tokens_basis says measured|estimated per step, unknown when absent"
+      },
+      "io": {
+        "measurable": true,
+        "reason": null,
+        "input_tokens": 246,
+        "output_tokens": 23,
+        "steps": 1,
+        "of_steps": 4,
+        "source": "steps"
+      },
+      "cost_usd": {
+        "measurable": true,
+        "reason": null,
+        "value": 0.006,
+        "source": "totals"
+      },
+      "burn": [
+        [
+          0,
+          "tool_call",
+          "plan_activities",
+          269,
+          269
+        ],
+        [
+          1,
+          "reason",
+          "claimed_done",
+          280,
+          549
+        ],
+        [
+          2,
+          "reason",
+          "verification",
+          0,
+          549
+        ],
+        [
+          3,
+          "answer",
+          "answer",
+          0,
+          549
+        ]
+      ],
+      "burn_capped": false,
+      "burn_note": null,
+      "top": [
+        {
+          "index": 1,
+          "kind": "reason",
+          "name": "claimed_done",
+          "tokens": 280,
+          "share": 0.51
+        },
+        {
+          "index": 0,
+          "kind": "tool_call",
+          "name": "plan_activities",
+          "tokens": 269,
+          "share": 0.49
+        }
+      ],
+      "waste": {
+        "after_last_evidence": 0,
+        "in_errored_calls": 0,
+        "in_repeats": 0,
+        "in_retries": 0,
+        "basis": "after_last_evidence: tokens of the steps after the last step with a recorded reward > 0 or a quality label good, before the answer; in_errored_calls: steps with error true; in_repeats: fetches repeating an earlier (name, input), the agent asking twice; in_retries: fetches the harness re-ran (attempt > 1), which is the platform's cost and not the agent's — 0 where the trace numbers no attempts, which is not a measurement"
+      },
+      "per_second": {
+        "measurable": true,
+        "reason": null,
+        "value": 274500.0,
+        "seconds": 0.002
+      },
+      "synthetic": false,
+      "narrative": "activities-strong spent 549 tokens over 4 steps: 51% on reason and 49% on tool call; 549 unlabelled; 246 in and 23 out, over 1 step that split them; the heaviest step was 1 (claimed_done, 280 tokens, 51%); 0 after the last evidence, 0 in errored calls and 0 in repeats; 274500 tokens per recorded second."
+    },
+    "delta": {
+      "total": -330,
+      "by_kind": {
+        "plan": 0,
+        "reason": -61,
+        "search": 0,
+        "retrieve": 0,
+        "read": 0,
+        "tool_call": -269,
+        "answer": 0
+      },
+      "by_tool": {
+        "plan_activities": -269
+      }
+    },
+    "cheaper": "activities-small",
+    "narrative": "activities-small spent 219 tokens against activities-strong's 549 (−330); the widest gap by kind is tool call (−269), by tool plan_activities (−269); activities-small was cheaper."
+  },
+  "fetches": {
+    "version": 1,
+    "measurable": true,
+    "reason": null,
+    "a": {
+      "measurable": true,
+      "reason": null,
+      "records": [],
+      "counts": {
+        "by_kind": {
+          "search": 0,
+          "retrieve": 0,
+          "read": 0,
+          "tool_call": 0
+        },
+        "by_tool": {},
+        "total": 0,
+        "errors": 0,
+        "repeats": 0,
+        "retries": 0,
+        "attempts_numbered": 0,
+        "used": 0,
+        "unused": 0,
+        "unknown_use": 0
+      },
+      "volume": {
+        "output_chars": 0,
+        "tokens": 0
+      },
+      "sources": [],
+      "map": {
+        "nodes": [
+          {
+            "id": "answer",
+            "kind": "answer",
+            "label": "Planned great activities",
+            "index": 2,
+            "size": 24
+          }
+        ],
+        "edges": [],
+        "unknown_use": 0,
+        "basis": "a search yields the retrieve and tool calls that follow it and is read by the reads, until the next search; a fetch reaches the answer when its use is recorded (reward > 0 or a quality label); every fetch's use is recorded"
+      },
+      "synthetic": false,
+      "retry_basis": "no fetch to number",
+      "narrative": "activities-small fetched nothing: no search, retrieve, read or tool call in the run."
+    },
+    "b": {
+      "measurable": true,
+      "reason": null,
+      "records": [
+        {
+          "index": 0,
+          "kind": "tool_call",
+          "name": "plan_activities",
+          "query": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+          "query_chars": 57,
+          "output_chars": 21,
+          "tokens": 269,
+          "tokens_basis": null,
+          "latency_s": null,
+          "error": null,
+          "effect": null,
+          "repeat_of": null,
+          "attempt": null,
+          "retry_of": null,
+          "used": null,
+          "used_basis": "no reward or quality label recorded",
+          "span": null
+        }
+      ],
+      "counts": {
+        "by_kind": {
+          "search": 0,
+          "retrieve": 0,
+          "read": 0,
+          "tool_call": 1
+        },
+        "by_tool": {
+          "plan_activities": 1
+        },
+        "total": 1,
+        "errors": 0,
+        "repeats": 0,
+        "retries": 0,
+        "attempts_numbered": 0,
+        "used": 0,
+        "unused": 0,
+        "unknown_use": 1
+      },
+      "volume": {
+        "output_chars": 21,
+        "tokens": 269
+      },
+      "sources": [
+        {
+          "name": "plan_activities",
+          "calls": 1,
+          "errors": 0,
+          "output_chars": 21
+        }
+      ],
+      "map": {
+        "nodes": [
+          {
+            "id": "call0",
+            "kind": "call",
+            "label": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+            "index": 0,
+            "size": 21
+          },
+          {
+            "id": "answer",
+            "kind": "answer",
+            "label": "Planned activities",
+            "index": 3,
+            "size": 18
+          }
+        ],
+        "edges": [],
+        "unknown_use": 1,
+        "basis": "a search yields the retrieve and tool calls that follow it and is read by the reads, until the next search; a fetch reaches the answer when its use is recorded (reward > 0 or a quality label); 1 fetch of unknown use has no edge"
+      },
+      "synthetic": false,
+      "retry_basis": "no fetch numbers its attempt, so a harness retry and the agent asking for the same thing twice cannot be told apart here; every same-input fetch is counted a repeat and retries reads 0 for want of a record, not for want of retries",
+      "narrative": "activities-strong made 1 fetch (1 tool call) through plan_activities ×1, 21 characters back; no fetch numbers its attempt, so a retry here would read as a repeat; no fetch carries a use signal (no reward > 0 or quality label), so the map reaches the answer from none."
+    },
+    "delta": {
+      "total": -1,
+      "by_kind": {
+        "search": 0,
+        "retrieve": 0,
+        "read": 0,
+        "tool_call": -1
+      },
+      "by_tool": {
+        "plan_activities": -1
+      },
+      "errors": 0,
+      "repeats": 0,
+      "retries": 0
+    },
+    "narrative": "activities-small made 0 fetches against activities-strong's 1 (0 and 0 errored, 0 and 0 repeated); the widest gap is plan_activities, which activities-strong called 1 more time(s)."
+  },
+  "data": {
+    "version": 1,
+    "measurable": true,
+    "reason": null,
+    "a": {
+      "measurable": true,
+      "reason": null,
+      "task": {
+        "id": "plan-activities",
+        "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+        "prompt_chars": 218,
+        "expected": null,
+        "expected_chars": null
+      },
+      "agent": {
+        "name": "activities-small",
+        "model": "activities-small",
+        "version": "sparkrun",
+        "framework": null,
+        "instructions": {
+          "system_prompt": null,
+          "source": null,
+          "chars": null
+        },
+        "tools_declared": [
+          {
+            "name": "plan_activities",
+            "effect": null
+          }
+        ],
+        "tools_used": []
+      },
+      "models": [
+        {
+          "model": "activities-small",
+          "steps": 3,
+          "kinds": {
+            "answer": 1,
+            "reason": 2
+          },
+          "tokens": 219,
+          "temperature": null,
+          "source": "trace.agent.model"
+        }
+      ],
+      "corpus": {
+        "sources": [],
+        "total_chars": 0,
+        "distinct": 0,
+        "fetches": 0,
+        "repeated_reads": 0,
+        "id_basis": "sha256 of the tool name and the whitespace-normalised input, first 16 hex chars"
+      },
+      "provenance": {
+        "answer_chars": 24,
+        "answer_source": "steps[-1].output",
+        "atoms": 0,
+        "supported": 0,
+        "unsupported": 0,
+        "values": [],
+        "grounded_in": [],
+        "grounded_share": null,
+        "ungrounded_share": null,
+        "basis": "the answer carries no typed value, so nothing can be traced"
+      },
+      "chain": {
+        "nodes": [
+          {
+            "id": "agent",
+            "kind": "agent",
+            "step": null,
+            "label": "activities-small",
+            "chars": null
+          },
+          {
+            "id": "model0",
+            "kind": "model",
+            "step": 0,
+            "label": "activities-small",
+            "tokens": 219
+          },
+          {
+            "id": "model1",
+            "kind": "model",
+            "step": 1,
+            "label": "activities-small",
+            "tokens": 0
+          },
+          {
+            "id": "answer",
+            "kind": "answer",
+            "step": 2,
+            "label": "activities-small",
+            "chars": 24
+          }
+        ],
+        "edges": [
+          {
+            "from": "agent",
+            "to": "model0",
+            "kind": "produces",
+            "step": 0,
+            "overlap": null,
+            "basis": "the agent's step"
+          },
+          {
+            "from": "agent",
+            "to": "model1",
+            "kind": "produces",
+            "step": 1,
+            "overlap": null,
+            "basis": "the agent's step"
+          },
+          {
+            "from": "agent",
+            "to": "answer",
+            "kind": "produces",
+            "step": 2,
+            "overlap": null,
+            "basis": "the agent's step"
+          }
+        ],
+        "reading": "0 data nodes, 2 model nodes and the answer; 0 feeds edges (0 by overlap), 0 data nodes reach the answer with a typed value.",
+        "basis": "a data node feeds a model node when the share of the model step's distinct normalised tokens (≥ 3 chars) found in the fetched output is ≥ 0.2 (the overlap), or when the fetch is the step just before it (overlap null when only adjacent); a model node produces the fetch that follows it; the agent produces every model step and the answer; a data node reaches the answer with the share of the answer's typed values it carries"
+      },
+      "synthetic": false,
+      "narrative": "activities-small was given a 218-character prompt and no expected answer; no instructions are recorded on the trace; its steps were produced by activities-small (3 steps, trace.agent.model); it read 0 distinct sources in 0 fetches, 0 characters back; its answer carries no typed value to trace."
+    },
+    "b": {
+      "measurable": true,
+      "reason": null,
+      "task": {
+        "id": "plan-activities",
+        "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+        "prompt_chars": 218,
+        "expected": null,
+        "expected_chars": null
+      },
+      "agent": {
+        "name": "activities-strong",
+        "model": "activities-strong",
+        "version": "sparkrun",
+        "framework": null,
+        "instructions": {
+          "system_prompt": null,
+          "source": null,
+          "chars": null
+        },
+        "tools_declared": [
+          {
+            "name": "plan_activities",
+            "effect": null
+          }
+        ],
+        "tools_used": [
+          {
+            "name": "plan_activities",
+            "calls": 1,
+            "effect_seen": null
+          }
+        ]
+      },
+      "models": [
+        {
+          "model": "activities-strong",
+          "steps": 4,
+          "kinds": {
+            "answer": 1,
+            "reason": 2,
+            "tool_call": 1
+          },
+          "tokens": 549,
+          "temperature": null,
+          "source": "trace.agent.model"
+        }
+      ],
+      "corpus": {
+        "sources": [
+          {
+            "id": "sha256:98611c2395b44bde",
+            "name": "plan_activities",
+            "kind": "tool_call",
+            "input": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+            "input_chars": 57,
+            "output_chars": 21,
+            "tokens": 269,
+            "steps": [
+              0
+            ],
+            "first_step": 0,
+            "digest": "sha256:76407de1ddb0ae8a",
+            "error": null,
+            "outputs_differ": false
+          }
+        ],
+        "total_chars": 21,
+        "distinct": 1,
+        "fetches": 1,
+        "repeated_reads": 0,
+        "id_basis": "sha256 of the tool name and the whitespace-normalised input, first 16 hex chars"
+      },
+      "provenance": {
+        "answer_chars": 18,
+        "answer_source": "steps[-1].output",
+        "atoms": 0,
+        "supported": 0,
+        "unsupported": 0,
+        "values": [],
+        "grounded_in": [],
+        "grounded_share": null,
+        "ungrounded_share": null,
+        "basis": "the answer carries no typed value, so nothing can be traced"
+      },
+      "chain": {
+        "nodes": [
+          {
+            "id": "agent",
+            "kind": "agent",
+            "step": null,
+            "label": "activities-strong",
+            "chars": null
+          },
+          {
+            "id": "data0",
+            "kind": "data",
+            "step": 0,
+            "label": "plan_activities: {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+            "chars": 21
+          },
+          {
+            "id": "model1",
+            "kind": "model",
+            "step": 1,
+            "label": "activities-strong",
+            "tokens": 280
+          },
+          {
+            "id": "model2",
+            "kind": "model",
+            "step": 2,
+            "label": "activities-strong",
+            "tokens": 0
+          },
+          {
+            "id": "answer",
+            "kind": "answer",
+            "step": 3,
+            "label": "activities-strong",
+            "chars": 18
+          }
+        ],
+        "edges": [
+          {
+            "from": "agent",
+            "to": "model1",
+            "kind": "produces",
+            "step": 1,
+            "overlap": null,
+            "basis": "the agent's step"
+          },
+          {
+            "from": "data0",
+            "to": "model1",
+            "kind": "feeds",
+            "step": 1,
+            "overlap": 0.5,
+            "basis": "overlap and adjacent"
+          },
+          {
+            "from": "agent",
+            "to": "model2",
+            "kind": "produces",
+            "step": 2,
+            "overlap": null,
+            "basis": "the agent's step"
+          },
+          {
+            "from": "agent",
+            "to": "answer",
+            "kind": "produces",
+            "step": 3,
+            "overlap": null,
+            "basis": "the agent's step"
+          },
+          {
+            "from": "data0",
+            "to": "answer",
+            "kind": "feeds",
+            "step": 3,
+            "overlap": 0.5,
+            "basis": "overlap"
+          }
+        ],
+        "reading": "1 data node, 2 model nodes and the answer; 2 feeds edges (2 by overlap), 0 data nodes reach the answer with a typed value.",
+        "basis": "a data node feeds a model node when the share of the model step's distinct normalised tokens (≥ 3 chars) found in the fetched output is ≥ 0.2 (the overlap), or when the fetch is the step just before it (overlap null when only adjacent); a model node produces the fetch that follows it; the agent produces every model step and the answer; a data node reaches the answer with the share of the answer's typed values it carries"
+      },
+      "synthetic": false,
+      "narrative": "activities-strong was given a 218-character prompt and no expected answer; no instructions are recorded on the trace; its steps were produced by activities-strong (4 steps, trace.agent.model); it read 1 distinct source in 1 fetch, 21 characters back; its answer carries no typed value to trace."
+    },
+    "task": {
+      "id": "plan-activities",
+      "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+      "prompt_chars": 218,
+      "expected": null,
+      "expected_chars": null
+    },
+    "instructions_diff": {
+      "same": null,
+      "hunks": [],
+      "added": null,
+      "removed": null,
+      "reason": "no instructions recorded on either side"
+    },
+    "corpus_diff": {
+      "shared": [],
+      "only_a": [],
+      "only_b": [
+        "sha256:98611c2395b44bde"
+      ],
+      "jaccard": 0.0,
+      "basis": "sources identified by tool name and normalised input; Jaccard over the two sets of ids"
+    },
+    "models": {
+      "a": [
+        "activities-small"
+      ],
+      "b": [
+        "activities-strong"
+      ],
+      "same": false
+    },
+    "provenance": {
+      "a": {
+        "atoms": 0,
+        "supported": 0,
+        "unsupported": 0,
+        "grounded_share": null,
+        "ungrounded_share": null
+      },
+      "b": {
+        "atoms": 0,
+        "supported": 0,
+        "unsupported": 0,
+        "grounded_share": null,
+        "ungrounded_share": null
+      },
+      "delta_grounded": null,
+      "readings": {
+        "a": {
+          "answer_basis": {
+            "atoms": 0,
+            "supported": 0,
+            "status": "no_typed_values",
+            "source": "reading.answer_basis"
+          },
+          "semantic": {
+            "claims_total": 0,
+            "claims_grounded": 0,
+            "score": 1.0,
+            "source": "semantic.grounding"
+          }
+        },
+        "b": {
+          "answer_basis": {
+            "atoms": 0,
+            "supported": 0,
+            "status": "no_typed_values",
+            "source": "reading.answer_basis"
+          },
+          "semantic": {
+            "claims_total": 0,
+            "claims_grounded": 0,
+            "score": 1.0,
+            "source": "semantic.grounding"
+          }
+        }
+      },
+      "basis": "delta_grounded = A's grounded share − B's, null when either answer carries no typed value"
+    },
+    "narrative": "both agents were given the same 218-character prompt and no expected answer; no instructions recorded on either side; different models: activities-small activities-small, activities-strong activities-strong; activities-small read 0 sources and activities-strong 1, 0 shared (Jaccard 0); activities-small's answer carries no typed value; activities-strong's answer carries no typed value."
+  }
+}

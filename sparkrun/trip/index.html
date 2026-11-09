@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trip Team</title>
+<meta name="description" content="Five sparkrun agents plan and book a trip in your browser. The heavy ranking runs on your GPU with WebGPU, and you approve every booking.">
+<meta property="og:title" content="Trip Team · sparkrun">
+<meta property="og:description" content="Watch five agents plan a trip, rank every flight and hotel on your GPU, and wait for your approval before spending.">
+<meta name="theme-color" content="#0f1a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%230f1a2e'/%3E%3Cpath d='M15.5 4 8 16h5l-1.5 8L20 12h-5z' fill='%23ff6a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a trip control room. Request form on the left; five agent lanes laid out as the dependency graph on the right; itinerary, approvals and proof below. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#0f1a2e; --muted:#566079; --line:#dde1ea;
+  --accent:#ff6a1a; --accent-ink:#b84300; --cobalt:#2340c8; --chip:#eef1f7;
+  --ok:#1f8a4c; --okbg:#e3f4ea; --bad:#b42318; --badbg:#fde8e6; --warn:#9a5b00; --warnbg:#fff1d6; --run:#2340c8; --runbg:#e6ebff;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440;
+  --ok:#5fd18f; --okbg:#12301f; --bad:#ff8a80; --badbg:#3a1614; --warn:#ffc266; --warnbg:#33260d; --run:#8ea2ff; --runbg:#1b2552;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440;
+  --ok:#5fd18f; --okbg:#12301f; --bad:#ff8a80; --badbg:#3a1614; --warn:#ffc266; --warnbg:#33260d; --run:#8ea2ff; --runbg:#1b2552;
+  color-scheme:dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:var(--cobalt)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.mono{font-family:var(--mono);font-size:.9em}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:13px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font:800 19px var(--display);color:var(--ink);text-decoration:none}
+.logo small{font:500 12px var(--mono);color:var(--muted)}
+.nav nav{display:flex;gap:20px;flex-wrap:wrap}
+.nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px}
+.nav nav a:hover,.nav nav a[aria-current]{color:var(--ink)}
+
+.intro{padding-block:34px 22px;display:grid;gap:10px;max-width:780px}
+.intro h1{font-size:clamp(32px,5vw,50px);font-weight:800;letter-spacing:-.02em}
+.intro p{color:var(--muted);font-size:17px}
+.engine{display:inline-flex;align-items:center;gap:8px;font:500 13px var(--mono);color:var(--muted)}
+.engine::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.engine[data-state="ready"]::before{background:var(--ok)}
+.engine[data-state="error"]::before{background:var(--bad)}
+
+.room{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+.room>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+form.request{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+form.request h2{grid-column:1/-1;font-size:20px}
+.field{display:grid;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+.field label,.field legend{font-size:13px;font-weight:600;padding:0}
+.field input,.field select{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+fieldset.field{border:0;margin:0;padding:0}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:inline-flex;align-items:center;gap:6px;font-weight:500;font-size:14px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;background:var(--bg)}
+.checks input{accent-color:var(--accent)}
+.range-row{display:flex;justify-content:space-between;font-size:13px}
+.range-row output{font:500 13px var(--mono)}
+input[type=range]{accent-color:var(--accent);padding:0!important;border:0!important;background:transparent!important}
+.hint{font-size:12.5px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 15px var(--body);padding:11px 18px;border-radius:999px;border:1px solid transparent;cursor:pointer}
+.btn.primary{background:var(--accent);color:#1b0b00}
+.btn.primary:disabled,.btn.approve:disabled{opacity:.55;cursor:progress}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.approve{background:var(--ok);color:#fff}
+form.request .btn{grid-column:1/-1}
+
+/* lanes laid out as the dependency graph */
+.graph{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-areas:"flights rank activities" "hotels rank booking";gap:12px;padding:14px}
+.lane{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:6px;align-content:start;background:var(--bg);min-width:0;transition:border-color .2s,background .2s}
+.lane[data-role="flights"]{grid-area:flights}.lane[data-role="hotels"]{grid-area:hotels}.lane[data-role="rank"]{grid-area:rank}
+.lane[data-role="activities"]{grid-area:activities}.lane[data-role="booking"]{grid-area:booking}
+.lane header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lane h3{font-size:16px;font-weight:600}
+.lane .what{font-size:13px;color:var(--muted)}
+.lane .last{font:12.5px/1.45 var(--mono);color:var(--ink);overflow-wrap:anywhere;min-height:2.9em}
+.lane .meta{font:500 11.5px var(--mono);color:var(--muted)}
+.lane[data-state="running"]{border-color:var(--run);background:var(--runbg)}
+.lane[data-state="verified"]{border-color:color-mix(in srgb,var(--ok) 60%,var(--line))}
+.lane[data-state="needs_approval"]{border-color:var(--warn);background:var(--warnbg)}
+.lane[data-state="failed"],.lane[data-state="stuck"]{border-color:var(--bad);background:var(--badbg)}
+.pill{font:600 11.5px var(--mono);padding:2px 9px;border-radius:999px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.pill.verified{background:var(--okbg);color:var(--ok)}
+.pill.running{background:var(--runbg);color:var(--run)}
+.pill.needs_approval,.pill.paused{background:var(--warnbg);color:var(--warn)}
+.pill.failed,.pill.stuck{background:var(--badbg);color:var(--bad)}
+.gpu{display:inline-flex;gap:6px;align-items:center;font:600 11.5px var(--mono);color:var(--accent-ink)}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 14px 14px}
+.stat{background:var(--chip);border-radius:10px;padding:10px 12px;min-width:0}
+.stat b{display:block;font:700 20px/1.1 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat span{font-size:12px;color:var(--muted)}
+
+.below{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-top:20px;padding-bottom:48px}
+.below>*{min-width:0}
+.section{padding:18px;display:grid;gap:12px}
+.section h2{font-size:20px}
+.empty{color:var(--muted);font-size:15px}
+#itin{display:grid;gap:14px}
+#itin h3{font-size:17px}
+.itin{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.leg{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:4px;min-width:0}
+.leg .k{font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.leg b{font-size:16px}
+.leg .price{font:700 18px var(--display);font-variant-numeric:tabular-nums}
+.leg .ref{font:600 12px var(--mono);color:var(--ok)}
+ul.acts{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+ul.acts li{display:grid;grid-template-columns:90px 1fr auto;gap:10px;font-size:14px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+ul.acts .d{font:12.5px var(--mono);color:var(--muted)}
+.approval{display:flex;flex-wrap:wrap;gap:12px;align-items:center;border:1px solid var(--warn);background:var(--warnbg);border-radius:12px;padding:12px 14px}
+.approval p{flex:1;min-width:200px;font-size:14.5px}
+ul.evidence{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px}
+ul.evidence li{display:grid;grid-template-columns:22px 1fr;gap:6px}
+ul.evidence .ok{color:var(--ok);font-weight:700}
+ul.evidence .no{color:var(--bad);font-weight:700}
+ul.evidence .why{color:var(--muted);font-size:13px;display:block}
+details.journal summary{cursor:pointer;font-weight:600;color:var(--cobalt)}
+ol.timeline{list-style:none;margin:10px 0 0;padding:0;max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.timeline li{display:grid;grid-template-columns:84px 120px 1fr;gap:8px;padding:6px 10px;border-bottom:1px solid var(--line);font-size:12.5px}
+.timeline li:last-child{border-bottom:0}
+.timeline .r{font:600 11.5px var(--mono);color:var(--accent-ink)}
+.timeline .kd{font:500 11.5px var(--mono);color:var(--muted)}
+.timeline .dt{overflow-wrap:anywhere;min-width:0}
+footer{border-top:1px solid var(--line);padding-block:26px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:1000px){.room,.below{grid-template-columns:1fr}}
+@media (max-width:700px){
+  .graph{grid-template-columns:1fr;grid-template-areas:"flights" "hotels" "rank" "activities" "booking"}
+  .stats{grid-template-columns:1fr 1fr}
+  .itin{grid-template-columns:1fr}
+  form.request{grid-template-columns:1fr}
+  .timeline li{grid-template-columns:70px 1fr}
+  .timeline .kd{display:none}
+}
+@media (prefers-reduced-motion:reduce){.lane{transition:none}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="../">
+      <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--ink)"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="var(--accent)"/></svg>
+      sparkrun <small>trip team</small>
+    </a>
+    <nav aria-label="sparkrun">
+      <a href="../">Docs</a>
+      <a href="../play/">Playground</a>
+      <a href="./" aria-current="page">Trip team</a>
+      <a href="https://github.com/MLSparks/sparseml/tree/main/sparkrun">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Multi-agent demo · runs in your browser</span>
+    <h1>Five agents plan your trip. You approve the spending.</h1>
+    <p>Flights and hotels search in parallel, every combination is ranked on your GPU, a cheap activities model gets caught cutting corners, and nothing is booked until you say yes. Each agent runs under sparkrun, so every result is checked and every booking happens exactly once.</p>
+    <span class="engine" id="engine" data-state="loading">Loading Python in your browser…</span>
+  </div>
+
+  <div class="room">
+    <form class="card request" id="req" novalidate>
+      <h2>Your trip</h2>
+      <div class="field"><label for="origin">From</label><input id="origin" value="SFO" maxlength="40" autocomplete="off"></div>
+      <div class="field"><label for="destination">To</label><input id="destination" value="Lisbon" maxlength="40" autocomplete="off"></div>
+      <div class="field"><label for="depart">Depart</label><input id="depart" type="date" value="2026-12-18"></div>
+      <div class="field"><label for="nights">Nights</label><input id="nights" type="number" min="2" max="14" value="5"></div>
+      <div class="field"><label for="travelers">Travelers</label><input id="travelers" type="number" min="1" max="6" value="2"></div>
+      <div class="field"><label for="budget">Budget ($)</label><input id="budget" type="number" min="500" max="50000" step="100" value="4200"></div>
+      <fieldset class="field wide"><legend>Interests</legend>
+        <div class="checks" id="interests">
+          <label><input type="checkbox" value="food" checked> food</label>
+          <label><input type="checkbox" value="history" checked> history</label>
+          <label><input type="checkbox" value="nature"> nature</label>
+          <label><input type="checkbox" value="art"> art</label>
+          <label><input type="checkbox" value="music"> music</label>
+        </div>
+      </fieldset>
+      <div class="field"><label for="stops">Max stops</label>
+        <select id="stops"><option value="0">Nonstop</option><option value="1" selected>1 stop</option><option value="2">2 stops</option></select></div>
+      <div class="field"><label for="options">Search depth</label>
+        <input id="options" type="range" min="200" max="4000" step="100" value="2000">
+        <div class="range-row"><span class="hint">flights &amp; hotels each</span><output id="options-out" for="options">2,000</output></div></div>
+      <p class="hint field wide" id="combos">Up to 4,000,000 flight × hotel combinations to rank.</p>
+      <button class="btn primary" type="submit" id="plan" disabled>Plan my trip</button>
+      <span class="hint field wide">Models are scripted stand-ins so the demo is free and repeatable. The agents, checks, journals, approvals and GPU ranking are real.</span>
+    </form>
+
+    <section class="card" aria-labelledby="lanes-title">
+      <h2 id="lanes-title" hidden>Agents</h2>
+      <div class="graph" id="graph"></div>
+      <div class="stats">
+        <div class="stat"><b id="s-combos">–</b><span>combinations ranked</span></div>
+        <div class="stat"><b id="s-gpu">–</b><span id="s-gpu-label">ranking time</span></div>
+        <div class="stat"><b id="s-steps">0</b><span>model steps</span></div>
+        <div class="stat"><b id="s-cost">$0.0000</b><span>model cost</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="below">
+    <section class="card section" aria-labelledby="itin-title" aria-live="polite">
+      <h2 id="itin-title">Itinerary</h2>
+      <div id="approval" class="approval" hidden>
+        <p id="approval-text"></p>
+        <button class="btn approve" type="button" id="approve">Approve</button>
+        <button class="btn ghost" type="button" id="decline">Decline</button>
+      </div>
+      <div id="itin"><p class="empty">Plan a trip to see the best flight and hotel the team found, the activities it planned, and your bookings.</p></div>
+    </section>
+    <section class="card section" aria-labelledby="proof-title">
+      <h2 id="proof-title">Proof</h2>
+      <div id="proof"><p class="empty">When the team finishes, independent checks verify the whole trip: one flight and one hotel, dates that line up, activities inside the stay, and a total within budget.</p></div>
+      <details class="journal" id="journal-wrap"><summary>Full journal</summary><ol class="timeline" id="timeline"></ol></details>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built with <a href="../">sparkrun</a> by <a href="../../">AgentSparks</a></span>
+    <span>Ranking: WebGPU when your browser has it, otherwise JavaScript on the CPU</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const ROLES = [
+  {id: "flights", name: "Flights", what: "Searches flights within your stop limit."},
+  {id: "hotels", name: "Hotels", what: "Searches hotels for your dates, in parallel with flights."},
+  {id: "rank", name: "Ranker", what: "Scores every flight × hotel pair that fits the budget.", gpu: true},
+  {id: "activities", name: "Activities", what: "Plans one activity a day. Starts on a cheap model."},
+  {id: "booking", name: "Booking", what: "Books the best option, once each, after you approve."},
+];
+const GLUE = `
+import json, shutil, sys
+sys.path.insert(0, "/home/pyodide")
+import trip
+S = {}
+
+def _snap(r):
+    b = S["board"]
+    roles = {n: {"status": x.status, "steps": x.steps, "cost": x.cost_usd, "escalations": x.escalations,
+                 "pending": x.pending} for n, x in r.roles.items()}
+    ev = [{"check": e.check, "passed": e.passed, "detail": e.detail} for e in r.verdict.evidence] if r.verdict else []
+    keep = {k: v for k, v in b.items() if k not in ("flights", "hotels")}
+    out = {"status": r.status, "waiting_on": r.waiting_on, "roles": roles, "evidence": ev, "steps": r.steps,
+           "cost": r.cost_usd, "events": S["events"], "board": keep,
+           "counts": {"flights": len(b.get("flights", [])), "hotels": len(b.get("hotels", []))}}
+    S["events"] = []
+    return json.dumps(out, default=str)
+
+def start(req_json):
+    shutil.rmtree("/tmp/trip", ignore_errors=True)
+    S["req"] = trip.TripRequest(**json.loads(req_json))
+    S["board"], S["events"] = {}, []
+    S["team"] = trip.build_team(S["req"], "/tmp/trip", board=S["board"], gate=trip.spending_gate,
+                                on_event=lambda role, e: S["events"].append([role, e]))
+    return _snap(S["team"].run("trip", stop_before=["rank"]))
+
+def arrays():
+    b, r = S["board"], S["req"]
+    return json.dumps({"fc": [f["price"] * r.travelers for f in b["flights"]],
+                       "fs": [trip.flight_score(f) for f in b["flights"]],
+                       "hc": [h["price"] for h in b["hotels"]], "hs": [trip.hotel_score(h) for h in b["hotels"]],
+                       "nights": r.nights, "budget": r.budget * 0.9})
+
+def resume(rank_json=None):
+    if rank_json:
+        S["board"]["accelerated_rank"] = json.loads(rank_json)
+    return _snap(S["team"].run("trip"))
+
+def approve():
+    S["team"].approve("trip", "booking")
+    return resume()
+`;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => "$" + Math.round(n).toLocaleString();
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let py = null, gpu = null, busy = false;
+
+$("graph").innerHTML = ROLES.map(r => `
+  <article class="lane" data-role="${r.id}" data-state="idle">
+    <header><h3>${r.name}</h3><span class="pill" id="pill-${r.id}">idle</span></header>
+    <p class="what">${r.what}</p>
+    ${r.gpu ? `<span class="gpu" id="gpu-tag">GPU step</span>` : ""}
+    <p class="last" id="last-${r.id}">Waiting for a trip request.</p>
+    <p class="meta" id="meta-${r.id}"></p>
+  </article>`).join("");
+
+function setLane(role, state, text, meta){
+  const lane = document.querySelector(`.lane[data-role="${role}"]`);
+  lane.dataset.state = state;
+  const pill = $("pill-" + role);
+  pill.className = "pill " + state;
+  pill.textContent = state.replace("_", " ");
+  if (text !== undefined) $("last-" + role).textContent = text;
+  if (meta !== undefined) $("meta-" + role).textContent = meta;
+}
+
+const opts = $("options");
+function syncOptions(){
+  const n = +opts.value;
+  $("options-out").textContent = n.toLocaleString();
+  $("combos").textContent = `Up to ${(n * n).toLocaleString()} flight × hotel combinations to rank.`;
+}
+opts.addEventListener("input", syncOptions); syncOptions();
+
+// ---------- ranking: WebGPU with a JavaScript fallback ----------
+const WGSL = `
+struct P { n: u32, m: u32, nights: f32, budget: f32 };
+@group(0) @binding(0) var<storage, read> fc: array<f32>;
+@group(0) @binding(1) var<storage, read> fs: array<f32>;
+@group(0) @binding(2) var<storage, read> hc: array<f32>;
+@group(0) @binding(3) var<storage, read> hs: array<f32>;
+@group(0) @binding(4) var<storage, read_write> best: array<f32>;
+@group(0) @binding(5) var<storage, read_write> bestj: array<i32>;
+@group(0) @binding(6) var<uniform> p: P;
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) g: vec3<u32>) {
+  let i = g.x;
+  if (i >= p.n) { return; }
+  var b = -3.0e38; var bj = -1;
+  for (var j = 0u; j < p.m; j = j + 1u) {
+    if (fc[i] + hc[j] * p.nights <= p.budget) {
+      let s = fs[i] + hs[j];
+      if (s > b) { b = s; bj = i32(j); }
+    }
+  }
+  best[i] = b; bestj[i] = bj;
+}`;
+
+async function initGPU(){
+  try {
+    if (!navigator.gpu) return null;
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) return null;
+    const device = await adapter.requestDevice();
+    const module = device.createShaderModule({code: WGSL});
+    const pipeline = await device.createComputePipelineAsync({layout: "auto", compute: {module, entryPoint: "main"}});
+    const info = adapter.info || {};
+    return {device, pipeline, name: [info.vendor, info.architecture].filter(Boolean).join(" ") || "GPU"};
+  } catch { return null; }
+}
+
+function topK(best, bestj, a, k){
+  const idx = [];
+  for (let i = 0; i < best.length; i++) if (bestj[i] >= 0) idx.push(i);
+  idx.sort((x, y) => best[y] - best[x] || x - y);
+  return idx.slice(0, k).map(i => [i, bestj[i], best[i], a.fc[i] + a.hc[bestj[i]] * a.nights]);
+}
+
+function rankCPU(a, k){
+  const n = a.fc.length, m = a.hc.length, best = new Float64Array(n), bestj = new Int32Array(n);
+  for (let i = 0; i < n; i++) {
+    let b = -Infinity, bj = -1; const fi = a.fc[i], si = a.fs[i];
+    for (let j = 0; j < m; j++) {
+      if (fi + a.hc[j] * a.nights <= a.budget) { const s = si + a.hs[j]; if (s > b) { b = s; bj = j; } }
+    }
+    best[i] = b; bestj[i] = bj;
+  }
+  return topK(best, bestj, a, k);
+}
+
+async function rankGPU(a, k){
+  const {device, pipeline} = gpu, n = a.fc.length, m = a.hc.length;
+  const buf = (arr, usage) => { const b = device.createBuffer({size: Math.max(16, arr.byteLength), usage, mappedAtCreation: true});
+    new arr.constructor(b.getMappedRange()).set(arr); b.unmap(); return b; };
+  const S = GPUBufferUsage.STORAGE, D = GPUBufferUsage.COPY_DST, C = GPUBufferUsage.COPY_SRC;
+  const ins = [a.fc, a.fs, a.hc, a.hs].map(x => buf(new Float32Array(x), S));
+  const best = device.createBuffer({size: n * 4, usage: S | C}), bestj = device.createBuffer({size: n * 4, usage: S | C});
+  const params = new ArrayBuffer(16); new Uint32Array(params, 0, 2).set([n, m]); new Float32Array(params, 8, 2).set([a.nights, a.budget]);
+  const ubuf = device.createBuffer({size: 16, usage: GPUBufferUsage.UNIFORM | D}); device.queue.writeBuffer(ubuf, 0, params);
+  const bind = device.createBindGroup({layout: pipeline.getBindGroupLayout(0), entries:
+    [...ins, best, bestj, ubuf].map((b, i) => ({binding: i, resource: {buffer: b}}))});
+  const rb = device.createBuffer({size: n * 4, usage: D | GPUBufferUsage.MAP_READ}), rbj = device.createBuffer({size: n * 4, usage: D | GPUBufferUsage.MAP_READ});
+  const enc = device.createCommandEncoder(), pass = enc.beginComputePass();
+  pass.setPipeline(pipeline); pass.setBindGroup(0, bind); pass.dispatchWorkgroups(Math.ceil(n / 64)); pass.end();
+  enc.copyBufferToBuffer(best, 0, rb, 0, n * 4); enc.copyBufferToBuffer(bestj, 0, rbj, 0, n * 4);
+  device.queue.submit([enc.finish()]);
+  await Promise.all([rb.mapAsync(GPUMapMode.READ), rbj.mapAsync(GPUMapMode.READ)]);
+  const out = topK(new Float32Array(rb.getMappedRange().slice(0)), new Int32Array(rbj.getMappedRange().slice(0)), a, k);
+  [...ins, best, bestj, ubuf, rb, rbj].forEach(b => b.destroy());
+  return out;
+}
+
+// ---------- boot ----------
+async function boot(){
+  const engine = $("engine");
+  try {
+    if (typeof loadPyodide !== "function") throw new Error("the Python runtime could not be downloaded");
+    const [pyodide, g] = await Promise.all([loadPyodide(), initGPU()]);
+    py = pyodide; gpu = g;
+    py.FS.mkdirTree("/home/pyodide/sparkrun");
+    const get = u => fetch(u).then(r => { if (!r.ok) throw new Error(`could not load ${u} (${r.status})`); return r.text(); });
+    const FILES = await get("../py/files.json").then(JSON.parse);
+    const srcs = await Promise.all([...FILES.map(f => get("../py/sparkrun/" + f)), get("../py/trip.py")]);
+    FILES.forEach((f, i) => py.FS.writeFile("/home/pyodide/sparkrun/" + f, srcs[i]));
+    py.FS.writeFile("/home/pyodide/trip.py", srcs[srcs.length - 1]);
+    py.runPython(GLUE);
+    engine.dataset.state = "ready";
+    engine.textContent = `Python ready · ranking on ${gpu ? "WebGPU (" + gpu.name + ")" : "CPU (this browser has no WebGPU)"}`;
+    $("gpu-tag").textContent = gpu ? "GPU step · WebGPU" : "GPU step · CPU fallback";
+    $("plan").disabled = false;
+  } catch (err) {
+    engine.dataset.state = "error";
+    engine.textContent = "Couldn't start here: " + err.message + ". Try reloading, or run examples/trip.py locally.";
+  }
+}
+
+// ---------- running the team ----------
+function describe(e){
+  switch (e.kind) {
+    case "tool_result": return (e.ok ? "" : "ERROR: ") + e.result;
+    case "tool_replayed": return "Already done; not repeated.";
+    case "verified": return e.passed ? "Checks passed." : "Checks failed: " + e.evidence.filter(x => !x.passed).map(x => x.detail).join("; ");
+    case "escalated": return `Escalated to ${e.model}: ${e.reason}.`;
+    case "approval_requested": return "Waiting for your approval.";
+    case "approved": return "You approved.";
+    case "claimed_done": return `Says done: “${e.answer}”`;
+    case "model_call": return `${e.model}: ${e.reply.slice(0, 90)}`;
+    case "finished": return `Finished: ${e.status}.`;
+    case "resumed": return "Resumed from its journal.";
+    default: return null;
+  }
+}
+
+let totalSteps = 0, totalCost = 0;
+async function play(snap){
+  const tl = $("timeline");
+  for (const [role, e] of snap.events) {
+    const text = describe(e);
+    if (text === null) continue;
+    const state = e.kind === "finished" ? e.status : e.kind === "approval_requested" ? "needs_approval" : "running";
+    setLane(role, state, e.kind === "finished" ? undefined : text);  // keep the last real result on the lane
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="r">${esc(role)}</span><span class="kd">${esc(e.kind)}</span><span class="dt">${esc(text)}</span>`;
+    tl.appendChild(li);
+    if (!reduced) await sleep(e.kind === "model_call" ? 25 : 90);
+  }
+  for (const [role, r] of Object.entries(snap.roles)) {
+    const meta = `${r.steps} steps · $${r.cost.toFixed(4)}${r.escalations ? ` · ${r.escalations} escalation` : ""}`;
+    setLane(role, r.status, undefined, meta);
+  }
+  totalSteps = snap.steps; totalCost = snap.cost;
+  $("s-steps").textContent = totalSteps;
+  $("s-cost").textContent = "$" + totalCost.toFixed(4);
+  render(snap);
+}
+
+function render(snap){
+  const b = snap.board, opt = (b.options || [])[0];
+  const parts = [];
+  if (opt) {
+    const booked = Object.fromEntries((b.bookings || []).map(x => [x.type, x]));
+    const f = opt.flight, h = opt.hotel, req = b.request;
+    parts.push(`<div class="itin">
+      <div class="leg"><span class="k">Flight</span><b>${esc(f.airline)} · ${esc(f.id)}</b>
+        <span>${esc(req.origin)} → ${esc(req.destination)}, ${f.stops ? f.stops + " stop" : "nonstop"}, ${f.hours} h, arrives ${esc(f.arrive)}</span>
+        <span class="price">${money(f.price * req.travelers)}</span>
+        ${booked.flight ? `<span class="ref">Booked · ${esc(booked.flight.ref)}</span>` : `<span class="hint">not booked yet</span>`}</div>
+      <div class="leg"><span class="k">Hotel</span><b>${esc(h.name)}</b>
+        <span>${esc(h.area)} · ${h.rating}★ · ${h.km} km from center · ${req.nights} nights</span>
+        <span class="price">${money(h.price * req.nights)}</span>
+        ${booked.hotel ? `<span class="ref">Booked · ${esc(booked.hotel.ref)} from ${esc(booked.hotel.check_in)}</span>` : `<span class="hint">not booked yet</span>`}</div>
+    </div>`);
+    if (b.activities && b.activities.length) {
+      parts.push(`<h3>Activities</h3><ul class="acts">` + b.activities.map(a =>
+        `<li><span class="d">${esc(a.day)}</span><span>${esc(a.name)}</span><span class="mono">${a.cost ? money(a.cost) : "free"}</span></li>`).join("") + `</ul>`);
+    }
+    if ((b.options || []).length > 1) {
+      parts.push(`<p class="hint">Runner-up options: ${b.options.slice(1, 4).map(o => `${esc(o.flight.airline)} + ${esc(o.hotel.area)} (${money(o.cost)})`).join(", ")}</p>`);
+    }
+  } else if (snap.status === "verified" || snap.status === "failed") {
+    parts.push(`<p class="empty">No flight and hotel fit this budget. Raise the budget or allow more stops.</p>`);
+  }
+  if (parts.length) $("itin").innerHTML = parts.join("");
+
+  const ap = $("approval");
+  const pending = snap.status === "needs_approval" && snap.roles.booking && snap.roles.booking.pending;
+  if (pending) {
+    const a = pending.args, req = b.request;
+    const what = pending.tool === "book_flight"
+      ? `Book flight ${esc(a.flight_id)} for ${req.travelers} traveler${req.travelers > 1 ? "s" : ""}: <b>${money(opt.flight.price * req.travelers)}</b>`
+      : `Book ${esc(opt.hotel.name)} from ${esc(a.check_in)} for ${a.nights} nights: <b>${money(opt.hotel.price * a.nights)}</b>`;
+    $("approval-text").innerHTML = `The booking agent is waiting for you. ${what}`;
+    ap.hidden = false;
+    $("approve").focus({preventScroll: true});
+  } else ap.hidden = true;
+
+  if (snap.evidence.length) {
+    const total = b.total != null ? ` Total ${money(b.total)} of ${money(b.request.budget)}.` : "";
+    $("proof").innerHTML = `<p><span class="pill ${snap.status}">${esc(snap.status)}</span>${esc(total)}</p><ul class="evidence">` +
+      snap.evidence.map(e => `<li><span class="${e.passed ? "ok" : "no"}">${e.passed ? "✓" : "✗"}</span><span>${esc(e.check)}<span class="why">${esc(e.detail)}</span></span></li>`).join("") + `</ul>`;
+  } else if (snap.status === "needs_approval") {
+    $("proof").innerHTML = `<p class="empty">The flights, hotels, ranking and activities agents have each passed their own checks. The trip-level checks run after booking.</p>`;
+  }
+}
+
+function request(){
+  const v = id => $(id).value;
+  const interests = [...document.querySelectorAll("#interests input:checked")].map(x => x.value);
+  return {origin: v("origin").trim() || "SFO", destination: v("destination").trim() || "Lisbon",
+          depart: v("depart") || "2026-12-18", nights: Math.min(14, Math.max(2, +v("nights") || 5)),
+          travelers: Math.min(6, Math.max(1, +v("travelers") || 1)), budget: Math.max(500, +v("budget") || 4200),
+          interests: interests.length ? interests : ["food"], max_stops: +v("stops"), options: +v("options")};
+}
+
+async function guard(fn){
+  if (busy || !py) return;
+  busy = true; $("plan").disabled = true; $("approve").disabled = true; $("decline").disabled = true;
+  try { await fn(); }
+  catch (err) { $("itin").innerHTML = `<p class="empty">Something went wrong: ${esc(err.message || err)}</p>`; }
+  finally { busy = false; $("plan").disabled = false; $("approve").disabled = false; $("decline").disabled = false; }
+}
+
+$("req").addEventListener("submit", e => { e.preventDefault(); guard(async () => {
+  ROLES.forEach(r => setLane(r.id, "idle", "Waiting.", ""));
+  $("timeline").innerHTML = ""; $("approval").hidden = true;
+  $("itin").innerHTML = `<p class="empty">The team is working…</p>`;
+  $("proof").innerHTML = `<p class="empty">Checks run as each agent finishes.</p>`;
+  ["s-combos", "s-gpu"].forEach(id => $(id).textContent = "–");
+  setLane("flights", "running", "Searching…"); setLane("hotels", "running", "Searching…");
+  await sleep(30);
+  const req = request();
+  const first = JSON.parse(py.globals.get("start")(JSON.stringify(req)));
+  await play(first);
+  if (first.status !== "paused") return;
+
+  setLane("rank", "running", gpu ? "Ranking on your GPU…" : "Ranking on the CPU…");
+  await sleep(30);
+  const arr = JSON.parse(py.globals.get("arrays")());
+  const pairs = arr.fc.length * arr.hc.length;
+  let ranked, how, ms, cpuMs = null;
+  if (gpu) {
+    const t0 = performance.now(); ranked = await rankGPU(arr, 5); ms = performance.now() - t0; how = "WebGPU";
+    const t1 = performance.now(); rankCPU(arr, 5); cpuMs = performance.now() - t1;
+  } else {
+    const t0 = performance.now(); ranked = rankCPU(arr, 5); ms = performance.now() - t0; how = "CPU (JavaScript)";
+  }
+  $("s-combos").textContent = pairs.toLocaleString();
+  $("s-gpu").textContent = `${ms.toFixed(1)} ms`;
+  $("s-gpu-label").textContent = cpuMs != null ? `on ${how} (CPU took ${cpuMs.toFixed(1)} ms)` : `ranking on ${how}`;
+  const second = JSON.parse(py.globals.get("resume")(JSON.stringify({pairs: ranked, backend: how, ms})));
+  await play(second);
+}); });
+
+$("approve").addEventListener("click", () => guard(async () => {
+  $("approval").hidden = true;
+  setLane("booking", "running", "Booking…");
+  await sleep(30);
+  await play(JSON.parse(py.globals.get("approve")()));
+}));
+
+$("decline").addEventListener("click", () => {
+  if (busy) return;
+  $("approval").hidden = true;
+  setLane("booking", "paused", "You declined. Nothing was booked.");
+  $("proof").innerHTML = `<p class="empty">You declined the booking, so nothing was charged. Change the request and plan again.</p>`;
+});
+
+boot();
+</script>
+</body>
+</html>

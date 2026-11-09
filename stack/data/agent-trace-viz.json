@@ -1,0 +1,249 @@
+{
+  "traces": [
+    {
+      "trace_id": "sparkrun-trip.flights",
+      "benchmark": "travel",
+      "strategy": "flights-small",
+      "task_id": "trip.flights",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_flights\", \"args\": {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"date\": \"2026-12-18\", \"max_stops\": 1}}",
+          "action": {
+            "tool": "search_flights",
+            "args": {
+              "origin": "SFO",
+              "destination": "Lisbon",
+              "date": "2026-12-18",
+              "max_stops": 1
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "489 flights with at most 1 stops; cheapest $292 per person",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Found flights",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 9.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.hotels",
+      "benchmark": "travel",
+      "strategy": "hotels-small",
+      "task_id": "trip.hotels",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}",
+          "action": {
+            "tool": "search_hotels",
+            "args": {
+              "city": "Lisbon",
+              "check_in": "2026-12-18",
+              "nights": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "600 hotels in Lisbon for 5 nights from 2026-12-18",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Found hotels",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 14.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.rank",
+      "benchmark": "travel",
+      "strategy": "rank-small",
+      "task_id": "trip.rank",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"rank_itineraries\", \"args\": {\"budget\": 4200.0, \"top\": 5}}",
+          "action": {
+            "tool": "rank_itineraries",
+            "args": {
+              "budget": 4200.0,
+              "top": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "ranked 293,400 combinations on numpy in 82.0 ms; best total $1181",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Ranked options",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 85.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.activities",
+      "benchmark": "travel",
+      "strategy": "activities-small → activities-strong",
+      "task_id": "trip.activities",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"plan_activities\", \"args\": {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}}",
+          "action": {
+            "tool": "plan_activities",
+            "args": {
+              "interests": [
+                "food",
+                "history"
+              ],
+              "budget_left": 3019.0
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "4 activities for $116",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Planned activities",
+      "succeeded": true,
+      "total_cost": 0.0062,
+      "elapsed_ms": 3.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 1.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.booking",
+      "benchmark": "travel",
+      "strategy": "booking-small",
+      "task_id": "trip.booking",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"book_flight\", \"args\": {\"flight_id\": \"F0089\"}}",
+          "action": {
+            "tool": "book_flight",
+            "args": {
+              "flight_id": "F0089"
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "booked F0089 (Fjord Air), arriving 2026-12-19",
+            "error": null
+          },
+          "hypothesis": null
+        },
+        {
+          "idx": 1,
+          "state_summary": "{\"tool\": \"book_hotel\", \"args\": {\"hotel_id\": \"H0581\", \"check_in\": \"2026-12-19\", \"nights\": 5}}",
+          "action": {
+            "tool": "book_hotel",
+            "args": {
+              "hotel_id": "H0581",
+              "check_in": "2026-12-19",
+              "nights": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "booked Pousada Harbor 581 from 2026-12-19 for 5 nights",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Booked flight and hotel",
+      "succeeded": true,
+      "total_cost": 0.0006,
+      "elapsed_ms": 30.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.guide",
+      "benchmark": "travel",
+      "strategy": "guide-small → guide-strong",
+      "task_id": "trip.guide",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}",
+          "action": {
+            "tool": "search_guide",
+            "args": {
+              "query": "Portugal currency euro tram Alfama",
+              "k": 2
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+      "succeeded": true,
+      "total_cost": 0.0062,
+      "elapsed_ms": 11.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 1.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    }
+  ]
+}

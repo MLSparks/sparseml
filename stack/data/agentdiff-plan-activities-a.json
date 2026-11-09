@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "trace_id": "sparkrun-trip.activities-L0",
+  "started_at": 1794218282.245,
+  "agent": {
+    "name": "activities-small",
+    "model": "activities-small",
+    "version": "sparkrun"
+  },
+  "task": {
+    "id": "plan-activities",
+    "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+    "expected": null
+  },
+  "outcome": {
+    "success": false,
+    "answer": "Planned great activities",
+    "score": 0.0
+  },
+  "totals": {
+    "input_tokens": 210,
+    "output_tokens": 9,
+    "cost_usd": 0.0002,
+    "latency_s": 0.0
+  },
+  "tools": [
+    {
+      "name": "plan_activities"
+    }
+  ],
+  "steps": [
+    {
+      "type": "reason",
+      "name": "claimed_done",
+      "input": "",
+      "output": "Planned great activities",
+      "tokens": 219,
+      "latency_s": 0.0,
+      "index": 0
+    },
+    {
+      "type": "reason",
+      "name": "verification",
+      "input": "independent checks",
+      "output": "activities found: 0 activities",
+      "quality": "bad",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 1
+    },
+    {
+      "type": "answer",
+      "name": "answer",
+      "input": "",
+      "output": "Planned great activities",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 2
+    }
+  ]
+}

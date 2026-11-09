@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "trace_id": "sparkrun-trip.activities-L1",
+  "started_at": 1794218282.245,
+  "agent": {
+    "name": "activities-strong",
+    "model": "activities-strong",
+    "version": "sparkrun"
+  },
+  "task": {
+    "id": "plan-activities",
+    "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+    "expected": null
+  },
+  "outcome": {
+    "success": true,
+    "answer": "Planned activities",
+    "score": 1.0
+  },
+  "totals": {
+    "input_tokens": 519,
+    "output_tokens": 30,
+    "cost_usd": 0.006,
+    "latency_s": 0.002
+  },
+  "tools": [
+    {
+      "name": "plan_activities"
+    }
+  ],
+  "steps": [
+    {
+      "type": "tool_call",
+      "name": "plan_activities",
+      "input": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+      "output": "4 activities for $116",
+      "tokens": 269,
+      "input_tokens": 246,
+      "output_tokens": 23,
+      "latency_s": 0.0,
+      "index": 0
+    },
+    {
+      "type": "reason",
+      "name": "claimed_done",
+      "input": "",
+      "output": "Planned activities",
+      "tokens": 280,
+      "latency_s": 0.002,
+      "index": 1
+    },
+    {
+      "type": "reason",
+      "name": "verification",
+      "input": "independent checks",
+      "output": "all checks passed",
+      "quality": "good",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 2
+    },
+    {
+      "type": "answer",
+      "name": "answer",
+      "input": "",
+      "output": "Planned activities",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 3
+    }
+  ]
+}

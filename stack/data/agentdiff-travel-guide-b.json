@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "trace_id": "sparkrun-trip.guide-L1",
+  "started_at": 1794218282.134,
+  "agent": {
+    "name": "guide-strong",
+    "model": "guide-strong",
+    "version": "sparkrun"
+  },
+  "task": {
+    "id": "travel-guide",
+    "prompt": "Answer the traveler's question using the travel guide.\nQUESTION: What currency does Portugal use, and which tram line runs through Alfama?",
+    "expected": null
+  },
+  "outcome": {
+    "success": true,
+    "answer": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+    "score": 1.0
+  },
+  "totals": {
+    "input_tokens": 583,
+    "output_tokens": 39,
+    "cost_usd": 0.006,
+    "latency_s": 0.006
+  },
+  "tools": [
+    {
+      "name": "search_guide"
+    }
+  ],
+  "steps": [
+    {
+      "type": "search",
+      "name": "search_guide",
+      "input": "{\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}",
+      "output": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]",
+      "tokens": 273,
+      "input_tokens": 251,
+      "output_tokens": 22,
+      "latency_s": 0.0,
+      "index": 0
+    },
+    {
+      "type": "reason",
+      "name": "claimed_done",
+      "input": "",
+      "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+      "tokens": 349,
+      "latency_s": 0.006,
+      "index": 1
+    },
+    {
+      "type": "reason",
+      "name": "verification",
+      "input": "independent checks",
+      "output": "all checks passed",
+      "quality": "good",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 2
+    },
+    {
+      "type": "answer",
+      "name": "answer",
+      "input": "",
+      "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+      "tokens": 0,
+      "latency_s": 0.0,
+      "index": 3
+    }
+  ]
+}

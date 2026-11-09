@@ -1,0 +1,3294 @@
+{
+  "generated_at": "2026-11-09 09:58 UTC",
+  "environment": {
+    "python": "3.12.16",
+    "machine": "x86_64",
+    "compute_backend": "numpy",
+    "sparkrun": "0.1.0",
+    "tools": {
+      "agentdiff": true,
+      "omniscope": true,
+      "agent_trace_viz": true,
+      "ares": "ares.metrics"
+    }
+  },
+  "team": {
+    "status": "verified",
+    "seconds": 0.153,
+    "approvals": 2,
+    "steps": 15,
+    "cost_usd": 0.0142,
+    "roles": [
+      {
+        "name": "flights",
+        "after": [],
+        "status": "verified",
+        "steps": 2,
+        "cost_usd": 0.0004,
+        "escalations": 0,
+        "models": [
+          "flights-small"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.134
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.134,
+            "model": "flights-small",
+            "level": 0,
+            "tokens": 226,
+            "cost_usd": 0.0002,
+            "reply": "{\"tool\": \"search_flights\", \"args\": {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"date\": \"2026-12-18\", \"max_stops\": 1}}"
+          },
+          {
+            "kind": "tool_result",
+            "seq": 3,
+            "t": 1794218282.138,
+            "tool": "search_flights",
+            "args": {
+              "origin": "SFO",
+              "destination": "Lisbon",
+              "date": "2026-12-18",
+              "max_stops": 1
+            },
+            "ok": true,
+            "result": "489 flights with at most 1 stops; cheapest $292 per person"
+          },
+          {
+            "kind": "model_call",
+            "seq": 4,
+            "t": 1794218282.143,
+            "model": "flights-small",
+            "level": 0,
+            "tokens": 242,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Found flights\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 5,
+            "t": 1794218282.143,
+            "answer": "Found flights"
+          },
+          {
+            "kind": "verified",
+            "seq": 6,
+            "t": 1794218282.143,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "flights found",
+                "passed": true,
+                "detail": "489 flights"
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 7,
+            "t": 1794218282.143,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Found flights"
+          }
+        ]
+      },
+      {
+        "name": "hotels",
+        "after": [],
+        "status": "verified",
+        "steps": 2,
+        "cost_usd": 0.0004,
+        "escalations": 0,
+        "models": [
+          "hotels-small"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.134
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.139,
+            "model": "hotels-small",
+            "level": 0,
+            "tokens": 216,
+            "cost_usd": 0.0002,
+            "reply": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}"
+          },
+          {
+            "kind": "tool_result",
+            "seq": 3,
+            "t": 1794218282.143,
+            "tool": "search_hotels",
+            "args": {
+              "city": "Lisbon",
+              "check_in": "2026-12-18",
+              "nights": 5
+            },
+            "ok": true,
+            "result": "600 hotels in Lisbon for 5 nights from 2026-12-18"
+          },
+          {
+            "kind": "model_call",
+            "seq": 4,
+            "t": 1794218282.148,
+            "model": "hotels-small",
+            "level": 0,
+            "tokens": 229,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Found hotels\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 5,
+            "t": 1794218282.148,
+            "answer": "Found hotels"
+          },
+          {
+            "kind": "verified",
+            "seq": 6,
+            "t": 1794218282.148,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "hotels found",
+                "passed": true,
+                "detail": "600 hotels"
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 7,
+            "t": 1794218282.148,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Found hotels"
+          }
+        ]
+      },
+      {
+        "name": "rank",
+        "after": [
+          "flights",
+          "hotels"
+        ],
+        "status": "verified",
+        "steps": 2,
+        "cost_usd": 0.0004,
+        "escalations": 0,
+        "models": [
+          "rank-small"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.155
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.155,
+            "model": "rank-small",
+            "level": 0,
+            "tokens": 229,
+            "cost_usd": 0.0002,
+            "reply": "{\"tool\": \"rank_itineraries\", \"args\": {\"budget\": 4200.0, \"top\": 5}}"
+          },
+          {
+            "kind": "tool_result",
+            "seq": 3,
+            "t": 1794218282.237,
+            "tool": "rank_itineraries",
+            "args": {
+              "budget": 4200.0,
+              "top": 5
+            },
+            "ok": true,
+            "result": "ranked 293,400 combinations on numpy in 82.0 ms; best total $1181"
+          },
+          {
+            "kind": "model_call",
+            "seq": 4,
+            "t": 1794218282.24,
+            "model": "rank-small",
+            "level": 0,
+            "tokens": 247,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Ranked options\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 5,
+            "t": 1794218282.24,
+            "answer": "Ranked options"
+          },
+          {
+            "kind": "verified",
+            "seq": 6,
+            "t": 1794218282.24,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "options found",
+                "passed": true,
+                "detail": "5 options"
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 7,
+            "t": 1794218282.24,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Ranked options"
+          }
+        ]
+      },
+      {
+        "name": "activities",
+        "after": [
+          "rank"
+        ],
+        "status": "verified",
+        "steps": 3,
+        "cost_usd": 0.0062,
+        "escalations": 1,
+        "models": [
+          "activities-small",
+          "activities-strong"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.245
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.245,
+            "model": "activities-small",
+            "level": 0,
+            "tokens": 219,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Planned great activities\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 2,
+            "t": 1794218282.245,
+            "answer": "Planned great activities"
+          },
+          {
+            "kind": "verified",
+            "seq": 3,
+            "t": 1794218282.245,
+            "passed": false,
+            "evidence": [
+              {
+                "check": "activities found",
+                "passed": false,
+                "detail": "0 activities"
+              }
+            ]
+          },
+          {
+            "kind": "escalated",
+            "seq": 4,
+            "t": 1794218282.245,
+            "model": "activities-strong",
+            "level": 1,
+            "reason": "verification failed"
+          },
+          {
+            "kind": "model_call",
+            "seq": 5,
+            "t": 1794218282.246,
+            "model": "activities-strong",
+            "level": 1,
+            "tokens": 269,
+            "cost_usd": 0.003,
+            "reply": "{\"tool\": \"plan_activities\", \"args\": {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}}"
+          },
+          {
+            "kind": "tool_result",
+            "seq": 7,
+            "t": 1794218282.246,
+            "tool": "plan_activities",
+            "args": {
+              "interests": [
+                "food",
+                "history"
+              ],
+              "budget_left": 3019.0
+            },
+            "ok": true,
+            "result": "4 activities for $116"
+          },
+          {
+            "kind": "model_call",
+            "seq": 8,
+            "t": 1794218282.248,
+            "model": "activities-strong",
+            "level": 1,
+            "tokens": 280,
+            "cost_usd": 0.003,
+            "reply": "{\"done\": \"Planned activities\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 9,
+            "t": 1794218282.248,
+            "answer": "Planned activities"
+          },
+          {
+            "kind": "verified",
+            "seq": 10,
+            "t": 1794218282.248,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "activities found",
+                "passed": true,
+                "detail": "4 activities"
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 11,
+            "t": 1794218282.248,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Planned activities"
+          }
+        ]
+      },
+      {
+        "name": "booking",
+        "after": [
+          "rank",
+          "activities"
+        ],
+        "status": "verified",
+        "steps": 3,
+        "cost_usd": 0.0006,
+        "escalations": 0,
+        "models": [
+          "booking-small"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.252
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.252,
+            "model": "booking-small",
+            "level": 0,
+            "tokens": 307,
+            "cost_usd": 0.0002,
+            "reply": "{\"tool\": \"book_flight\", \"args\": {\"flight_id\": \"F0089\"}}"
+          },
+          {
+            "kind": "approval_requested",
+            "seq": 2,
+            "t": 1794218282.253,
+            "tool": "book_flight",
+            "args": {
+              "flight_id": "F0089"
+            },
+            "reason": "needs_approval",
+            "note": "book_flight spends money; a person must approve it"
+          },
+          {
+            "kind": "approved",
+            "seq": 4,
+            "t": 1794218282.255
+          },
+          {
+            "kind": "tool_result",
+            "seq": 7,
+            "t": 1794218282.268,
+            "tool": "book_flight",
+            "args": {
+              "flight_id": "F0089"
+            },
+            "ok": true,
+            "result": "booked F0089 (Fjord Air), arriving 2026-12-19"
+          },
+          {
+            "kind": "model_call",
+            "seq": 8,
+            "t": 1794218282.27,
+            "model": "booking-small",
+            "level": 0,
+            "tokens": 337,
+            "cost_usd": 0.0002,
+            "reply": "{\"tool\": \"book_hotel\", \"args\": {\"hotel_id\": \"H0581\", \"check_in\": \"2026-12-19\", \"nights\": 5}}"
+          },
+          {
+            "kind": "approval_requested",
+            "seq": 9,
+            "t": 1794218282.27,
+            "tool": "book_hotel",
+            "args": {
+              "hotel_id": "H0581",
+              "check_in": "2026-12-19",
+              "nights": 5
+            },
+            "reason": "needs_approval",
+            "note": "book_hotel spends money; a person must approve it"
+          },
+          {
+            "kind": "approved",
+            "seq": 11,
+            "t": 1794218282.272
+          },
+          {
+            "kind": "tool_result",
+            "seq": 14,
+            "t": 1794218282.281,
+            "tool": "book_hotel",
+            "args": {
+              "hotel_id": "H0581",
+              "check_in": "2026-12-19",
+              "nights": 5
+            },
+            "ok": true,
+            "result": "booked Pousada Harbor 581 from 2026-12-19 for 5 nights"
+          },
+          {
+            "kind": "model_call",
+            "seq": 15,
+            "t": 1794218282.282,
+            "model": "booking-small",
+            "level": 0,
+            "tokens": 357,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Booked flight and hotel\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 16,
+            "t": 1794218282.282,
+            "answer": "Booked flight and hotel"
+          },
+          {
+            "kind": "verified",
+            "seq": 17,
+            "t": 1794218282.282,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "flight and hotel booked",
+                "passed": true,
+                "detail": "2 bookings"
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 18,
+            "t": 1794218282.282,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Booked flight and hotel"
+          }
+        ]
+      },
+      {
+        "name": "guide",
+        "after": [],
+        "status": "verified",
+        "steps": 3,
+        "cost_usd": 0.0062,
+        "escalations": 1,
+        "models": [
+          "guide-small",
+          "guide-strong"
+        ],
+        "events": [
+          {
+            "kind": "run_started",
+            "seq": 0,
+            "t": 1794218282.134
+          },
+          {
+            "kind": "model_call",
+            "seq": 1,
+            "t": 1794218282.139,
+            "model": "guide-small",
+            "level": 0,
+            "tokens": 201,
+            "cost_usd": 0.0002,
+            "reply": "{\"done\": \"Portugal uses the escudo, and Tram 15 goes through Alfama.\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 2,
+            "t": 1794218282.139,
+            "answer": "Portugal uses the escudo, and Tram 15 goes through Alfama."
+          },
+          {
+            "kind": "verified",
+            "seq": 3,
+            "t": 1794218282.139,
+            "passed": false,
+            "evidence": [
+              {
+                "check": "answer grounded in retrieved evidence (ARES, >= 80%)",
+                "passed": false,
+                "detail": "no evidence was retrieved"
+              },
+              {
+                "check": "answer matches gold (ARES F1 >= 0.40)",
+                "passed": false,
+                "detail": "F1 0.17 against 'euro, Tram 28'"
+              },
+              {
+                "check": "answer recorded",
+                "passed": true,
+                "detail": "Portugal uses the escudo, and Tram 15 goes through Alfama."
+              }
+            ]
+          },
+          {
+            "kind": "escalated",
+            "seq": 4,
+            "t": 1794218282.139,
+            "model": "guide-strong",
+            "level": 1,
+            "reason": "verification failed"
+          },
+          {
+            "kind": "model_call",
+            "seq": 5,
+            "t": 1794218282.139,
+            "model": "guide-strong",
+            "level": 1,
+            "tokens": 273,
+            "cost_usd": 0.003,
+            "reply": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}"
+          },
+          {
+            "kind": "tool_result",
+            "seq": 7,
+            "t": 1794218282.139,
+            "tool": "search_guide",
+            "args": {
+              "query": "Portugal currency euro tram Alfama",
+              "k": 2
+            },
+            "ok": true,
+            "result": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]"
+          },
+          {
+            "kind": "model_call",
+            "seq": 8,
+            "t": 1794218282.145,
+            "model": "guide-strong",
+            "level": 1,
+            "tokens": 349,
+            "cost_usd": 0.003,
+            "reply": "{\"done\": \"Portugal uses the euro, and Tram 28 runs through Alfama.\"}"
+          },
+          {
+            "kind": "claimed_done",
+            "seq": 9,
+            "t": 1794218282.145,
+            "answer": "Portugal uses the euro, and Tram 28 runs through Alfama."
+          },
+          {
+            "kind": "verified",
+            "seq": 10,
+            "t": 1794218282.145,
+            "passed": true,
+            "evidence": [
+              {
+                "check": "answer grounded in retrieved evidence (ARES, >= 80%)",
+                "passed": true,
+                "detail": "groundedness 1.00"
+              },
+              {
+                "check": "answer matches gold (ARES F1 >= 0.40)",
+                "passed": true,
+                "detail": "F1 0.50 against 'euro, Tram 28'"
+              },
+              {
+                "check": "answer recorded",
+                "passed": true,
+                "detail": "Portugal uses the euro, and Tram 28 runs through Alfama."
+              }
+            ]
+          },
+          {
+            "kind": "finished",
+            "seq": 11,
+            "t": 1794218282.145,
+            "reason": "all checks passed",
+            "status": "verified",
+            "answer": "Portugal uses the euro, and Tram 28 runs through Alfama."
+          }
+        ]
+      }
+    ],
+    "verdict": [
+      {
+        "check": "exactly one flight and one hotel",
+        "passed": true,
+        "detail": "bookings: ['flight', 'hotel']"
+      },
+      {
+        "check": "hotel check-in matches flight arrival",
+        "passed": true,
+        "detail": "arrive 2026-12-19, check in 2026-12-19"
+      },
+      {
+        "check": "activities inside the stay",
+        "passed": true,
+        "detail": "4 activities between 2026-12-19 and 2026-12-24"
+      },
+      {
+        "check": "total within budget",
+        "passed": true,
+        "detail": "$1,297 of $4,200"
+      }
+    ],
+    "board": {
+      "option": {
+        "flight": {
+          "id": "F0089",
+          "airline": "Fjord Air",
+          "price": 398.0,
+          "stops": 0,
+          "hours": 9.8,
+          "depart_hour": 22,
+          "arrive": "2026-12-19"
+        },
+        "hotel": {
+          "id": "H0581",
+          "name": "Pousada Harbor 581",
+          "area": "Hillside",
+          "price": 77.0,
+          "rating": 4.9,
+          "km": 0.9
+        },
+        "score": 175.94,
+        "cost": 1181.0
+      },
+      "bookings": [
+        {
+          "type": "flight",
+          "id": "F0089",
+          "cost": 796.0,
+          "arrive": "2026-12-19",
+          "ref": "FL-6BBDA9"
+        },
+        {
+          "type": "hotel",
+          "id": "H0581",
+          "cost": 385.0,
+          "check_in": "2026-12-19",
+          "nights": 5,
+          "ref": "HT-327186"
+        }
+      ],
+      "activities": [
+        {
+          "day": "2026-12-20",
+          "name": "Free walking tour of the old town",
+          "interest": "history",
+          "cost": 0
+        },
+        {
+          "day": "2026-12-21",
+          "name": "Castle and viewpoints",
+          "interest": "history",
+          "cost": 30
+        },
+        {
+          "day": "2026-12-22",
+          "name": "City history museum",
+          "interest": "history",
+          "cost": 36
+        },
+        {
+          "day": "2026-12-23",
+          "name": "Market breakfast tasting",
+          "interest": "food",
+          "cost": 50
+        }
+      ],
+      "total": 1297.0,
+      "rank_stats": {
+        "backend": "numpy",
+        "ms": 82.03,
+        "pairs": 293400
+      },
+      "request": {
+        "origin": "SFO",
+        "destination": "Lisbon",
+        "depart": "2026-12-18",
+        "nights": 5,
+        "travelers": 2,
+        "budget": 4200.0,
+        "interests": [
+          "food",
+          "history"
+        ],
+        "max_stops": 1,
+        "options": 600
+      },
+      "options": [
+        {
+          "flight": {
+            "id": "F0089",
+            "airline": "Fjord Air",
+            "price": 398.0,
+            "stops": 0,
+            "hours": 9.8,
+            "depart_hour": 22,
+            "arrive": "2026-12-19"
+          },
+          "hotel": {
+            "id": "H0581",
+            "name": "Pousada Harbor 581",
+            "area": "Hillside",
+            "price": 77.0,
+            "rating": 4.9,
+            "km": 0.9
+          },
+          "score": 175.94,
+          "cost": 1181.0
+        },
+        {
+          "flight": {
+            "id": "F0041",
+            "airline": "Coastline",
+            "price": 427.0,
+            "stops": 0,
+            "hours": 9.8,
+            "depart_hour": 23,
+            "arrive": "2026-12-19"
+          },
+          "hotel": {
+            "id": "H0581",
+            "name": "Pousada Harbor 581",
+            "area": "Hillside",
+            "price": 77.0,
+            "rating": 4.9,
+            "km": 0.9
+          },
+          "score": 174.79,
+          "cost": 1239.0
+        },
+        {
+          "flight": {
+            "id": "F0353",
+            "airline": "Brightjet",
+            "price": 443.0,
+            "stops": 0,
+            "hours": 9.5,
+            "depart_hour": 21,
+            "arrive": "2026-12-19"
+          },
+          "hotel": {
+            "id": "H0581",
+            "name": "Pousada Harbor 581",
+            "area": "Hillside",
+            "price": 77.0,
+            "rating": 4.9,
+            "km": 0.9
+          },
+          "score": 174.5,
+          "cost": 1271.0
+        },
+        {
+          "flight": {
+            "id": "F0209",
+            "airline": "Coastline",
+            "price": 441.0,
+            "stops": 0,
+            "hours": 10.3,
+            "depart_hour": 18,
+            "arrive": "2026-12-19"
+          },
+          "hotel": {
+            "id": "H0581",
+            "name": "Pousada Harbor 581",
+            "area": "Hillside",
+            "price": 77.0,
+            "rating": 4.9,
+            "km": 0.9
+          },
+          "score": 173.62,
+          "cost": 1267.0
+        },
+        {
+          "flight": {
+            "id": "F0031",
+            "airline": "Coastline",
+            "price": 398.0,
+            "stops": 0,
+            "hours": 11.9,
+            "depart_hour": 23,
+            "arrive": "2026-12-19"
+          },
+          "hotel": {
+            "id": "H0581",
+            "name": "Pousada Harbor 581",
+            "area": "Hillside",
+            "price": 77.0,
+            "rating": 4.9,
+            "km": 0.9
+          },
+          "score": 173.43,
+          "cost": 1181.0
+        }
+      ],
+      "flights_found": 489,
+      "hotels_found": 600
+    }
+  },
+  "guide": {
+    "question": "What currency does Portugal use, and which tram line runs through Alfama?",
+    "gold": "euro, Tram 28",
+    "answer": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+    "corpus": [
+      {
+        "title": "Money",
+        "text": "Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash."
+      },
+      {
+        "title": "Tram 28",
+        "text": "Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town."
+      },
+      {
+        "title": "Belem Tower",
+        "text": "Belem Tower is a 16th-century fortification on the Tagus and a UNESCO World Heritage Site."
+      },
+      {
+        "title": "Lisboa Card",
+        "text": "The Lisboa Card covers public transport and free or discounted entry to many museums."
+      },
+      {
+        "title": "Pasteis de Belem",
+        "text": "Pasteis de Belem has been baking custard tarts in Belem since 1837."
+      },
+      {
+        "title": "Fado",
+        "text": "Fado, Lisbon's traditional music, is on UNESCO's list of Intangible Cultural Heritage."
+      }
+    ]
+  },
+  "omniscope": {
+    "events": [
+      {
+        "event_id": "trip:flights:0",
+        "agent_id": "flights",
+        "event_type": "agent_start",
+        "causal_parents": [],
+        "timestamp": "2026-11-09T09:58:02.134Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:flights:1",
+        "agent_id": "flights",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:flights:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.134Z",
+        "model_name": "flights-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"search_flights\", \"args\": {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"date\": \"2026-12-18\", \"max_stops\": 1}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:hotels:0",
+        "agent_id": "hotels",
+        "event_type": "agent_start",
+        "causal_parents": [],
+        "timestamp": "2026-11-09T09:58:02.134Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:guide:0",
+        "agent_id": "guide",
+        "event_type": "agent_start",
+        "causal_parents": [],
+        "timestamp": "2026-11-09T09:58:02.134Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:flights:3",
+        "agent_id": "flights",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:flights:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.138Z",
+        "model_name": null,
+        "tool_name": "search_flights",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:hotels:1",
+        "agent_id": "hotels",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:hotels:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": "hotels-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:1",
+        "agent_id": "guide",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:guide:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": "guide-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Portugal uses the escudo, and Tram 15 goes through Alfama.\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:3",
+        "agent_id": "guide",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:guide:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.17 against 'euro, Tram 28'; answer recorded: Portugal uses the escudo, and Tram 15 goes through Alfama.",
+        "confidence_score": 0.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:guide:4",
+        "agent_id": "guide",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:guide:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": "guide-strong",
+        "tool_name": null,
+        "output_preview": "escalated to guide-strong: verification failed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "escalated"
+        }
+      },
+      {
+        "event_id": "trip:guide:5",
+        "agent_id": "guide",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:guide:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": "guide-strong",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:7",
+        "agent_id": "guide",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:guide:5"
+        ],
+        "timestamp": "2026-11-09T09:58:02.139Z",
+        "model_name": null,
+        "tool_name": "search_guide",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:flights:4",
+        "agent_id": "flights",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:flights:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.143Z",
+        "model_name": "flights-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Found flights\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:flights:6",
+        "agent_id": "flights",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:flights:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.143Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "flights found: 489 flights",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:flights:7",
+        "agent_id": "flights",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:flights:6"
+        ],
+        "timestamp": "2026-11-09T09:58:02.143Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:hotels:3",
+        "agent_id": "hotels",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:hotels:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.143Z",
+        "model_name": null,
+        "tool_name": "search_hotels",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:guide:8",
+        "agent_id": "guide",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:guide:7"
+        ],
+        "timestamp": "2026-11-09T09:58:02.145Z",
+        "model_name": "guide-strong",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Portugal uses the euro, and Tram 28 runs through Alfama.\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:10",
+        "agent_id": "guide",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:guide:8"
+        ],
+        "timestamp": "2026-11-09T09:58:02.145Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "answer grounded in retrieved evidence (ARES, >= 80%): groundedness 1.00; answer matches gold (ARES F1 >= 0.40): F1 0.50 against 'euro, Tram 28'; answer recorded: Portugal uses the euro, and Tram 28 runs through Alfama.",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:guide:11",
+        "agent_id": "guide",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:guide:10"
+        ],
+        "timestamp": "2026-11-09T09:58:02.145Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:hotels:4",
+        "agent_id": "hotels",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:hotels:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.148Z",
+        "model_name": "hotels-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Found hotels\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:hotels:6",
+        "agent_id": "hotels",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:hotels:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.148Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "hotels found: 600 hotels",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:hotels:7",
+        "agent_id": "hotels",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:hotels:6"
+        ],
+        "timestamp": "2026-11-09T09:58:02.148Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:rank:0",
+        "agent_id": "rank",
+        "event_type": "agent_start",
+        "causal_parents": [
+          "trip:flights:7",
+          "trip:hotels:7"
+        ],
+        "timestamp": "2026-11-09T09:58:02.155Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:rank:1",
+        "agent_id": "rank",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:rank:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.155Z",
+        "model_name": "rank-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"rank_itineraries\", \"args\": {\"budget\": 4200.0, \"top\": 5}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:rank:3",
+        "agent_id": "rank",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:rank:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.237Z",
+        "model_name": null,
+        "tool_name": "rank_itineraries",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:rank:4",
+        "agent_id": "rank",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:rank:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.240Z",
+        "model_name": "rank-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Ranked options\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:rank:6",
+        "agent_id": "rank",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:rank:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.240Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "options found: 5 options",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:rank:7",
+        "agent_id": "rank",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:rank:6"
+        ],
+        "timestamp": "2026-11-09T09:58:02.240Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:activities:0",
+        "agent_id": "activities",
+        "event_type": "agent_start",
+        "causal_parents": [
+          "trip:rank:7"
+        ],
+        "timestamp": "2026-11-09T09:58:02.245Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:activities:1",
+        "agent_id": "activities",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:activities:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.245Z",
+        "model_name": "activities-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Planned great activities\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:activities:3",
+        "agent_id": "activities",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:activities:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.245Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "activities found: 0 activities",
+        "confidence_score": 0.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:activities:4",
+        "agent_id": "activities",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:activities:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.245Z",
+        "model_name": "activities-strong",
+        "tool_name": null,
+        "output_preview": "escalated to activities-strong: verification failed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "escalated"
+        }
+      },
+      {
+        "event_id": "trip:activities:5",
+        "agent_id": "activities",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:activities:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.246Z",
+        "model_name": "activities-strong",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"plan_activities\", \"args\": {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:activities:7",
+        "agent_id": "activities",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:activities:5"
+        ],
+        "timestamp": "2026-11-09T09:58:02.246Z",
+        "model_name": null,
+        "tool_name": "plan_activities",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:activities:8",
+        "agent_id": "activities",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:activities:7"
+        ],
+        "timestamp": "2026-11-09T09:58:02.248Z",
+        "model_name": "activities-strong",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Planned activities\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:activities:10",
+        "agent_id": "activities",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:activities:8"
+        ],
+        "timestamp": "2026-11-09T09:58:02.248Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "activities found: 4 activities",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:activities:11",
+        "agent_id": "activities",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:activities:10"
+        ],
+        "timestamp": "2026-11-09T09:58:02.248Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:booking:0",
+        "agent_id": "booking",
+        "event_type": "agent_start",
+        "causal_parents": [
+          "trip:rank:7",
+          "trip:activities:11"
+        ],
+        "timestamp": "2026-11-09T09:58:02.252Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:booking:1",
+        "agent_id": "booking",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:booking:0"
+        ],
+        "timestamp": "2026-11-09T09:58:02.252Z",
+        "model_name": "booking-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"book_flight\", \"args\": {\"flight_id\": \"F0089\"}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:booking:2",
+        "agent_id": "booking",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:booking:1"
+        ],
+        "timestamp": "2026-11-09T09:58:02.253Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "book_flight spends money; a person must approve it",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "approval_requested",
+          "needs_human": "true"
+        }
+      },
+      {
+        "event_id": "trip:booking:3",
+        "agent_id": "booking",
+        "event_type": "system_event",
+        "causal_parents": [
+          "trip:booking:2"
+        ],
+        "timestamp": "2026-11-09T09:58:02.253Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "paused"
+        }
+      },
+      {
+        "event_id": "trip:booking:4",
+        "agent_id": "booking",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:booking:3"
+        ],
+        "timestamp": "2026-11-09T09:58:02.255Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "approved"
+        }
+      },
+      {
+        "event_id": "trip:booking:7",
+        "agent_id": "booking",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:booking:4"
+        ],
+        "timestamp": "2026-11-09T09:58:02.268Z",
+        "model_name": null,
+        "tool_name": "book_flight",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:booking:8",
+        "agent_id": "booking",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:booking:7"
+        ],
+        "timestamp": "2026-11-09T09:58:02.270Z",
+        "model_name": "booking-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"book_hotel\", \"args\": {\"hotel_id\": \"H0581\", \"check_in\": \"2026-12-19\", \"nights\": 5}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:booking:9",
+        "agent_id": "booking",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:booking:8"
+        ],
+        "timestamp": "2026-11-09T09:58:02.270Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "book_hotel spends money; a person must approve it",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "approval_requested",
+          "needs_human": "true"
+        }
+      },
+      {
+        "event_id": "trip:booking:10",
+        "agent_id": "booking",
+        "event_type": "system_event",
+        "causal_parents": [
+          "trip:booking:9"
+        ],
+        "timestamp": "2026-11-09T09:58:02.270Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "paused"
+        }
+      },
+      {
+        "event_id": "trip:booking:11",
+        "agent_id": "booking",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:booking:10"
+        ],
+        "timestamp": "2026-11-09T09:58:02.272Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "approved"
+        }
+      },
+      {
+        "event_id": "trip:booking:14",
+        "agent_id": "booking",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:booking:11"
+        ],
+        "timestamp": "2026-11-09T09:58:02.281Z",
+        "model_name": null,
+        "tool_name": "book_hotel",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:booking:15",
+        "agent_id": "booking",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:booking:14"
+        ],
+        "timestamp": "2026-11-09T09:58:02.282Z",
+        "model_name": "booking-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Booked flight and hotel\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:booking:17",
+        "agent_id": "booking",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:booking:15"
+        ],
+        "timestamp": "2026-11-09T09:58:02.282Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "flight and hotel booked: 2 bookings",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:booking:18",
+        "agent_id": "booking",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:booking:17"
+        ],
+        "timestamp": "2026-11-09T09:58:02.282Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      }
+    ],
+    "risk": {
+      "booking": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.0,
+        "context_overflow_risk": 0.002,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.0,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [],
+        "recommended_interventions": []
+      },
+      "flights": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.0,
+        "context_overflow_risk": 0.001,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.0,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [],
+        "recommended_interventions": []
+      },
+      "guide": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.4,
+        "context_overflow_risk": 0.001,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.082,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [
+          {
+            "detector": "hallucination",
+            "signal": "hallucination risk: 0.40",
+            "weight": 0.8
+          }
+        ],
+        "recommended_interventions": []
+      },
+      "hotels": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.0,
+        "context_overflow_risk": 0.001,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.0,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [],
+        "recommended_interventions": []
+      },
+      "activities": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.4,
+        "context_overflow_risk": 0.001,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.082,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [
+          {
+            "detector": "hallucination",
+            "signal": "hallucination risk: 0.40",
+            "weight": 0.8
+          }
+        ],
+        "recommended_interventions": []
+      },
+      "rank": {
+        "loop_probability": 0.0,
+        "hallucination_probability": 0.0,
+        "context_overflow_risk": 0.001,
+        "tool_thrashing_risk": 0.0,
+        "reasoning_collapse_risk": 0.0,
+        "agent_divergence_risk": 0.0,
+        "overall_failure_risk": 0.0,
+        "time_to_predicted_failure": null,
+        "contributing_signals": [],
+        "recommended_interventions": []
+      }
+    }
+  },
+  "trace_viz": [
+    {
+      "trace_id": "sparkrun-trip.flights",
+      "benchmark": "travel",
+      "strategy": "flights-small",
+      "task_id": "trip.flights",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_flights\", \"args\": {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"date\": \"2026-12-18\", \"max_stops\": 1}}",
+          "action": {
+            "tool": "search_flights",
+            "args": {
+              "origin": "SFO",
+              "destination": "Lisbon",
+              "date": "2026-12-18",
+              "max_stops": 1
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "489 flights with at most 1 stops; cheapest $292 per person",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Found flights",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 9.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.hotels",
+      "benchmark": "travel",
+      "strategy": "hotels-small",
+      "task_id": "trip.hotels",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}",
+          "action": {
+            "tool": "search_hotels",
+            "args": {
+              "city": "Lisbon",
+              "check_in": "2026-12-18",
+              "nights": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "600 hotels in Lisbon for 5 nights from 2026-12-18",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Found hotels",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 14.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.rank",
+      "benchmark": "travel",
+      "strategy": "rank-small",
+      "task_id": "trip.rank",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"rank_itineraries\", \"args\": {\"budget\": 4200.0, \"top\": 5}}",
+          "action": {
+            "tool": "rank_itineraries",
+            "args": {
+              "budget": 4200.0,
+              "top": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "ranked 293,400 combinations on numpy in 82.0 ms; best total $1181",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Ranked options",
+      "succeeded": true,
+      "total_cost": 0.0004,
+      "elapsed_ms": 85.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.activities",
+      "benchmark": "travel",
+      "strategy": "activities-small → activities-strong",
+      "task_id": "trip.activities",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"plan_activities\", \"args\": {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}}",
+          "action": {
+            "tool": "plan_activities",
+            "args": {
+              "interests": [
+                "food",
+                "history"
+              ],
+              "budget_left": 3019.0
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "4 activities for $116",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Planned activities",
+      "succeeded": true,
+      "total_cost": 0.0062,
+      "elapsed_ms": 3.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 1.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.booking",
+      "benchmark": "travel",
+      "strategy": "booking-small",
+      "task_id": "trip.booking",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"book_flight\", \"args\": {\"flight_id\": \"F0089\"}}",
+          "action": {
+            "tool": "book_flight",
+            "args": {
+              "flight_id": "F0089"
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "booked F0089 (Fjord Air), arriving 2026-12-19",
+            "error": null
+          },
+          "hypothesis": null
+        },
+        {
+          "idx": 1,
+          "state_summary": "{\"tool\": \"book_hotel\", \"args\": {\"hotel_id\": \"H0581\", \"check_in\": \"2026-12-19\", \"nights\": 5}}",
+          "action": {
+            "tool": "book_hotel",
+            "args": {
+              "hotel_id": "H0581",
+              "check_in": "2026-12-19",
+              "nights": 5
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "booked Pousada Harbor 581 from 2026-12-19 for 5 nights",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Booked flight and hotel",
+      "succeeded": true,
+      "total_cost": 0.0006,
+      "elapsed_ms": 30.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 0.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    },
+    {
+      "trace_id": "sparkrun-trip.guide",
+      "benchmark": "travel",
+      "strategy": "guide-small → guide-strong",
+      "task_id": "trip.guide",
+      "steps": [
+        {
+          "idx": 0,
+          "state_summary": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}",
+          "action": {
+            "tool": "search_guide",
+            "args": {
+              "query": "Portugal currency euro tram Alfama",
+              "k": 2
+            },
+            "cost": 1.0
+          },
+          "observation": {
+            "result": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]",
+            "error": null
+          },
+          "hypothesis": null
+        }
+      ],
+      "final_answer": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+      "succeeded": true,
+      "total_cost": 0.0062,
+      "elapsed_ms": 11.0,
+      "scores": {
+        "verified": 1.0,
+        "escalations": 1.0,
+        "duplicates_prevented": 0.0
+      },
+      "parent_trace_id": null,
+      "user_id": null,
+      "session_id": null
+    }
+  ],
+  "agentdiff": [
+    {
+      "title": "Guide: answering from memory vs from the travel guide",
+      "task": "travel-guide",
+      "a": {
+        "schema_version": 1,
+        "trace_id": "sparkrun-trip.guide-L0",
+        "started_at": 1794218282.134,
+        "agent": {
+          "name": "guide-small",
+          "model": "guide-small",
+          "version": "sparkrun"
+        },
+        "task": {
+          "id": "travel-guide",
+          "prompt": "Answer the traveler's question using the travel guide.\nQUESTION: What currency does Portugal use, and which tram line runs through Alfama?",
+          "expected": null
+        },
+        "outcome": {
+          "success": false,
+          "answer": "Portugal uses the escudo, and Tram 15 goes through Alfama.",
+          "score": 0.0
+        },
+        "totals": {
+          "input_tokens": 184,
+          "output_tokens": 17,
+          "cost_usd": 0.0002,
+          "latency_s": 0.005
+        },
+        "tools": [
+          {
+            "name": "search_guide"
+          }
+        ],
+        "steps": [
+          {
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Portugal uses the escudo, and Tram 15 goes through Alfama.",
+            "tokens": 201,
+            "latency_s": 0.005,
+            "index": 0
+          },
+          {
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.17 against 'euro, Tram 28'",
+            "quality": "bad",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 1
+          },
+          {
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Portugal uses the escudo, and Tram 15 goes through Alfama.",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 2
+          }
+        ]
+      },
+      "b": {
+        "schema_version": 1,
+        "trace_id": "sparkrun-trip.guide-L1",
+        "started_at": 1794218282.134,
+        "agent": {
+          "name": "guide-strong",
+          "model": "guide-strong",
+          "version": "sparkrun"
+        },
+        "task": {
+          "id": "travel-guide",
+          "prompt": "Answer the traveler's question using the travel guide.\nQUESTION: What currency does Portugal use, and which tram line runs through Alfama?",
+          "expected": null
+        },
+        "outcome": {
+          "success": true,
+          "answer": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+          "score": 1.0
+        },
+        "totals": {
+          "input_tokens": 583,
+          "output_tokens": 39,
+          "cost_usd": 0.006,
+          "latency_s": 0.006
+        },
+        "tools": [
+          {
+            "name": "search_guide"
+          }
+        ],
+        "steps": [
+          {
+            "type": "search",
+            "name": "search_guide",
+            "input": "{\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}",
+            "output": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]",
+            "tokens": 273,
+            "input_tokens": 251,
+            "output_tokens": 22,
+            "latency_s": 0.0,
+            "index": 0
+          },
+          {
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+            "tokens": 349,
+            "latency_s": 0.006,
+            "index": 1
+          },
+          {
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "all checks passed",
+            "quality": "good",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 2
+          },
+          {
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 3
+          }
+        ]
+      },
+      "report": {
+        "verdict_card": [
+          {
+            "key": "verdict",
+            "text": "guide-strong solved travel-guide; guide-small failed.",
+            "source": "outcome"
+          },
+          {
+            "key": "cause",
+            "text": "step 2 of guide-small (retrieval, hypothesized): the run went wrong at step 2, a retrieval decision that the other agent made differently",
+            "source": "diagnosis.decisive_step; mechanism from the leading hypothesis",
+            "step": 2,
+            "side": "a"
+          },
+          {
+            "key": "cost",
+            "text": "guide-small spent 421 tokens and 1 step less than guide-strong — faster to nothing",
+            "source": "tradeoff.spend_delta_b_minus_a"
+          },
+          {
+            "key": "fix",
+            "text": "guide-small — at step 2: add a verification step before committing the answer",
+            "source": "reading.a.take_forward[at the decisive step]",
+            "step": 2,
+            "side": "a"
+          },
+          {
+            "key": "confidence",
+            "text": "medium — single pair (n=1); the ranking is consistent but one comparison cannot rule out task-specific luck; the decisive step is hypothesized, not replay-verified",
+            "source": "diagnosis.confidence"
+          }
+        ],
+        "divergences": [
+          {
+            "rank": 1,
+            "a_index": null,
+            "b_index": 0,
+            "kind": "retrieval",
+            "summary": "Agent A skipped 1 step(s) that Agent B performed, where Agent B searched \"{\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}\"."
+          },
+          {
+            "rank": 2,
+            "a_index": 1,
+            "b_index": 2,
+            "kind": "reasoning",
+            "summary": "Agent A reasoned \"independent checks\" (annotated bad) while Agent B reasoned \"independent checks\"."
+          }
+        ],
+        "alignment": [
+          {
+            "a_index": null,
+            "b_index": 0,
+            "op": "b_only",
+            "similarity": 0.0
+          },
+          {
+            "a_index": 0,
+            "b_index": 1,
+            "op": "match",
+            "similarity": 1.0
+          },
+          {
+            "a_index": 1,
+            "b_index": 2,
+            "op": "drift",
+            "similarity": 1.0
+          },
+          {
+            "a_index": 2,
+            "b_index": 3,
+            "op": "match",
+            "similarity": 1.0
+          }
+        ],
+        "attribution": {
+          "failed_agent": "a",
+          "root_cause_step": 1,
+          "chain": [
+            1,
+            2
+          ],
+          "category": "retrieval",
+          "explanation": "Agent A diverged at step 1 because it selected the wrong retrieval result (bad-quality: \"verification\"). That divergence carried directly into the final answer. The answer emitted at step 2 was wrong, so the failure is attributed to retrieval at step 1."
+        },
+        "report_html": "agentdiff-travel-guide.html"
+      }
+    },
+    {
+      "title": "Activities: claiming done vs actually planning",
+      "task": "plan-activities",
+      "a": {
+        "schema_version": 1,
+        "trace_id": "sparkrun-trip.activities-L0",
+        "started_at": 1794218282.245,
+        "agent": {
+          "name": "activities-small",
+          "model": "activities-small",
+          "version": "sparkrun"
+        },
+        "task": {
+          "id": "plan-activities",
+          "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+          "expected": null
+        },
+        "outcome": {
+          "success": false,
+          "answer": "Planned great activities",
+          "score": 0.0
+        },
+        "totals": {
+          "input_tokens": 210,
+          "output_tokens": 9,
+          "cost_usd": 0.0002,
+          "latency_s": 0.0
+        },
+        "tools": [
+          {
+            "name": "plan_activities"
+          }
+        ],
+        "steps": [
+          {
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned great activities",
+            "tokens": 219,
+            "latency_s": 0.0,
+            "index": 0
+          },
+          {
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "activities found: 0 activities",
+            "quality": "bad",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 1
+          },
+          {
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned great activities",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 2
+          }
+        ]
+      },
+      "b": {
+        "schema_version": 1,
+        "trace_id": "sparkrun-trip.activities-L1",
+        "started_at": 1794218282.245,
+        "agent": {
+          "name": "activities-strong",
+          "model": "activities-strong",
+          "version": "sparkrun"
+        },
+        "task": {
+          "id": "plan-activities",
+          "prompt": "Plan activities for the stay.\nREQUEST: {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"depart\": \"2026-12-18\", \"nights\": 5, \"travelers\": 2, \"budget\": 4200.0, \"interests\": [\"food\", \"history\"], \"max_stops\": 1, \"options\": 600}",
+          "expected": null
+        },
+        "outcome": {
+          "success": true,
+          "answer": "Planned activities",
+          "score": 1.0
+        },
+        "totals": {
+          "input_tokens": 519,
+          "output_tokens": 30,
+          "cost_usd": 0.006,
+          "latency_s": 0.002
+        },
+        "tools": [
+          {
+            "name": "plan_activities"
+          }
+        ],
+        "steps": [
+          {
+            "type": "tool_call",
+            "name": "plan_activities",
+            "input": "{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}",
+            "output": "4 activities for $116",
+            "tokens": 269,
+            "input_tokens": 246,
+            "output_tokens": 23,
+            "latency_s": 0.0,
+            "index": 0
+          },
+          {
+            "type": "reason",
+            "name": "claimed_done",
+            "input": "",
+            "output": "Planned activities",
+            "tokens": 280,
+            "latency_s": 0.002,
+            "index": 1
+          },
+          {
+            "type": "reason",
+            "name": "verification",
+            "input": "independent checks",
+            "output": "all checks passed",
+            "quality": "good",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 2
+          },
+          {
+            "type": "answer",
+            "name": "answer",
+            "input": "",
+            "output": "Planned activities",
+            "tokens": 0,
+            "latency_s": 0.0,
+            "index": 3
+          }
+        ]
+      },
+      "report": {
+        "verdict_card": [
+          {
+            "key": "verdict",
+            "text": "activities-strong solved plan-activities; activities-small failed.",
+            "source": "outcome"
+          },
+          {
+            "key": "cause",
+            "text": "step 2 of activities-small (tool_selection, hypothesized): the run went wrong at step 2, a tool_selection decision that the other agent made differently",
+            "source": "diagnosis.decisive_step; mechanism from the leading hypothesis",
+            "step": 2,
+            "side": "a"
+          },
+          {
+            "key": "cost",
+            "text": "activities-small spent 330 tokens and 1 step less than activities-strong — faster to nothing",
+            "source": "tradeoff.spend_delta_b_minus_a"
+          },
+          {
+            "key": "fix",
+            "text": "activities-small — at step 2: add a verification step before committing the answer",
+            "source": "reading.a.take_forward[at the decisive step]",
+            "step": 2,
+            "side": "a"
+          },
+          {
+            "key": "confidence",
+            "text": "medium — single pair (n=1); the ranking is consistent but one comparison cannot rule out task-specific luck; the decisive step is hypothesized, not replay-verified",
+            "source": "diagnosis.confidence"
+          }
+        ],
+        "divergences": [
+          {
+            "rank": 1,
+            "a_index": null,
+            "b_index": 0,
+            "kind": "tool_selection",
+            "summary": "Agent A skipped 1 step(s) that Agent B performed, where Agent B called tool \"plan_activities\" with \"{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}\"."
+          },
+          {
+            "rank": 2,
+            "a_index": 1,
+            "b_index": 2,
+            "kind": "reasoning",
+            "summary": "Agent A reasoned \"independent checks\" (annotated bad) while Agent B reasoned \"independent checks\"."
+          }
+        ],
+        "alignment": [
+          {
+            "a_index": null,
+            "b_index": 0,
+            "op": "b_only",
+            "similarity": 0.0
+          },
+          {
+            "a_index": 0,
+            "b_index": 1,
+            "op": "match",
+            "similarity": 1.0
+          },
+          {
+            "a_index": 1,
+            "b_index": 2,
+            "op": "drift",
+            "similarity": 1.0
+          },
+          {
+            "a_index": 2,
+            "b_index": 3,
+            "op": "match",
+            "similarity": 1.0
+          }
+        ],
+        "attribution": {
+          "failed_agent": "a",
+          "root_cause_step": 1,
+          "chain": [
+            1,
+            2
+          ],
+          "category": "tool_selection",
+          "explanation": "Agent A diverged at step 1 because it made an incorrect tool call (bad-quality: \"verification\"). That divergence carried directly into the final answer. The answer emitted at step 2 was wrong, so the failure is attributed to tool_selection at step 1."
+        },
+        "report_html": "agentdiff-plan-activities.html"
+      }
+    }
+  ],
+  "ares": {
+    "source": "ares.metrics",
+    "leaderboard": [
+      {
+        "name": "combo_best",
+        "phase": "synthesis",
+        "f1": 0.3775,
+        "em": 0.3,
+        "recall": 0.79,
+        "grounding": 0.8342,
+        "latency_s": 0.122,
+        "tokens": 43.38,
+        "prompt": "cot",
+        "k": 4,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "prompt_cot",
+        "phase": "ablation",
+        "f1": 0.3742,
+        "em": 0.3,
+        "recall": 0.79,
+        "grounding": 0.8164,
+        "latency_s": 0.9316,
+        "tokens": 40.96,
+        "prompt": "cot",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.3_cot_d",
+        "phase": "neighbour-search",
+        "f1": 0.3596,
+        "em": 0.22,
+        "recall": 0.64,
+        "grounding": 0.8113,
+        "latency_s": 0.8119,
+        "tokens": 61.18,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.3_cot_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.3596,
+        "em": 0.22,
+        "recall": 0.64,
+        "grounding": 0.8113,
+        "latency_s": 0.1084,
+        "tokens": 63.18,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k5_a0.7_cot",
+        "phase": "neighbour-search",
+        "f1": 0.3426,
+        "em": 0.26,
+        "recall": 0.79,
+        "grounding": 0.7547,
+        "latency_s": 0.7096,
+        "tokens": 34.42,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.6_cot_d",
+        "phase": "neighbour-search",
+        "f1": 0.3421,
+        "em": 0.2,
+        "recall": 0.67,
+        "grounding": 0.795,
+        "latency_s": 0.0,
+        "tokens": 59.68,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.6_cot_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.342,
+        "em": 0.2,
+        "recall": 0.68,
+        "grounding": 0.7962,
+        "latency_s": 0.6306,
+        "tokens": 62.98,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k5_a0.7_cot_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.3346,
+        "em": 0.22,
+        "recall": 0.81,
+        "grounding": 0.7527,
+        "latency_s": 0.9297,
+        "tokens": 66.5,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k2_a0.4_cot",
+        "phase": "neighbour-search",
+        "f1": 0.3343,
+        "em": 0.2,
+        "recall": 0.6,
+        "grounding": 0.7844,
+        "latency_s": 0.9553,
+        "tokens": 47.02,
+        "prompt": "cot",
+        "k": 2,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.4_cot_r",
+        "phase": "neighbour-search",
+        "f1": 0.3249,
+        "em": 0.22,
+        "recall": 0.8,
+        "grounding": 0.8285,
+        "latency_s": 1.7906,
+        "tokens": 39.98,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k6_a0.4_cot_d",
+        "phase": "neighbour-search",
+        "f1": 0.3244,
+        "em": 0.18,
+        "recall": 0.79,
+        "grounding": 0.8027,
+        "latency_s": 0.9239,
+        "tokens": 62.96,
+        "prompt": "cot",
+        "k": 6,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.6_cot_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.324,
+        "em": 0.2,
+        "recall": 0.78,
+        "grounding": 0.7972,
+        "latency_s": 4.8211,
+        "tokens": 62.96,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k6_a0.3_cot_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.3152,
+        "em": 0.18,
+        "recall": 0.83,
+        "grounding": 0.7736,
+        "latency_s": 0.7851,
+        "tokens": 65.74,
+        "prompt": "cot",
+        "k": 6,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k3_a0.7_cot",
+        "phase": "neighbour-search",
+        "f1": 0.3122,
+        "em": 0.24,
+        "recall": 0.73,
+        "grounding": 0.7924,
+        "latency_s": 0.0,
+        "tokens": 33.38,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.7_cot_r",
+        "phase": "neighbour-search",
+        "f1": 0.311,
+        "em": 0.24,
+        "recall": 0.73,
+        "grounding": 0.802,
+        "latency_s": 0.858,
+        "tokens": 36.8,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k2_a0.6_cot",
+        "phase": "neighbour-search",
+        "f1": 0.3074,
+        "em": 0.2,
+        "recall": 0.63,
+        "grounding": 0.7878,
+        "latency_s": 0.3241,
+        "tokens": 45.32,
+        "prompt": "cot",
+        "k": 2,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.4_cot",
+        "phase": "neighbour-search",
+        "f1": 0.307,
+        "em": 0.2,
+        "recall": 0.71,
+        "grounding": 0.8245,
+        "latency_s": 0.5142,
+        "tokens": 38.22,
+        "prompt": "cot",
+        "k": 3,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "decompose+reflect",
+        "phase": "ablation",
+        "f1": 0.3046,
+        "em": 0.18,
+        "recall": 0.7,
+        "grounding": 0.9029,
+        "latency_s": 0.2011,
+        "tokens": 36.06,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k5_a0.3_cot",
+        "phase": "neighbour-search",
+        "f1": 0.3044,
+        "em": 0.2,
+        "recall": 0.79,
+        "grounding": 0.8097,
+        "latency_s": 0.847,
+        "tokens": 35.96,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.3_cot_r",
+        "phase": "neighbour-search",
+        "f1": 0.3044,
+        "em": 0.2,
+        "recall": 0.79,
+        "grounding": 0.8097,
+        "latency_s": 0.1927,
+        "tokens": 37.96,
+        "prompt": "cot",
+        "k": 5,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "reflect",
+        "phase": "ablation",
+        "f1": 0.2936,
+        "em": 0.18,
+        "recall": 0.79,
+        "grounding": 0.9438,
+        "latency_s": 0.2208,
+        "tokens": 14.66,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "baseline",
+        "phase": "ablation",
+        "f1": 0.2933,
+        "em": 0.18,
+        "recall": 0.79,
+        "grounding": 0.9413,
+        "latency_s": 0.4703,
+        "tokens": 11.86,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "k6",
+        "phase": "ablation",
+        "f1": 0.2862,
+        "em": 0.16,
+        "recall": 0.83,
+        "grounding": 0.9195,
+        "latency_s": 0.3651,
+        "tokens": 12.22,
+        "prompt": "plain",
+        "k": 6,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "k2",
+        "phase": "ablation",
+        "f1": 0.2833,
+        "em": 0.14,
+        "recall": 0.64,
+        "grounding": 0.8873,
+        "latency_s": 0.319,
+        "tokens": 9.68,
+        "prompt": "plain",
+        "k": 2,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "decompose",
+        "phase": "ablation",
+        "f1": 0.281,
+        "em": 0.16,
+        "recall": 0.69,
+        "grounding": 0.8826,
+        "latency_s": 0.7291,
+        "tokens": 32.8,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.7_plain_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.2799,
+        "em": 0.14,
+        "recall": 0.8,
+        "grounding": 0.9138,
+        "latency_s": 0.2144,
+        "tokens": 36.84,
+        "prompt": "plain",
+        "k": 5,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "k8",
+        "phase": "ablation",
+        "f1": 0.2798,
+        "em": 0.16,
+        "recall": 0.91,
+        "grounding": 0.9315,
+        "latency_s": 0.0679,
+        "tokens": 12.5,
+        "prompt": "plain",
+        "k": 8,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.7_plain_d",
+        "phase": "neighbour-search",
+        "f1": 0.2726,
+        "em": 0.14,
+        "recall": 0.79,
+        "grounding": 0.9183,
+        "latency_s": 0.0,
+        "tokens": 34.28,
+        "prompt": "plain",
+        "k": 5,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k6_a0.4_plain",
+        "phase": "neighbour-search",
+        "f1": 0.2651,
+        "em": 0.14,
+        "recall": 0.83,
+        "grounding": 0.9102,
+        "latency_s": 0.243,
+        "tokens": 13.14,
+        "prompt": "plain",
+        "k": 6,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.3_plain_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.2559,
+        "em": 0.12,
+        "recall": 0.77,
+        "grounding": 0.9192,
+        "latency_s": 0.4709,
+        "tokens": 38.16,
+        "prompt": "plain",
+        "k": 5,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k3_a0.7_plain_r",
+        "phase": "neighbour-search",
+        "f1": 0.2557,
+        "em": 0.16,
+        "recall": 0.74,
+        "grounding": 0.8964,
+        "latency_s": 0.3975,
+        "tokens": 12.9,
+        "prompt": "plain",
+        "k": 3,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k3_a0.4_plain",
+        "phase": "neighbour-search",
+        "f1": 0.2557,
+        "em": 0.12,
+        "recall": 0.71,
+        "grounding": 0.8939,
+        "latency_s": 0.2327,
+        "tokens": 11.44,
+        "prompt": "plain",
+        "k": 3,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k6_a0.7_plain_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.2474,
+        "em": 0.12,
+        "recall": 0.84,
+        "grounding": 0.8807,
+        "latency_s": 0.6007,
+        "tokens": 38.14,
+        "prompt": "plain",
+        "k": 6,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "alpha0.0",
+        "phase": "ablation",
+        "f1": 0.2462,
+        "em": 0.1,
+        "recall": 0.71,
+        "grounding": 0.9456,
+        "latency_s": 0.3337,
+        "tokens": 11.14,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.7_plain_r",
+        "phase": "neighbour-search",
+        "f1": 0.2447,
+        "em": 0.1,
+        "recall": 0.8,
+        "grounding": 0.9203,
+        "latency_s": 0.4323,
+        "tokens": 14.86,
+        "prompt": "plain",
+        "k": 5,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "alpha0.7",
+        "phase": "ablation",
+        "f1": 0.2383,
+        "em": 0.14,
+        "recall": 0.76,
+        "grounding": 0.892,
+        "latency_s": 0.2647,
+        "tokens": 12.4,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.7_plain_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.2361,
+        "em": 0.1,
+        "recall": 0.66,
+        "grounding": 0.8609,
+        "latency_s": 0.4083,
+        "tokens": 36.26,
+        "prompt": "plain",
+        "k": 3,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k6_a0.7_strict_r",
+        "phase": "neighbour-search",
+        "f1": 0.2331,
+        "em": 0.12,
+        "recall": 0.86,
+        "grounding": 0.775,
+        "latency_s": 0.7663,
+        "tokens": 21.68,
+        "prompt": "strict",
+        "k": 6,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k6_a0.7_strict",
+        "phase": "neighbour-search",
+        "f1": 0.2331,
+        "em": 0.12,
+        "recall": 0.86,
+        "grounding": 0.775,
+        "latency_s": 0.0,
+        "tokens": 17.78,
+        "prompt": "strict",
+        "k": 6,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k2_a0.6_strict",
+        "phase": "neighbour-search",
+        "f1": 0.2319,
+        "em": 0.14,
+        "recall": 0.63,
+        "grounding": 0.7346,
+        "latency_s": 0.1265,
+        "tokens": 17.88,
+        "prompt": "strict",
+        "k": 2,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "alpha0.3",
+        "phase": "ablation",
+        "f1": 0.225,
+        "em": 0.1,
+        "recall": 0.76,
+        "grounding": 0.9355,
+        "latency_s": 0.2325,
+        "tokens": 11.48,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k3_a0.3_strict_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.2191,
+        "em": 0.1,
+        "recall": 0.65,
+        "grounding": 0.8419,
+        "latency_s": 1.5047,
+        "tokens": 44.24,
+        "prompt": "strict",
+        "k": 3,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "alpha1.0",
+        "phase": "ablation",
+        "f1": 0.2158,
+        "em": 0.1,
+        "recall": 0.7,
+        "grounding": 0.8901,
+        "latency_s": 0.3714,
+        "tokens": 13.72,
+        "prompt": "plain",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k6_a0.6_strict",
+        "phase": "neighbour-search",
+        "f1": 0.2097,
+        "em": 0.1,
+        "recall": 0.84,
+        "grounding": 0.7428,
+        "latency_s": 0.2899,
+        "tokens": 21.1,
+        "prompt": "strict",
+        "k": 6,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k2_a0.6_plain_d",
+        "phase": "neighbour-search",
+        "f1": 0.2075,
+        "em": 0.08,
+        "recall": 0.59,
+        "grounding": 0.8786,
+        "latency_s": 0.2199,
+        "tokens": 34.28,
+        "prompt": "plain",
+        "k": 2,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k6_a0.7_strict_d",
+        "phase": "neighbour-search",
+        "f1": 0.2037,
+        "em": 0.1,
+        "recall": 0.83,
+        "grounding": 0.6949,
+        "latency_s": 0.4257,
+        "tokens": 38.96,
+        "prompt": "strict",
+        "k": 6,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k2_a0.7_strict_r",
+        "phase": "neighbour-search",
+        "f1": 0.2031,
+        "em": 0.1,
+        "recall": 0.66,
+        "grounding": 0.725,
+        "latency_s": 0.3166,
+        "tokens": 27.3,
+        "prompt": "strict",
+        "k": 2,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k2_a0.4_strict",
+        "phase": "neighbour-search",
+        "f1": 0.2021,
+        "em": 0.1,
+        "recall": 0.6,
+        "grounding": 0.7634,
+        "latency_s": 0.3121,
+        "tokens": 20.78,
+        "prompt": "strict",
+        "k": 2,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "prompt_strict",
+        "phase": "ablation",
+        "f1": 0.1963,
+        "em": 0.1,
+        "recall": 0.79,
+        "grounding": 0.7826,
+        "latency_s": 0.4936,
+        "tokens": 17.4,
+        "prompt": "strict",
+        "k": 4,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k2_a0.7_plain_d_r",
+        "phase": "neighbour-search",
+        "f1": 0.1957,
+        "em": 0.06,
+        "recall": 0.59,
+        "grounding": 0.871,
+        "latency_s": 0.1862,
+        "tokens": 36.52,
+        "prompt": "plain",
+        "k": 2,
+        "decompose": true,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k6_a0.4_strict_r",
+        "phase": "neighbour-search",
+        "f1": 0.1943,
+        "em": 0.08,
+        "recall": 0.83,
+        "grounding": 0.785,
+        "latency_s": 232.5014,
+        "tokens": 29.02,
+        "prompt": "strict",
+        "k": 6,
+        "decompose": false,
+        "reflect": true
+      },
+      {
+        "name": "nbr_k3_a0.6_strict",
+        "phase": "neighbour-search",
+        "f1": 0.1802,
+        "em": 0.08,
+        "recall": 0.73,
+        "grounding": 0.7575,
+        "latency_s": 0.5179,
+        "tokens": 23.16,
+        "prompt": "strict",
+        "k": 3,
+        "decompose": false,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.4_strict_d",
+        "phase": "neighbour-search",
+        "f1": 0.174,
+        "em": 0.06,
+        "recall": 0.75,
+        "grounding": 0.8097,
+        "latency_s": 0.5526,
+        "tokens": 42.2,
+        "prompt": "strict",
+        "k": 5,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k2_a0.7_strict_d",
+        "phase": "neighbour-search",
+        "f1": 0.1687,
+        "em": 0.08,
+        "recall": 0.57,
+        "grounding": 0.6817,
+        "latency_s": 0.4209,
+        "tokens": 38.58,
+        "prompt": "strict",
+        "k": 2,
+        "decompose": true,
+        "reflect": false
+      },
+      {
+        "name": "nbr_k5_a0.3_strict_d",
+        "phase": "neighbour-search",
+        "f1": 0.1563,
+        "em": 0.06,
+        "recall": 0.75,
+        "grounding": 0.8181,
+        "latency_s": 0.2805,
+        "tokens": 43.14,
+        "prompt": "strict",
+        "k": 5,
+        "decompose": true,
+        "reflect": false
+      }
+    ]
+  },
+  "lean": {
+    "overhead_ms_per_step": 0.101,
+    "steps": 400,
+    "parallel": {
+      "tasks": 32,
+      "model_latency_ms": 50,
+      "sequential_s": 4.89,
+      "workers_32_s": 0.16
+    },
+    "cost": {
+      "model_calls": 15,
+      "cheap_calls": 11,
+      "first_run_usd": 0.0142,
+      "strong_only_usd": 0.045,
+      "savings_x": 3.2,
+      "prices": {
+        "small": 0.0002,
+        "strong": 0.003
+      },
+      "first_run_s": 0.153,
+      "repeat": {
+        "status": "verified",
+        "usd": 0.0002,
+        "seconds": 0.055,
+        "cache_hits": 14,
+        "calls": 15
+      },
+      "first_cache_hits": 0
+    }
+  }
+}
