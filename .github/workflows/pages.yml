@@ -1,0 +1,50 @@
+name: site
+
+# Build the website from site/ and publish it to the gh-pages branch.
+# The Stack Explorer's data is regenerated from a real run analyzed by the real tools;
+# if that step fails, the committed snapshot in site/stack/data is published instead.
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", "sparkrun/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch the stack's tools
+        run: |
+          for r in Agenttracing simple_agent_tracer agent-trace-viz ares; do
+            git clone -q --depth 1 "https://github.com/sugeerth/$r" "tools/$r"
+          done
+          pip install --quiet httpx pydantic numpy
+      - name: Generate Stack Explorer data
+        continue-on-error: true
+        env:
+          PYTHONPATH: tools/Agenttracing:tools/simple_agent_tracer:tools/agent-trace-viz/src:tools/ares
+        run: python sparkrun/examples/stack.py --out stack-data --with-tools --ares-leaderboard tools/ares/results/leaderboard.csv
+      - name: Build
+        run: |
+          if [ -f stack-data/stack.json ]; then python site/build.py --out _site --stack-data stack-data
+          else python site/build.py --out _site; fi
+      - name: Publish to gh-pages
+        run: |
+          cd _site
+          git init -q -b gh-pages
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Deploy ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

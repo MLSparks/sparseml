@@ -6,3 +6,6 @@ dist/
 .venv/
 runs/
 .DS_Store
+_site/
+stack-data/
+tools/

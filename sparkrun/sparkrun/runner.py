@@ -348,7 +348,8 @@ class Agent:
                 self._emit(j, s, "paused", status="model_unavailable", reason=str(e))
                 return self._result(j, run_id, s, "model_unavailable", str(e))
             self._emit(j, s, "model_call", step=s.steps + 1, model=model.name, level=s.level,
-                       reply=text[:4000], tokens=usage.tokens, cost_usd=usage.cost_usd)
+                       reply=text[:4000], tokens=usage.tokens, tokens_in=usage.prompt_tokens,
+                       tokens_out=usage.completion_tokens, cost_usd=usage.cost_usd)
 
             try:
                 action = parse_action(text)

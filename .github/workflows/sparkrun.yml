@@ -35,3 +35,29 @@ jobs:
           python -m pip install --quiet .
           sparkrun --help
           python -c "import sparkrun; print('sparkrun', sparkrun.__version__)"
+
+  stack:
+    # The exporters and ARES checks, validated by the real tools they target.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch the stack's tools
+        run: |
+          for r in Agenttracing simple_agent_tracer agent-trace-viz ares; do
+            git clone -q --depth 1 "https://github.com/sugeerth/$r" "tools/$r"
+          done
+          pip install --quiet httpx pydantic numpy
+      - name: Tests with every tool installed (nothing skipped)
+        working-directory: sparkrun
+        env:
+          PYTHONPATH: ../tools/Agenttracing:../tools/simple_agent_tracer:../tools/agent-trace-viz/src:../tools/ares
+        run: |
+          python -m unittest discover -s tests -v 2>&1 | tee test.log
+          if grep -q "skipped" test.log; then echo "::error::a stack tool was not importable"; exit 1; fi
+      - name: Stack demo end to end
+        env:
+          PYTHONPATH: tools/Agenttracing:tools/simple_agent_tracer:tools/agent-trace-viz/src:tools/ares
+        run: python sparkrun/examples/stack.py --out stack-data --with-tools --ares-leaderboard tools/ares/results/leaderboard.csv

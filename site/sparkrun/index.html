@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>sparkrun</title>
+<meta name="description" content="sparkrun: lean, verified, crash-safe execution for AI agents on small models. No dependencies, runs on free local models.">
+<meta property="og:title" content="sparkrun">
+<meta property="og:description" content="Make AI agents finish long tasks: independent verification, crash-safe resume, no duplicate side effects, small models first.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0f1a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%230f1a2e'/%3E%3Cpath d='M15.5 4 8 16h5l-1.5 8L20 12h-5z' fill='%23ff6a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: docs page in the AgentSparks system. Hero states the compounding-error problem with a live calculator; then install, usage, guarantees, reference. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#0f1a2e; --muted:#566079; --line:#dde1ea;
+  --accent:#ff6a1a; --accent-ink:#b84300; --cobalt:#2340c8; --chip:#eef1f7; --ok:#1f8a4c; --bad:#c2410c;
+  --code-bg:#0f1a2e; --code-fg:#e8ecf5; --code-mut:#8f9bb6; --code-key:#ffb07f; --code-str:#8ee0a8;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440; --ok:#5fd18f; --bad:#ff9a6b;
+  --code-bg:#070c18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440; --ok:#5fd18f; --bad:#ff9a6b;
+  --code-bg:#070c18; color-scheme:dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:var(--cobalt)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:clamp(26px,3.6vw,36px);font-weight:800;letter-spacing:-.01em}
+h3{font-size:19px;font-weight:600}
+p{margin:0}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+code{font-family:var(--mono);font-size:.92em;background:var(--chip);padding:1px 6px;border-radius:5px}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:13px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font:800 19px var(--display);color:var(--ink);text-decoration:none}
+.logo small{font:500 12px var(--mono);color:var(--muted)}
+.nav nav{display:flex;gap:20px;flex-wrap:wrap}
+.nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px}
+.nav nav a:hover{color:var(--ink)}
+
+.hero{padding-block:64px 56px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,6vw,64px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:19px;color:var(--muted);margin:20px 0 26px;max-width:34em}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px var(--body);padding:11px 18px;border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.ghost{border-color:var(--line);color:var(--ink);background:var(--surface)}
+
+/* compounding calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0}
+.calc .big{font:800 clamp(44px,7vw,64px)/1 var(--display);font-variant-numeric:tabular-nums}
+.calc .big.low{color:var(--bad)}
+.calc .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:14px;font-size:14px}
+.calc label{font-weight:600}
+.calc output{font:500 14px var(--mono);font-variant-numeric:tabular-nums}
+.calc input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+.calc svg{display:block;width:100%;height:auto;margin-top:16px}
+.calc .note{font-size:13px;color:var(--muted);margin-top:10px}
+
+section.band{padding-block:64px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:10px;margin-bottom:28px;max-width:700px}
+.sec-head p{color:var(--muted);font-size:17px}
+
+.code{position:relative;background:var(--code-bg);color:var(--code-fg);border-radius:14px;padding:18px 20px;overflow-x:auto;font:14px/1.6 var(--mono);margin:0}
+.code .c{color:var(--code-mut)} .code .k{color:var(--code-key)} .code .s{color:var(--code-str)}
+.codewrap{position:relative;min-width:0}
+.copy{position:absolute;top:10px;right:10px;font:500 12px var(--body);color:var(--code-fg);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 10px;cursor:pointer}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.two>*{min-width:0}
+.steps{display:grid;gap:14px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px}
+.steps li::before{content:counter(s);width:28px;height:28px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font:600 13px var(--mono);color:var(--accent-ink)}
+.steps p{color:var(--muted);font-size:15px}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--chip)}
+td:first-child{font-weight:600;width:30%}
+td .where{display:block;margin-top:4px;font:500 12px var(--mono);color:var(--muted)}
+.pill{display:inline-block;font:500 12px var(--mono);padding:2px 9px;border-radius:999px;background:var(--chip)}
+.pill.ok{color:var(--ok)} .pill.wait{color:var(--accent-ink)}
+
+.lean{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.lean div{display:grid;gap:8px;align-content:start}
+.lean p{color:var(--muted)}
+.limits{margin:0;padding-left:20px;display:grid;gap:8px;max-width:46em;color:var(--muted)}
+.road{margin:0;padding-left:22px;display:grid;gap:10px;max-width:50em}
+.road li::marker{font-family:var(--mono);color:var(--accent)}
+.road b{font-weight:600}
+footer{border-top:1px solid var(--line);padding-block:30px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  .hero .wrap,.two,.lean{grid-template-columns:1fr}
+  .hero{padding-block:40px}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top">
+      <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--ink)"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="var(--accent)"/></svg>
+      sparkrun <small>v0.1.0</small>
+    </a>
+    <nav aria-label="Docs">
+      <a href="#install">Install</a>
+      <a href="#guarantees">Guarantees</a>
+      <a href="#reference">Reference</a>
+      <a href="play/">Playground</a>
+      <a href="trip/">Trip team</a>
+      <a href="https://github.com/MLSparks/sparseml/tree/main/sparkrun">GitHub ↗</a>
+      <a href="../">AgentSparks</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Open source · Apache-2.0 · zero dependencies</span>
+        <h1>Agents that <em>finish</em> the job, and prove it.</h1>
+        <p class="lede">sparkrun is a lean runtime for AI agents on small models. It checks results independently, survives crashes, never repeats a side effect, and only calls a bigger model when a small one fails.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#install">Install sparkrun</a>
+          <a class="btn ghost" href="play/">Try it in your browser</a>
+          <a class="btn ghost" href="trip/">Multi-agent trip demo</a>
+        </div>
+      </div>
+      <div class="calc" aria-labelledby="calc-title">
+        <span class="eyebrow" id="calc-title">Why long tasks fail</span>
+        <div class="row" style="margin-top:10px">
+          <span>Chance an agent finishes all steps</span>
+        </div>
+        <div class="big" id="calc-out">50%</div>
+        <div class="row">
+          <label for="calc-p">Per-step reliability</label><output id="calc-p-out" for="calc-p">99.0%</output>
+          <input id="calc-p" type="range" min="900" max="999" step="1" value="990">
+        </div>
+        <div class="row">
+          <label for="calc-n">Steps in the task</label><output id="calc-n-out" for="calc-n">69</output>
+          <input id="calc-n" type="range" min="1" max="200" step="1" value="69">
+        </div>
+        <svg id="calc-chart" viewBox="0 0 320 120" role="img" aria-label="Success rate falling as steps increase"></svg>
+        <p class="note">Errors compound: success = reliability<sup>steps</sup>. Verification, recovery and escalation are how sparkrun bends this curve back up.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="install">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Install</span>
+        <h2>One package, nothing else to run.</h2>
+        <p>Python 3.10 or newer. The package installs as <code>agentsparks-sparkrun</code> and imports as <code>sparkrun</code>.</p>
+      </div>
+      <div class="two">
+        <div class="codewrap"><button class="copy" type="button" data-copy="install">Copy</button><pre class="code" id="install-code"><span class="c"># from GitHub</span>
+pip install "agentsparks-sparkrun @ git+https://github.com/MLSparks/sparseml#subdirectory=sparkrun"
+
+<span class="c"># optional: a free local small model</span>
+ollama pull qwen2.5:3b</pre></div>
+        <ol class="steps">
+          <li><div><h3>Wrap your tools</h3><p>Mark anything that changes the world with <code>side_effect=True</code>. It will run at most once per task.</p></div></li>
+          <li><div><h3>Say how success is checked</h3><p>Tests that pass, a file that exists, an endpoint that answers. The model's word never counts.</p></div></li>
+          <li><div><h3>List models cheapest first</h3><p>Most steps run on a free local model. A stronger one is called only when the small one fails.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Usage</span>
+        <h2>A verified run in a few lines.</h2>
+      </div>
+      <div class="codewrap"><button class="copy" type="button" data-copy="usage">Copy</button><pre class="code" id="usage-code"><span class="k">from</span> sparkrun <span class="k">import</span> Agent, OpenAICompatible, Policy, tool, verify
+
+<span class="k">@tool</span>(side_effect=<span class="k">True</span>)                 <span class="c"># changes the world, so it runs at most once</span>
+<span class="k">def</span> write_file(path: str, content: str):
+    <span class="s">"""Create or overwrite a file."""</span>
+    open(path, <span class="s">"w"</span>).write(content)
+    <span class="k">return</span> <span class="s">"ok"</span>
+
+small = OpenAICompatible(<span class="s">"http://localhost:11434/v1"</span>, <span class="s">"qwen2.5:3b"</span>)         <span class="c"># free, local</span>
+strong = OpenAICompatible(<span class="s">"https://api.example.com/v1"</span>, <span class="s">"big-model"</span>,          <span class="c"># only if needed</span>
+                          api_key_env=<span class="s">"EXAMPLE_API_KEY"</span>, usd_per_mtok_in=1.0, usd_per_mtok_out=4.0)
+
+agent = Agent([small, strong], [write_file],
+              checks=[verify.command(<span class="s">"pytest -q"</span>, cwd=<span class="s">"project"</span>)],        <span class="c"># proof, not opinion</span>
+              policy=Policy(max_steps=40, max_cost_usd=0.50))
+result = agent.run(<span class="s">"Make the failing test in project/ pass"</span>)
+print(result.status, result.cost_usd)          <span class="c"># "verified" only when the checks pass</span></pre></div>
+    </div>
+  </section>
+
+  <section class="band" id="guarantees">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Guarantees</span>
+        <h2>Every way long runs break, and what sparkrun does about it.</h2>
+        <p>Each guarantee is covered by the test suite, which runs on Python 3.10 to 3.13 on every change.</p>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Failure</th><th>What sparkrun does</th></tr></thead>
+          <tbody>
+            <tr><td>Claims success incorrectly<span class="where">verify.py</span></td><td>Only independent checks can mark a run verified. Failed checks come back to the model as "must fix" items.</td></tr>
+            <tr><td>Repeats an action<span class="where">runner.py</span></td><td>Side-effect tools get an idempotency key. A repeat returns the recorded result instead of running again.</td></tr>
+            <tr><td>Process crashes<span class="where">journal.py</span></td><td>Every change is journaled and fsynced. <code>run(run_id=...)</code> rebuilds the run and continues without re-paying for finished steps.</td></tr>
+            <tr><td>Crash during a side effect<span class="where">runner.py</span></td><td>It can't know whether the action happened, so the run pauses as <code>needs_reconcile</code> until a person approves a retry.</td></tr>
+            <tr><td>Gets stuck in a loop<span class="where">runner.py</span></td><td>The same call repeated in a short window escalates to a stronger model, then stops as <code>stuck</code>.</td></tr>
+            <tr><td>Context too long or trimmed<span class="where">memory.py</span></td><td>Each call sends goal, must-fix items, remembered facts and the newest steps. The prompt stays under a fixed size however long the run.</td></tr>
+            <tr><td>Messy output from small models<span class="where">runner.py</span></td><td>Accepts prose, code fences, single quotes and renamed keys, and tells the model what was wrong otherwise.</td></tr>
+            <tr><td>Risky actions<span class="where">tools.py</span></td><td><code>needs_approval=True</code> pauses until a person approves. Tool allowlists and step, cost and time budgets are hard limits.</td></tr>
+            <tr><td>Cost tracked per token, not per outcome<span class="where">report.py</span></td><td><code>sparkrun report</code> shows success rate and cost per verified task.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Lean by design</span>
+        <h2>Built for small models and $0 infrastructure.</h2>
+      </div>
+      <div class="lean">
+        <div><h3>Small model first</h3><p>Pass models cheapest to strongest. Escalation happens only after invalid replies, a failed check or a loop.</p></div>
+        <div><h3>Flat prompt size</h3><p>Compact task memory replaces the growing transcript, so 4k-context models stay on track and cost per step stays constant.</p></div>
+        <div><h3>No servers</h3><p>The journal is a JSON-lines file. No database, queue or service. It runs on a laptop, a free CI runner or a container.</p></div>
+      </div>
+      <div class="lean" style="margin-top:28px">
+        <div><h3>~0.1 ms per step</h3><p>sparkrun's own overhead per step. Only critical events are forced to disk, so safety costs almost nothing.</p></div>
+        <div><h3>Parallel runs</h3><p><code>run_many(goals, workers=64)</code> ran 64 tasks with 50 ms model calls in 0.2 s instead of 9.8 s.</p></div>
+        <div><h3>Prefix-cache friendly</h3><p>The system prompt never changes between calls, so local servers can reuse its cached computation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="reference">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Reference</span>
+        <h2>Run statuses and commands</h2>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Status</th><th>Meaning</th><th>Next</th></tr></thead>
+          <tbody>
+            <tr><td><code>verified</code></td><td>All checks passed.</td><td><span class="pill ok">done</span></td></tr>
+            <tr><td><code>unverified</code></td><td>The model said done, but no checks were configured.</td><td><span class="pill">done</span></td></tr>
+            <tr><td><code>failed</code></td><td>Checks kept failing, or the model returned a permanent error.</td><td><span class="pill">done</span></td></tr>
+            <tr><td><code>budget_exceeded</code></td><td>Step, cost or time limit reached.</td><td><span class="pill">done</span></td></tr>
+            <tr><td><code>stuck</code></td><td>Kept repeating itself on the strongest model.</td><td><span class="pill">done</span></td></tr>
+            <tr><td><code>needs_approval</code></td><td>Waiting for a person to approve an action.</td><td><span class="pill wait">approve, then resume</span></td></tr>
+            <tr><td><code>needs_reconcile</code></td><td>A side effect may or may not have happened before a crash.</td><td><span class="pill wait">approve to retry, then resume</span></td></tr>
+            <tr><td><code>model_unavailable</code></td><td>The model server was unreachable after retries.</td><td><span class="pill wait">resume</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codewrap" style="margin-top:24px"><button class="copy" type="button" data-copy="cli">Copy</button><pre class="code" id="cli-code">sparkrun report runs            <span class="c"># success rate, cost per verified task, duplicates prevented</span>
+sparkrun show runs/&lt;run_id&gt;     <span class="c"># every event in one run</span>
+sparkrun approve runs/&lt;run_id&gt;  <span class="c"># approve what a paused run is waiting on</span></pre></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap two">
+      <div>
+        <div class="sec-head"><span class="eyebrow">Limits</span><h2>What it doesn't do</h2></div>
+        <ul class="limits">
+          <li>Verification is only as strong as your checks. With none, a run ends <code>unverified</code>, never <code>verified</code>.</li>
+          <li>"At most once" covers side effects that go through sparkrun tools. Give outside systems an idempotency key too where they support one.</li>
+          <li>Setup learning is a simple epsilon-greedy choice, not a full experiment framework.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="sec-head"><span class="eyebrow">Roadmap</span><h2>What's next</h2></div>
+        <ol class="road">
+          <li><b>Check library</b> for coding, browser and business-workflow agents.</li>
+          <li><b>Failure benchmark</b> of real agent failures, measuring success, recovery and cost per verified task.</li>
+          <li><b>Adapters</b> for LangGraph, CrewAI and custom loops.</li>
+          <li><b>Fault injection</b> to test agents before production.</li>
+          <li><b>Sparse local models</b> so the cheapest tier runs fast on CPU.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>sparkrun is built by <a href="../">AgentSparks</a>. Apache-2.0.</span>
+    <span><a href="https://github.com/MLSparks/sparseml/tree/main/sparkrun">Source</a> · <a href="https://github.com/MLSparks/sparseml/releases">Releases</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const p = document.getElementById("calc-p"), n = document.getElementById("calc-n");
+  const out = document.getElementById("calc-out"), pOut = document.getElementById("calc-p-out"), nOut = document.getElementById("calc-n-out");
+  const svg = document.getElementById("calc-chart");
+  const W = 320, H = 120, pad = {l: 30, r: 8, t: 8, b: 20}, maxN = 200;
+  const x = s => pad.l + (s - 1) / (maxN - 1) * (W - pad.l - pad.r);
+  const y = v => pad.t + (1 - v) * (H - pad.t - pad.b);
+  function draw(){
+    const rel = p.value / 1000, steps = +n.value, v = Math.pow(rel, steps);
+    out.textContent = (v * 100 < 1 ? (v * 100).toFixed(2) : Math.round(v * 100)) + "%";
+    out.classList.toggle("low", v < 0.5);
+    pOut.textContent = (rel * 100).toFixed(1) + "%";
+    nOut.textContent = steps;
+    let d = "";
+    for (let s = 1; s <= maxN; s += 1) d += (s === 1 ? "M" : "L") + x(s).toFixed(1) + " " + y(Math.pow(rel, s)).toFixed(1);
+    const grid = [0, 0.5, 1].map(g => `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(g)}" y2="${y(g)}" stroke="var(--line)" stroke-width="1"/>` +
+      `<text x="${pad.l - 6}" y="${y(g) + 4}" text-anchor="end" font-size="10" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${g * 100}%</text>`).join("");
+    const ticks = [1, 100, 200].map(s => `<text x="${x(s)}" y="${H - 4}" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${s}</text>`).join("");
+    svg.innerHTML = grid + ticks +
+      `<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2"/>` +
+      `<line x1="${x(steps)}" x2="${x(steps)}" y1="${pad.t}" y2="${H - pad.b}" stroke="var(--muted)" stroke-dasharray="3 3"/>` +
+      `<circle cx="${x(steps)}" cy="${y(v)}" r="4" fill="var(--ink)" stroke="var(--surface)" stroke-width="2"/>`;
+  }
+  p.addEventListener("input", draw); n.addEventListener("input", draw); draw();
+
+  document.querySelectorAll("button.copy").forEach(b => b.addEventListener("click", () => {
+    const pre = document.getElementById(b.dataset.copy + "-code");
+    const text = pre.innerText.split("\n").filter(l => !l.trim().startsWith("#")).join("\n").replace(/\s+#.*$/gm, "").trim();
+    const done = msg => { b.textContent = msg; setTimeout(() => b.textContent = "Copy", 1500); };
+    try { navigator.clipboard.writeText(text).then(() => done("Copied"), () => done("Select and copy")); }
+    catch { done("Select and copy"); }
+  }));
+})();
+</script>
+</body>
+</html>

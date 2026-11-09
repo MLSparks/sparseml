@@ -293,6 +293,38 @@ class TestEfficiency(Base):
         self.assertEqual(fsync.call_count, 3)
 
 
+class TestCachedModel(Base):
+    def test_repeat_task_costs_nothing(self):
+        from sparkrun import CachedModel
+        cache = {}
+        script = lambda msgs: act("send", to="a", body="b") if "send(" not in msgs[1]["content"] else done()
+        first = self.agent(CachedModel(ScriptedModel(script, usd_per_call=0.01), cache)).run("send it")
+        self.assertEqual((first.status, first.cost_usd), ("verified", 0.02))
+        inner = ScriptedModel(script, usd_per_call=0.01)
+        cached = CachedModel(inner, cache)
+        self.env.sent.clear()
+        again = self.agent(cached).run("send it")
+        self.assertEqual(again.status, "verified")
+        self.assertEqual(again.cost_usd, 0.0)
+        self.assertEqual((cached.hits, cached.misses, inner.calls), (2, 0, 0))
+
+    def test_cache_on_disk_survives_a_new_process(self):
+        from sparkrun import CachedModel
+        d = Path(self.tmp.name) / "cache"
+        m1 = CachedModel(ScriptedModel(["hello"]), d)
+        m1.complete([{"role": "user", "content": "hi"}])
+        m2 = CachedModel(ScriptedModel([]), d)  # an empty script would fail if called
+        self.assertEqual(m2.complete([{"role": "user", "content": "hi"}])[0], "hello")
+        self.assertEqual(m2.hits, 1)
+
+    def test_different_prompts_are_not_confused(self):
+        from sparkrun import CachedModel
+        m = CachedModel(ScriptedModel(["one", "two"]), {})
+        self.assertEqual(m.complete([{"role": "user", "content": "a"}])[0], "one")
+        self.assertEqual(m.complete([{"role": "user", "content": "b"}])[0], "two")
+        self.assertEqual(m.misses, 2)
+
+
 class TestOpenAICompatible(unittest.TestCase):
     """Runs the HTTP adapter against a stub server shaped like Ollama / llama.cpp / vLLM."""
 

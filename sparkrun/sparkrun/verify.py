@@ -128,3 +128,63 @@ def predicate(fn: Callable[[dict], Any], name: str) -> Check:
         return Evidence(name, bool(ok), str(detail))
 
     return _named(check, name)
+
+
+# --------------------------------------------------------------------------- ARES metrics
+# Groundedness and answer F1 from ARES (github.com/sugeerth/ares, MIT). The real ares.metrics
+# is used when installed; otherwise these faithful copies run, so results match either way.
+
+try:  # pragma: no cover - depends on the environment
+    from ares.metrics import f1 as _ares_f1, grounding as _ares_grounding
+    ARES_SOURCE = "ares.metrics"
+except Exception:  # ARES not installed (it is optional)
+    import collections as _collections
+    import string as _string
+
+    _PUNCT = set(_string.punctuation)
+    _ARTICLES = re.compile(r"\b(a|an|the)\b")
+    ARES_SOURCE = "sparkrun copy of ares.metrics"
+
+    def _norm(s: str) -> str:
+        s = "".join(ch for ch in (s or "").lower() if ch not in _PUNCT)
+        return " ".join(_ARTICLES.sub(" ", s).split())
+
+    def _ares_f1(pred: str, gold: str) -> float:
+        p, g = _norm(pred).split(), _norm(gold).split()
+        if not p or not g:
+            return float(p == g)
+        n = sum((_collections.Counter(p) & _collections.Counter(g)).values())
+        if n == 0:
+            return 0.0
+        prec, rec = n / len(p), n / len(g)
+        return 2 * prec * rec / (prec + rec)
+
+    def _ares_grounding(answer: str, context: str) -> float:
+        a, c = set(_norm(answer).split()), set(_norm(context).split())
+        return len(a & c) / len(a) if a else 0.0
+
+
+def grounded(context: Callable[[dict], str], *, min_score: float = 0.8, name: str | None = None) -> Check:
+    """Passes when at least min_score of the answer's words appear in the evidence the agent
+    actually retrieved (ARES lexical groundedness). context(ctx) returns that evidence."""
+    label = name or f"answer grounded in retrieved evidence (ARES, >= {min_score:.0%})"
+
+    def check(ctx: dict) -> Evidence:
+        answer, evidence = ctx.get("answer") or "", context(ctx) or ""
+        if not evidence.strip():
+            return Evidence(label, False, "no evidence was retrieved")
+        score = _ares_grounding(answer, evidence)
+        return Evidence(label, score >= min_score, f"groundedness {score:.2f}")
+
+    return _named(check, label)
+
+
+def answer_f1(gold: str, *, min_score: float = 0.5, name: str | None = None) -> Check:
+    """Passes when the answer's token F1 against a gold answer reaches min_score (ARES F1)."""
+    label = name or f"answer matches gold (ARES F1 >= {min_score:.2f})"
+
+    def check(ctx: dict) -> Evidence:
+        score = _ares_f1(ctx.get("answer") or "", gold)
+        return Evidence(label, score >= min_score, f"F1 {score:.2f} against {gold!r}")
+
+    return _named(check, label)
