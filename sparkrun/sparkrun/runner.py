@@ -290,9 +290,8 @@ class Agent:
         """Run independent goals in parallel. Agents spend most of their time waiting on
         model calls, so threads give near-linear speedups. Models must be thread-safe
         (OpenAICompatible and ScriptedModel are)."""
-        from concurrent.futures import ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-            return list(pool.map(lambda g: self.run(g), goals))
+        from .team import parallel_map
+        return parallel_map(lambda g: self.run(g), goals, workers)
 
     def _start(self, j: Journal, run_id: str, goal: str | None) -> Result:
         if not j.events:

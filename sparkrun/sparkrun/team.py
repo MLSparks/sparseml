@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -23,6 +24,15 @@ from .runner import Agent, Result
 from .verify import Check, Verdict, run_checks
 
 OK = {"verified", "unverified"}
+
+
+def parallel_map(fn, items, workers: int) -> list:
+    """Map on threads, or in order where threads don't exist (WebAssembly) or don't help."""
+    items = list(items)
+    if len(items) <= 1 or workers <= 1 or sys.platform in ("emscripten", "wasi"):
+        return [fn(x) for x in items]
+    with ThreadPoolExecutor(max_workers=min(workers, len(items))) as pool:
+        return list(pool.map(fn, items))
 
 
 @dataclass
@@ -113,9 +123,8 @@ class Team:
 
         for wave in self.waves:
             todo = [n for n in wave if n not in stop]
-            with ThreadPoolExecutor(max_workers=max(1, min(self.workers, len(todo) or 1))) as pool:
-                for name, res in pool.map(one, todo):
-                    result.roles[name] = res
+            for name, res in parallel_map(one, todo, self.workers):
+                result.roles[name] = res
             self._save(board_file)
             bad = [n for n in wave if n in result.roles and result.roles[n].status not in OK]
             if bad:
