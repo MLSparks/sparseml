@@ -253,6 +253,46 @@ class TestRuns(Base):
         self.assertAlmostEqual(s["cost_per_verified_usd"], 0.03)
 
 
+class TestEfficiency(Base):
+    def test_run_many_runs_in_parallel(self):
+        import time as _t
+
+        def slow(messages):
+            _t.sleep(0.05)
+            return done() if "send(" in messages[1]["content"] else act("send", to="a", body="b")
+
+        agent = Agent(ScriptedModel(slow), self.env.tools, runs_dir=self.runs, policy=FAST)
+        t0 = _t.perf_counter()
+        results = agent.run_many([f"task {i}" for i in range(20)], workers=20)
+        elapsed = _t.perf_counter() - t0
+        self.assertEqual([r.status for r in results], ["unverified"] * 20)
+        self.assertEqual(len({r.run_id for r in results}), 20)
+        self.assertLess(elapsed, 1.0)  # sequential would take at least 20 * 2 * 0.05 = 2s
+
+    def test_durability_modes_all_resume_correctly(self):
+        for mode in ("always", "side_effects", "never"):
+            env = Env()
+            run_id = f"d-{mode}"
+            with self.assertRaises(RuntimeError):
+                Agent(ScriptedModel([act("send", to="a", body="b"), RuntimeError("crash")]), env.tools,
+                      checks=[env.sent_once], policy=FAST, runs_dir=self.runs, durability=mode).run("x", run_id=run_id)
+            r = Agent(ScriptedModel([act("send", to="a", body="b"), done()]), env.tools,
+                      checks=[env.sent_once], policy=FAST, runs_dir=self.runs, durability=mode).run(run_id=run_id)
+            self.assertEqual((mode, r.status, len(env.sent)), (mode, "verified", 1))
+
+    def test_bad_durability_rejected(self):
+        with self.assertRaises(ValueError):
+            Agent(ScriptedModel([]), [], durability="sometimes")
+
+    def test_critical_events_are_fsynced(self):
+        import os as _os
+        from unittest import mock
+        with mock.patch.object(_os, "fsync", wraps=_os.fsync) as fsync:
+            self.agent(ScriptedModel([act("lookup", name="x"), act("send", to="a", body="b"), done()])).run("x")
+        # side-effect start + result, and the final outcome; the lookup and model replies are not fsynced
+        self.assertEqual(fsync.call_count, 3)
+
+
 class TestOpenAICompatible(unittest.TestCase):
     """Runs the HTTP adapter against a stub server shaped like Ollama / llama.cpp / vLLM."""
 

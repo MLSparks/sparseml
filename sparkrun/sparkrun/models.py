@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -94,15 +95,19 @@ class ScriptedModel:
         self.name = name
         self.usd_per_call = usd_per_call
         self.calls = 0
+        self._lock = threading.Lock()
 
     def complete(self, messages: list[dict], max_tokens: int = 512) -> tuple[str, Usage]:
         if callable(self.script):
-            reply: Reply = self.script(messages)
+            with self._lock:
+                self.calls += 1
+            reply: Reply = self.script(messages)  # outside the lock so slow scripts run in parallel
         else:
-            if self.calls >= len(self.script):
-                raise PermanentError(f"{self.name}: script has no reply #{self.calls + 1}")
-            reply = self.script[self.calls]
-        self.calls += 1
+            with self._lock:
+                if self.calls >= len(self.script):
+                    raise PermanentError(f"{self.name}: script has no reply #{self.calls + 1}")
+                reply = self.script[self.calls]
+                self.calls += 1
         if isinstance(reply, BaseException):
             raise reply
         prompt = sum(len(m.get("content", "")) for m in messages) // 4

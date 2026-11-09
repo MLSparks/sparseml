@@ -31,7 +31,7 @@ The package installs as `agentsparks-sparkrun` and imports as `sparkrun`. Docs: 
 cd sparkrun
 python examples/demo.py                                   # offline, no model needed
 ollama pull qwen2.5:3b && python examples/demo.py --ollama qwen2.5:3b   # a real local small model
-python -m unittest discover -s tests                      # 30 tests
+python -m unittest discover -s tests                      # 34 tests
 ```
 
 ```python
@@ -91,6 +91,27 @@ print(result.status, result.cost_usd, result.verdict.failures if result.verdict 
   4k-context small models and keeps cost per step constant.
 - **No infrastructure.** The journal is a JSON-lines file, so there's no database, queue or
   server to run. It works anywhere Python 3.10+ runs: a laptop, a $0 CI runner, a container.
+
+## Performance
+
+sparkrun's own work is small next to a model call. Measured with `python benchmarks/bench.py`
+on a 4-core cloud container (your numbers will differ):
+
+| | Before tuning | Now |
+|---|---|---|
+| Overhead per step, default durability | ~1.0 ms | **~0.1 ms** (≈10x less) |
+| 64 tasks × 3 model calls of 50 ms | 9.8 s sequential | **0.2 s** with `run_many(workers=64)` (≈49x faster) |
+
+- **Durability where it matters.** Every event is written and flushed immediately, so a process crash loses
+  nothing. Only critical events (side-effect start and result, approvals, pauses, the final outcome) are
+  forced to disk with `fsync`. Choose `Agent(..., durability="always")` to fsync everything, or `"never"` for
+  scratch runs.
+- **Parallel runs.** `agent.run_many(goals, workers=16)` runs independent tasks on threads. Agents mostly wait
+  on the model, so throughput grows almost linearly with workers until the model server is saturated.
+- **Prefix caching friendly.** The system prompt (instructions and tool list) is identical on every call, so
+  local servers like llama.cpp, vLLM and Ollama can reuse its cached computation; only the compact task view changes.
+- **Flat prompts.** Task memory is trimmed once when it's added and rendered within `context_chars`, so cost
+  per step stays constant on long runs.
 
 ## Run statuses
 

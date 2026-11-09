@@ -19,6 +19,12 @@ class TaskState:
     open_items: list[str] = field(default_factory=list)
     recent: list[str] = field(default_factory=list)
 
+    def add_step(self, text: str) -> None:
+        self.recent.append(_clip(text))
+
+    def add_fact(self, text: str) -> None:
+        self.facts.append(_clip(text))
+
     def render(self, budget_chars: int = 6000) -> str:
         goal = f"GOAL:\n{self.goal}"
         must_fix = ("MUST FIX BEFORE DONE:\n" + "\n".join(f"- {_clip(x)}" for x in self.open_items)
@@ -50,7 +56,7 @@ def _newest_that_fit(items: list[str], budget: int) -> tuple[list[str], int]:
     out: list[str] = []
     used = 0
     for item in reversed(items):
-        clipped = _clip(item)
+        clipped = item if len(item) <= MAX_ITEM_CHARS else _clip(item)  # clipped on insert
         if used + len(clipped) + 3 > budget:
             break
         out.append(clipped)
