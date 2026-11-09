@@ -128,4 +128,4 @@ python -m sparkrun approve runs/<run_id>
    rate, duplicate actions and cost per verified task against plain agent loops.
 3. **Framework adapters:** wrap LangGraph, CrewAI and custom loops so their tool calls go through the journal.
 4. **Simulation:** fault injection (timeouts, crashes, bad tool output) to train and test agents before production.
-5. **Sparse local models:** pair with SparseML-pruned and quantized models so the cheapest tier runs fast on CPU.
+5. **Sparse local models:** pair with pruned and quantized models so the cheapest tier runs fast on CPU.
