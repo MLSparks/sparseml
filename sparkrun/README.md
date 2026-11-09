@@ -54,6 +54,38 @@ result = agent.run("Make the failing test in project/ pass")
 print(result.status, result.cost_usd, result.verdict.failures if result.verdict else None)
 ```
 
+## Multi-agent teams
+
+`Team` runs specialist agents that share a blackboard. Roles run in waves set by their dependencies (the same
+wave runs in parallel), every role keeps sparkrun's guarantees, and team-level checks verify the combined result.
+Run the same `team_id` again to resume after a crash or an approval.
+
+```python
+from sparkrun import Role, Team
+
+team = Team([
+    Role("flights", flights_agent, "Find flights"),
+    Role("hotels", hotels_agent, "Find hotels"),
+    Role("rank", rank_agent, "Rank combinations", after=("flights", "hotels")),
+    Role("booking", booking_agent, lambda board: f"Book {board['options'][0]}", after=("rank",)),
+], board=board, checks=[fits_budget, dates_line_up])
+result = team.run("trip-42")          # needs_approval while booking waits for a person
+team.approve("trip-42", "booking"); team.run("trip-42")
+```
+
+`Policy(gate=...)` lets an outside policy pause any tool call for approval, and `on_event` mirrors every event to a
+bus or UI. The [Sparks bridge](https://github.com/MLSparks/Auto-startup-) uses both to run sparkrun teams under
+Sparks guardrails.
+
+`python examples/trip.py` runs a five-agent trip booking: flights and hotels search in parallel, ranking scores
+every combination, a cheap activities model is caught claiming false success, and booking waits for approval.
+
+## GPU only where it pays
+
+`sparkrun.compute.best_pairs()` does the one heavy step agents hit, scoring every pair from two large candidate
+sets under a budget. It uses a GPU through CuPy or PyTorch with CUDA when installed, otherwise NumPy, otherwise
+plain Python, with the same result every way. Everything else stays on the CPU, where it's cheap.
+
 ## How a run works
 
 ```

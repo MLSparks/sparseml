@@ -15,7 +15,7 @@ import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Callable, Iterable, Sequence
 
 from .journal import Journal, stable_hash
 from .memory import TaskState
@@ -255,7 +255,8 @@ class Agent:
     def __init__(self, models: Model | Sequence[Model], tools: Iterable[Tool], *,
                  checks: Iterable[Check] = (), policy: Policy | None = None,
                  runs_dir: str | Path = "runs", context_chars: int = 6000,
-                 max_tokens: int = 384, instructions: str = "", durability: str = "side_effects"):
+                 max_tokens: int = 384, instructions: str = "", durability: str = "side_effects",
+                 on_event: Callable[[dict], Any] | None = None):
         self.models = list(models) if isinstance(models, (list, tuple)) else [models]
         if not self.models:
             raise ValueError("at least one model is required")
@@ -268,6 +269,8 @@ class Agent:
         if durability not in Journal.DURABILITY:
             raise ValueError(f"durability must be one of {Journal.DURABILITY}")
         self.durability = durability
+        self.on_event = on_event
+        """Called with every journal event as it is written (mirror to a bus, a UI, metrics)."""
         extra = f"\n{instructions.strip()}" if instructions.strip() else ""
         specs = "\n".join(t.spec() for t in self.tools.values()) or "(none)"
         self.system = SYSTEM_PROMPT.format(instructions=extra, tools=specs)
@@ -386,9 +389,10 @@ class Agent:
             if tool.side_effect and key in s.done_results:
                 self._emit(j, s, "tool_replayed", key=key, tool=name, args=args, result=s.done_results[key])
                 continue
-            if tool.needs_approval and key not in s.approved:
+            gated = p.gate(name, args) if p.gate and key not in s.approved else None
+            if (tool.needs_approval or gated) and key not in s.approved:
                 self._emit(j, s, "approval_requested", key=key, tool=name, args=args, reason="needs_approval",
-                           note=f"Approve {_call_str(name, args)} to continue.")
+                           note=gated or f"Approve {_call_str(name, args)} to continue.")
                 continue
             self._execute(j, s, name, args, key)
 
@@ -440,7 +444,13 @@ class Agent:
 
     def _emit(self, j: Journal, s: _State, kind: str, **data: Any) -> None:
         critical = kind in CRITICAL or (kind in ("tool_started", "tool_result") and data.get("side_effect", False))
-        s.apply(j.append(kind, critical=critical, **data))
+        event = j.append(kind, critical=critical, **data)
+        s.apply(event)
+        if self.on_event is not None:
+            try:
+                self.on_event(event)
+            except Exception:  # an observer must never break a run
+                pass
 
     def _escalate(self, j: Journal, s: _State, reason: str) -> None:
         if s.level < len(self.models) - 1:
