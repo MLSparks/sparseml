@@ -1,10 +1,24 @@
-# AgentSparks website
+# Website
 
-A single-page site for AgentSparks: product overview, a link to Auto Startup,
-and a job board with three open roles. It is plain HTML, CSS and JavaScript
-with no build step, so any static host can serve it.
+Everything GitHub Pages serves is built from this folder:
 
-## Applications database (Google Sheet)
+```bash
+python site/build.py --out _site                         # add --stack-data DIR for fresh Stack data
+```
+
+`.github/workflows/pages.yml` runs this on every push to main, after regenerating the Stack Explorer's
+data from a real run analyzed by AgentDiff, Omniscope, agent-trace-viz and ARES, and publishes `_site`
+to the `gh-pages` branch. `stack/data/stack.json` is a committed snapshot used if that step fails.
+
+| Path | Page |
+|---|---|
+| `index.html` | AgentSparks home and job board |
+| `stack/` | Stack Explorer |
+| `sparkrun/` | sparkrun docs |
+| `sparkrun/play/` | sparkrun playground (Python in the browser) |
+| `sparkrun/trip/` | multi-agent travel demo (WebGPU ranking) |
+
+## Job board applications
 
 Applications go into a Google Sheet you own. Setup takes about five minutes:
 

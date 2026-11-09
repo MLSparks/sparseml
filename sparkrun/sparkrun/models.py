@@ -1,12 +1,14 @@
 """Model adapters. Lean by default: any OpenAI-compatible server, including local small models."""
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import threading
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable, Protocol, Sequence, Union
 
 from .tools import TransientError
@@ -112,3 +114,45 @@ class ScriptedModel:
             raise reply
         prompt = sum(len(m.get("content", "")) for m in messages) // 4
         return reply, Usage(prompt, len(reply) // 4, self.usd_per_call)
+
+
+class CachedModel:
+    """Reuse a model's reply for an identical prompt: a repeat costs nothing and takes no time.
+
+    sparkrun prompts are compact and stable (fixed system prompt, compact task view), so
+    identical prompts recur across repeated tasks, retries and similar requests. Pass a dict
+    to share one cache between models and runs, or a directory to keep it across processes.
+    Only use it with deterministic models (temperature 0), where a repeat would say the same.
+    """
+
+    def __init__(self, model: Model, cache: "dict | str | os.PathLike | None" = None):
+        self.model = model
+        self.name = model.name
+        self.dir = None if cache is None or isinstance(cache, dict) else Path(cache)
+        self.cache: dict = cache if isinstance(cache, dict) else {}
+        if self.dir:
+            self.dir.mkdir(parents=True, exist_ok=True)
+        self.hits = self.misses = 0
+        self._lock = threading.Lock()
+
+    def _key(self, messages: list[dict], max_tokens: int) -> str:
+        data = json.dumps([self.name, messages, max_tokens], sort_keys=True, ensure_ascii=False)
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
+
+    def complete(self, messages: list[dict], max_tokens: int = 512) -> tuple[str, Usage]:
+        key = self._key(messages, max_tokens)
+        with self._lock:
+            text = self.cache.get(key)
+            if text is None and self.dir and (self.dir / key).exists():
+                text = (self.dir / key).read_text(encoding="utf-8")
+                self.cache[key] = text
+            if text is not None:
+                self.hits += 1
+                return text, Usage(0, 0, 0.0)
+        text, usage = self.model.complete(messages, max_tokens)  # outside the lock: calls run in parallel
+        with self._lock:
+            self.misses += 1
+            self.cache[key] = text
+            if self.dir:
+                (self.dir / key).write_text(text, encoding="utf-8")
+        return text, usage

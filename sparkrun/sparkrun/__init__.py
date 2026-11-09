@@ -9,7 +9,7 @@ from . import compute, verify
 from .evolve import Variants
 from .journal import Journal, stable_hash
 from .memory import TaskState
-from .models import Model, OpenAICompatible, PermanentError, ScriptedModel, Usage
+from .models import CachedModel, Model, OpenAICompatible, PermanentError, ScriptedModel, Usage
 from .report import format_report, summarize
 from .runner import Agent, ParseError, Result, approve_pending, parse_action
 from .team import Role, Team, TeamResult
@@ -18,7 +18,7 @@ from .verify import Evidence, Verdict
 
 __version__ = "0.1.0"
 __all__ = [
-    "Agent", "Evidence", "Role", "Team", "TeamResult", "compute", "Journal", "Model", "OpenAICompatible", "ParseError", "PermanentError",
+    "Agent", "CachedModel", "Evidence", "Role", "Team", "TeamResult", "compute", "Journal", "Model", "OpenAICompatible", "ParseError", "PermanentError",
     "Policy", "Result", "ScriptedModel", "TaskState", "Tool", "TransientError", "Usage", "Variants",
     "Verdict", "approve_pending", "format_report", "parse_action", "stable_hash", "summarize", "tool",
     "verify",

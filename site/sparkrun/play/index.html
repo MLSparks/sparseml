@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>sparkrun Playground</title>
+<meta name="description" content="Run sparkrun in your browser: watch an agent get caught claiming false success, survive a crash without repeating a side effect, stop a loop, and wait for approval.">
+<meta property="og:title" content="sparkrun Playground">
+<meta property="og:description" content="Run real sparkrun agent scenarios in your browser. Nothing to install.">
+<meta name="theme-color" content="#0f1a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%230f1a2e'/%3E%3Cpath d='M15.5 4 8 16h5l-1.5 8L20 12h-5z' fill='%23ff6a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a working bench. Scenario tabs on top, editable code on the left, the run's journal as a timeline on the right. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#0f1a2e; --muted:#566079; --line:#dde1ea;
+  --accent:#ff6a1a; --accent-ink:#b84300; --cobalt:#2340c8; --chip:#eef1f7;
+  --ok:#1f8a4c; --okbg:#e3f4ea; --bad:#b42318; --badbg:#fde8e6; --warn:#9a5b00; --warnbg:#fff1d6;
+  --code-bg:#0f1a2e; --code-fg:#e8ecf5;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440;
+  --ok:#5fd18f; --okbg:#12301f; --bad:#ff8a80; --badbg:#3a1614; --warn:#ffc266; --warnbg:#33260d;
+  --code-bg:#070c18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1120; --surface:#121a2d; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --cobalt:#8ea2ff; --chip:#1a2440;
+  --ok:#5fd18f; --okbg:#12301f; --bad:#ff8a80; --badbg:#3a1614; --warn:#ffc266; --warnbg:#33260d;
+  --code-bg:#070c18; color-scheme:dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:var(--cobalt)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+code{font-family:var(--mono);font-size:.92em;background:var(--chip);padding:1px 6px;border-radius:5px}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:13px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font:800 19px var(--display);color:var(--ink);text-decoration:none}
+.logo small{font:500 12px var(--mono);color:var(--muted)}
+.nav nav{display:flex;gap:20px;flex-wrap:wrap}
+.nav nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px}
+.nav nav a:hover,.nav nav a[aria-current]{color:var(--ink)}
+
+.intro{padding-block:36px 22px;display:grid;gap:10px;max-width:760px}
+.intro h1{font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-.02em}
+.intro p{color:var(--muted);font-size:17px}
+.engine{display:inline-flex;align-items:center;gap:8px;font:500 13px var(--mono);color:var(--muted)}
+.engine::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.engine[data-state="ready"]::before{background:var(--ok)}
+.engine[data-state="error"]::before{background:var(--bad)}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{font:500 14px var(--body);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.bench{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:start;padding-bottom:48px}
+.bench>*{min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}
+.panel-head h2{font-size:18px;font-weight:600}
+.scenario-desc{padding:14px 16px;border-bottom:1px solid var(--line);color:var(--muted);font-size:15px}
+textarea#code{display:block;width:100%;min-height:440px;border:0;resize:vertical;background:var(--code-bg);color:var(--code-fg);font:13.5px/1.6 var(--mono);padding:16px;tab-size:4;white-space:pre;overflow:auto}
+textarea#code:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:0}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);padding:9px 16px;border-radius:999px;border:1px solid transparent;cursor:pointer}
+.btn.primary{background:var(--accent);color:#1b0b00}
+.btn.primary:disabled{opacity:.55;cursor:progress}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+kbd{font:500 11px var(--mono);border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
+.btn.primary kbd{color:inherit;border-color:currentColor;opacity:.75}
+
+.result{padding:16px;display:grid;gap:14px}
+.status{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font:600 13px var(--mono);padding:4px 12px;border-radius:999px;background:var(--chip)}
+.pill.verified{background:var(--okbg);color:var(--ok)}
+.pill.bad{background:var(--badbg);color:var(--bad)}
+.pill.wait{background:var(--warnbg);color:var(--warn)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.metric{background:var(--chip);border-radius:10px;padding:8px 10px}
+.metric b{display:block;font:700 20px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.metric span{font-size:12px;color:var(--muted)}
+pre.stdout{margin:0;background:var(--chip);border-radius:10px;padding:10px 12px;font:13px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto}
+pre.stdout.err{background:var(--badbg);color:var(--bad)}
+.runlabel{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+ol.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0;max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.timeline li{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:13.5px}
+.timeline li:last-child{border-bottom:0}
+.kind{font:500 12px var(--mono);color:var(--muted);padding-top:1px}
+.timeline .detail{min-width:0;overflow-wrap:anywhere}
+.timeline .mono{font-family:var(--mono);font-size:12.5px}
+.timeline li.good{background:color-mix(in srgb,var(--okbg) 70%,transparent)}
+.timeline li.good .kind{color:var(--ok)}
+.timeline li.bad{background:color-mix(in srgb,var(--badbg) 70%,transparent)}
+.timeline li.bad .kind{color:var(--bad)}
+.timeline li.warn{background:color-mix(in srgb,var(--warnbg) 70%,transparent)}
+.timeline li.warn .kind{color:var(--warn)}
+.empty{padding:28px 16px;color:var(--muted);text-align:center}
+
+.below{border-top:1px solid var(--line);padding-block:40px 56px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.below>*{min-width:0}
+.below h2{font-size:24px;font-weight:800;margin-bottom:10px}
+.below p{color:var(--muted)}
+pre.code{margin:12px 0 0;background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:14px 16px;overflow-x:auto;font:13px/1.6 var(--mono)}
+footer{border-top:1px solid var(--line);padding-block:26px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .bench,.below{grid-template-columns:1fr}
+  textarea#code{min-height:320px}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="../">
+      <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--ink)"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="var(--accent)"/></svg>
+      sparkrun <small>playground</small>
+    </a>
+    <nav aria-label="Docs">
+      <a href="../">Docs</a>
+      <a href="./" aria-current="page">Playground</a>
+      <a href="../trip/">Trip team</a>
+      <a href="https://github.com/MLSparks/sparseml/tree/main/sparkrun">GitHub ↗</a>
+      <a href="../../">AgentSparks</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="intro">
+    <span class="eyebrow">Live in your browser</span>
+    <h1>Watch sparkrun keep an agent honest.</h1>
+    <p>Each scenario runs the real sparkrun package on this page, using Python compiled to WebAssembly. Pick one, press Run, then edit the code and run it again. Nothing is sent to a server.</p>
+    <span class="engine" id="engine" data-state="loading">Loading Python in your browser…</span>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Scenarios" id="tabs"></div>
+
+  <div class="bench">
+    <section class="panel" aria-labelledby="code-title">
+      <div class="panel-head">
+        <h2 id="code-title">Scenario code</h2>
+        <div class="actions">
+          <button class="btn ghost" type="button" id="reset">Reset code</button>
+          <button class="btn primary" type="button" id="run" disabled>Run <kbd>Ctrl ↵</kbd></button>
+        </div>
+      </div>
+      <p class="scenario-desc" id="desc"></p>
+      <label for="code" hidden>Python code</label>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+    </section>
+
+    <section class="panel" aria-labelledby="out-title" aria-live="polite">
+      <div class="panel-head"><h2 id="out-title">What happened</h2><span class="engine" id="took"></span></div>
+      <div class="result" id="result">
+        <div class="empty" id="placeholder">Press Run to execute this scenario. The run's journal appears here step by step: every model reply, tool call, check and decision.</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="below">
+    <div>
+      <h2>Run it on your own agents</h2>
+      <p>Install the same package locally and point it at a free small model.</p>
+      <pre class="code">pip install "agentsparks-sparkrun @ git+https://github.com/MLSparks/sparseml#subdirectory=sparkrun"
+ollama pull qwen2.5:3b</pre>
+    </div>
+    <div>
+      <h2>About this page</h2>
+      <p>The playground uses scripted models so every run is repeatable and free. Real models connect through <code>OpenAICompatible</code>, which needs network access the browser sandbox doesn't give Python, so try those locally. Read the <a href="../">docs</a> for the full guarantees.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>sparkrun by <a href="../../">AgentSparks</a> · Apache-2.0</span>
+    <span>Python runtime: <a href="https://pyodide.org">Pyodide</a></span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const SCENARIOS = [
+  {id: "false-claim", label: "False success claim",
+   desc: "A cheap model says it's done without doing anything. The independent check fails, the run escalates to a stronger model, and only a real result counts.",
+   code: `import json
+from sparkrun import Agent, ScriptedModel, tool, verify
+
+@tool(side_effect=True)
+def write_file(path: str, content: str):
+    """Create or overwrite a file."""
+    open("/tmp/work/" + path, "w").write(content)
+    return f"wrote {len(content)} characters"
+
+def prints_greeting(ctx):
+    import contextlib, io, runpy
+    out = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(out):
+            runpy.run_path("/tmp/work/hello.py")
+    except FileNotFoundError:
+        return False, "hello.py does not exist"
+    return "hello" in out.getvalue(), out.getvalue().strip()
+
+# A cheap model that claims success without doing the work
+small = ScriptedModel(['Done! {"done": "Created hello.py"}'],
+                      name="small-model", usd_per_call=0.0002)
+# A stronger model that actually does it
+strong = ScriptedModel([
+    json.dumps({"tool": "write_file",
+                "args": {"path": "hello.py", "content": "print('hello from sparkrun')"}}),
+    json.dumps({"done": "Wrote hello.py"}),
+], name="strong-model", usd_per_call=0.003)
+
+agent = Agent([small, strong], [write_file], runs_dir="/tmp/runs",
+              checks=[verify.predicate(prints_greeting, "hello.py prints a greeting")])
+result = agent.run("Create hello.py that prints a greeting")
+print(result.status, "| escalations:", result.escalations, "| cost: $%.4f" % result.cost_usd)
+`},
+  {id: "crash-resume", label: "Crash and resume",
+   desc: "The process dies right after an invoice is sent. On resume the model asks to send it again; sparkrun replays the recorded result instead of sending a second invoice.",
+   code: `import json
+from sparkrun import Agent, ScriptedModel, tool, verify
+
+sent = []
+
+@tool(side_effect=True)
+def send_invoice(customer: str, amount: int):
+    """Email an invoice."""
+    sent.append(customer)
+    return f"invoice for \${amount} sent to {customer}"
+
+once = verify.predicate(lambda ctx: (len(sent) == 1, f"{len(sent)} invoice(s) sent"),
+                        "exactly one invoice")
+invoice = json.dumps({"tool": "send_invoice", "args": {"customer": "acme", "amount": 120}})
+
+# First attempt: the process dies right after the invoice goes out
+crashing = ScriptedModel([invoice, RuntimeError("power cut")], name="small-model")
+try:
+    Agent(crashing, [send_invoice], checks=[once], runs_dir="/tmp/runs").run(
+        "Invoice acme $120", run_id="invoice-acme")
+except RuntimeError as e:
+    print("crashed:", e, "| invoices sent:", len(sent))
+
+# Resume the same run. The model asks to send the invoice again.
+resumed = ScriptedModel([invoice, json.dumps({"done": "Invoice sent"})], name="small-model")
+result = Agent(resumed, [send_invoice], checks=[once], runs_dir="/tmp/runs").run(
+    run_id="invoice-acme")
+print(result.status, "| invoices sent:", len(sent),
+      "| duplicates prevented:", result.duplicates_prevented)
+`},
+  {id: "stuck-loop", label: "Stuck in a loop",
+   desc: "The agent keeps running the same search. sparkrun escalates to the stronger model once, and when that repeats too, it stops the run instead of burning budget.",
+   code: `import json
+from sparkrun import Agent, ScriptedModel, tool
+
+@tool
+def search(query: str):
+    """Search the help center."""
+    return "no results"
+
+loop = [json.dumps({"tool": "search", "args": {"query": "refund policy"}})] * 10
+small = ScriptedModel(loop, name="small-model", usd_per_call=0.0002)
+strong = ScriptedModel(loop, name="strong-model", usd_per_call=0.003)
+
+result = Agent([small, strong], [search], runs_dir="/tmp/runs").run("Find the refund policy")
+print(result.status, "|", result.reason, "| steps:", result.steps)
+`},
+  {id: "approval", label: "Human approval",
+   desc: "Refunds need a person's OK. The run pauses before the refund, a person approves, and the run continues from where it stopped.",
+   code: `import json
+from sparkrun import Agent, ScriptedModel, tool, verify
+
+refunds = []
+
+@tool(side_effect=True, needs_approval=True)
+def refund(order: str, amount: int):
+    """Refund a customer."""
+    refunds.append((order, amount))
+    return f"refunded \${amount} on {order}"
+
+check = verify.predicate(lambda ctx: (refunds == [("A-17", 40)], f"refunds: {refunds}"),
+                         "one $40 refund on A-17")
+ask = json.dumps({"tool": "refund", "args": {"order": "A-17", "amount": 40}})
+
+agent = Agent(ScriptedModel([ask]), [refund], checks=[check], runs_dir="/tmp/runs")
+first = agent.run("Refund order A-17", run_id="refund-a17")
+print("1.", first.status, "| refunds so far:", len(refunds))
+
+agent.approve("refund-a17")   # a person says yes
+
+done = json.dumps({"done": "Refunded A-17"})
+after = Agent(ScriptedModel([done]), [refund], checks=[check], runs_dir="/tmp/runs").run(
+    run_id="refund-a17")
+print("2.", after.status, "| refunds:", refunds)
+`},
+];
+
+const HARNESS = `
+import sys, io, json, shutil, os, traceback
+from pathlib import Path
+for d in ("/tmp/runs", "/tmp/work"):
+    shutil.rmtree(d, ignore_errors=True)
+os.makedirs("/tmp/work")
+for m in [m for m in sys.modules if m == "sparkrun" or m.startswith("sparkrun.")]:
+    del sys.modules[m]
+_buf, _old, _err = io.StringIO(), sys.stdout, None
+sys.stdout = _buf
+try:
+    exec(compile(USER_CODE, "scenario.py", "exec"), {"__name__": "__main__"})
+except BaseException:
+    _err = traceback.format_exc(limit=4)
+finally:
+    sys.stdout = _old
+_runs = []
+for _p in sorted(Path("/tmp/runs").glob("*/journal.jsonl"), key=lambda p: p.stat().st_mtime):
+    _runs.append({"run": _p.parent.name,
+                  "events": [json.loads(l) for l in _p.read_text().splitlines() if l.strip()]})
+from sparkrun import summarize
+json.dumps({"stdout": _buf.getvalue(), "error": _err, "runs": _runs,
+            "summary": summarize("/tmp/runs") if _runs else None})
+`;
+
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let pyodide = null, current = SCENARIOS[0];
+const edits = {};
+
+function select(id){
+  if (current) edits[current.id] = $("code").value;
+  current = SCENARIOS.find(s => s.id === id) || SCENARIOS[0];
+  document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.id === current.id)));
+  $("desc").textContent = current.desc;
+  $("code").value = edits[current.id] ?? current.code;
+  $("result").innerHTML = `<div class="empty">Press Run to execute this scenario. The run's journal appears here step by step: every model reply, tool call, check and decision.</div>`;
+  $("took").textContent = "";
+  if (location.hash.slice(1) !== current.id) history.replaceState(null, "", "#" + current.id);
+}
+
+$("tabs").innerHTML = SCENARIOS.map(s =>
+  `<button type="button" role="tab" data-id="${s.id}" aria-selected="false">${esc(s.label)}</button>`).join("");
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button[data-id]"); if (b) select(b.dataset.id); });
+window.addEventListener("hashchange", () => select(location.hash.slice(1)));
+current = null;
+select(location.hash.slice(1));
+
+$("reset").addEventListener("click", () => { delete edits[current.id]; $("code").value = current.code; });
+$("code").addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run(); }
+  if (e.key === "Tab" && !e.shiftKey) {
+    e.preventDefault();
+    const t = e.target, s = t.selectionStart;
+    t.setRangeText("    ", s, t.selectionEnd, "end");
+  }
+});
+$("run").addEventListener("click", run);
+
+async function boot(){
+  const engine = $("engine");
+  try {
+    if (typeof loadPyodide !== "function") throw new Error("the Python runtime could not be downloaded");
+    pyodide = await loadPyodide();
+    pyodide.FS.mkdirTree("/home/pyodide/sparkrun");
+    const FILES = await fetch("../py/files.json").then(r => { if (!r.ok) throw new Error("could not load the sparkrun file list"); return r.json(); });
+    const sources = await Promise.all(FILES.map(f => fetch("../py/sparkrun/" + f).then(r => {
+      if (!r.ok) throw new Error(`could not load ${f} (${r.status})`);
+      return r.text();
+    })));
+    FILES.forEach((f, i) => pyodide.FS.writeFile("/home/pyodide/sparkrun/" + f, sources[i]));
+    pyodide.runPython("import sys; sys.path.insert(0, '/home/pyodide')");
+    engine.dataset.state = "ready";
+    engine.textContent = "Python ready · sparkrun 0.1.0 loaded";
+    $("run").disabled = false;
+  } catch (err) {
+    engine.dataset.state = "error";
+    engine.textContent = "Couldn't start Python here: " + err.message + ". Try reloading, or run sparkrun locally.";
+  }
+}
+
+function run(){
+  if (!pyodide || $("run").disabled) return;
+  $("run").disabled = true;
+  $("took").textContent = "Running…";
+  setTimeout(() => {
+    const t0 = performance.now();
+    let data;
+    try {
+      pyodide.globals.set("USER_CODE", $("code").value);
+      data = JSON.parse(pyodide.runPython(HARNESS));
+    } catch (err) {
+      data = {stdout: "", error: String(err.message || err), runs: [], summary: null};
+    }
+    $("took").textContent = `ran in ${Math.round(performance.now() - t0)} ms`;
+    render(data);
+    $("run").disabled = false;
+  }, 20);
+}
+
+const STATUS_CLASS = {verified: "verified", unverified: "", failed: "bad", stuck: "bad", budget_exceeded: "bad",
+                      needs_approval: "wait", needs_reconcile: "wait", model_unavailable: "wait", in_progress: "wait"};
+
+function describe(e){
+  const args = a => esc(JSON.stringify(a));
+  switch (e.kind) {
+    case "run_started": return ["", `Goal: ${esc(e.goal)}<br><span class="mono">models: ${esc(e.models.join(" → "))}</span>`];
+    case "model_call": return ["", `<span class="mono">${esc(e.model)}</span> replied: <span class="mono">${esc(e.reply.slice(0, 160))}</span>`];
+    case "bad_reply": return ["warn", `Reply rejected: ${esc(e.error)}`];
+    case "feedback": return ["warn", esc(e.text)];
+    case "remember": return ["", `Remembered: ${esc(e.text)}`];
+    case "tool_started": return ["", `Calling <span class="mono">${esc(e.tool)}(${args(e.args)})</span>`];
+    case "tool_result": return [e.ok ? "" : "bad", `<span class="mono">${esc(e.tool)}</span> → ${e.ok ? "" : "ERROR: "}${esc(e.result)}${e.attempts > 1 ? ` (after ${e.attempts} attempts)` : ""}`];
+    case "tool_replayed": return ["good", `Duplicate prevented: <span class="mono">${esc(e.tool)}</span> already succeeded, so it was not run again.`];
+    case "claimed_done": return ["", `Model says done: “${esc(e.answer)}”`];
+    case "verified": return [e.passed ? "good" : "bad", (e.passed ? "Checks passed. " : "Checks failed. ") +
+      e.evidence.map(ev => `${ev.passed ? "✓" : "✗"} ${esc(ev.check)}${ev.detail ? ` (${esc(ev.detail)})` : ""}`).join("; ")];
+    case "escalated": return ["warn", `Escalated to <span class="mono">${esc(e.model)}</span>: ${esc(e.reason)}`];
+    case "approval_requested": return ["warn", `Waiting for a person: ${esc(e.note || e.reason)}`];
+    case "approved": return ["good", "A person approved the action."];
+    case "paused": return ["warn", `Paused: ${esc(e.status)}`];
+    case "resumed": return ["", "Run resumed from its journal."];
+    case "finished": return [e.status === "verified" ? "good" : (e.status === "unverified" ? "" : "bad"), `Finished: <b>${esc(e.status)}</b> (${esc(e.reason)})`];
+    default: return ["", esc(JSON.stringify(e))];
+  }
+}
+
+function render(data){
+  const parts = [];
+  const s = data.summary;
+  if (s && s.runs.length) {
+    const last = s.runs[s.runs.length - 1];
+    const cls = STATUS_CLASS[last.status] ?? "";
+    parts.push(`<div class="status"><span class="pill ${cls}">${esc(last.status)}</span><span>${esc(last.goal)}</span></div>`);
+    const steps = s.runs.reduce((a, r) => a + r.steps, 0);
+    parts.push(`<div class="metrics">
+      <div class="metric"><b>${steps}</b><span>model steps</span></div>
+      <div class="metric"><b>$${s.total_cost_usd.toFixed(4)}</b><span>cost</span></div>
+      <div class="metric"><b>${s.escalations}</b><span>escalations</span></div>
+      <div class="metric"><b>${s.duplicates_prevented}</b><span>duplicates prevented</span></div></div>`);
+  }
+  if (data.stdout) parts.push(`<pre class="stdout">${esc(data.stdout.trim())}</pre>`);
+  if (data.error) parts.push(`<pre class="stdout err">${esc(data.error.trim())}</pre>`);
+  for (const r of data.runs) {
+    parts.push(`<div class="runlabel">Journal · ${esc(r.run)}</div><ol class="timeline">` + r.events.map(e => {
+      const [cls, html] = describe(e);
+      return `<li class="${cls}"><span class="kind">${esc(e.kind)}</span><span class="detail">${html}</span></li>`;
+    }).join("") + `</ol>`);
+  }
+  if (!parts.length) parts.push(`<div class="empty">The code ran but created no sparkrun runs. Use <code>runs_dir="/tmp/runs"</code> so the journal shows here.</div>`);
+  $("result").innerHTML = parts.join("");
+}
+
+boot();
+</script>
+</body>
+</html>

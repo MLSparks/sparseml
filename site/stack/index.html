@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agent Reliability Stack</title>
+<meta name="description" content="One multi-agent travel run seen through four tools: sparkrun runs it, Omniscope traces it, AgentDiff explains every failure, ARES grades the answers.">
+<meta property="og:title" content="Agent Reliability Stack">
+<meta property="og:description" content="Run · Trace · Diff · Evaluate. A six-agent travel team, checked by four independent tools.">
+<meta name="theme-color" content="#0f1a2e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%230f1a2e'/%3E%3Cpath d='M15.5 4 8 16h5l-1.5 8L20 12h-5z' fill='%23ff6a1a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: value first (what the traveler got, mistakes caught, what it cost), then the tools under the hood, one lens each on the same run. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --sunk:#eef1f7; --ink:#0f1a2e; --muted:#566079; --line:#dde1ea;
+  --accent:#ff6a1a; --accent-ink:#b84300; --link:#2340c8;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  --good-ink:#0a7a0a; --bad-ink:#b42318;
+  --hero-a:#0f1a2e; --hero-b:#16254a; --hero-ink:#e8ecf5; --hero-muted:#a9b4cc;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1120; --surface:#121a2d; --sunk:#1a2440; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --link:#8ea2ff;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --good-ink:#5fd18f; --bad-ink:#ff8a80;
+  --hero-a:#070c18; --hero-b:#111c38; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1120; --surface:#121a2d; --sunk:#1a2440; --ink:#e8ecf5; --muted:#9aa5bd; --line:#24304a;
+  --accent:#ff8a47; --accent-ink:#ffb07f; --link:#8ea2ff;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --good-ink:#5fd18f; --bad-ink:#ff8a80;
+  --hero-a:#070c18; --hero-b:#111c38; color-scheme:dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600}
+p{margin:0}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.mono{font-family:var(--mono);font-size:.88em}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--hero-a)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--hero-a);color:var(--hero-ink);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font:800 18px var(--display);color:var(--hero-ink);text-decoration:none}
+.logo small{font:500 12px var(--mono);color:var(--hero-muted)}
+.nav nav{display:flex;gap:18px;flex-wrap:wrap}
+.nav nav a{color:var(--hero-muted);text-decoration:none;font-weight:500;font-size:14.5px}
+.nav nav a:hover,.nav nav a[aria-current]{color:#fff}
+
+/* hero: the value of the run */
+.hero{background:radial-gradient(1200px 500px at 85% -10%,rgba(255,106,26,.18),transparent 60%),linear-gradient(180deg,var(--hero-a),var(--hero-b));color:var(--hero-ink);padding-block:44px 40px}
+.hero h1{font-size:clamp(34px,5.4vw,60px);font-weight:800;letter-spacing:-.02em;max-width:16em;margin-top:12px}
+.hero h1 em{font-style:normal;color:#ff8a47}
+.hero .lede{color:var(--hero-muted);font-size:18px;max-width:46em;margin-top:16px}
+.hero .eyebrow{color:#ffb07f}
+.coststrip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:26px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden}
+.coststrip div{background:rgba(7,12,24,.55);padding:14px 16px;display:grid;gap:2px}
+.coststrip b{font:800 clamp(24px,3.2vw,34px)/1.05 var(--display);color:#fff;font-variant-numeric:tabular-nums}
+.coststrip b em{font-style:normal;color:#ff8a47}
+.coststrip span{font-size:13px;color:var(--hero-muted)}
+.prov{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 18px;font:500 12.5px var(--mono);color:var(--hero-muted)}
+.prov span::before{content:"● ";color:#5fd18f}
+.prov span.off::before{color:#ffb07f}
+
+/* lens tabs */
+.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);z-index:9;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:6px;padding-block:10px;overflow-x:auto}
+.tabs button{flex:none;font:600 14px var(--body);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tabs button span{font:500 11px var(--mono);opacity:.7;margin-left:6px}
+.tabsep{flex:none;align-self:center;font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 4px 0 12px;border-left:1px solid var(--line);margin-left:6px}
+.caught{display:grid;gap:12px}
+.catch{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px}
+.catch .said{font-size:15px}
+.catch .said s{text-decoration:line-through;text-decoration-color:var(--critical);color:var(--muted)}
+.catch .why{font-size:13px;color:var(--bad-ink)}
+.catch .got{font-size:15px}
+.catch .got::before{content:"✓ ";color:var(--good-ink);font-weight:700}
+.hood{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hood button{display:grid;gap:4px;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer}
+.hood button:hover{border-color:var(--accent)}
+.hood b{font:600 15px var(--display)}
+.hood span{font-size:13px;color:var(--muted)}
+.hood em{font:500 11px var(--mono);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+
+main{padding-block:28px 56px}
+.lens-head{display:grid;gap:8px;margin-bottom:20px;max-width:780px}
+.lens-head p{color:var(--muted);font-size:16.5px}
+.tool-tag{display:inline-flex;gap:8px;align-items:center;font:500 12.5px var(--mono);color:var(--muted)}
+.tool-tag a{color:var(--link)}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;align-items:start}
+.grid2>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.card>h3{margin-bottom:10px}
+.stack{display:grid;gap:18px}
+.hint{font-size:13px;color:var(--muted)}
+
+/* pills, status */
+.pill{display:inline-flex;align-items:center;gap:5px;font:600 11.5px var(--mono);padding:2px 9px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--good-ink);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.pill.bad{color:var(--bad-ink);background:color-mix(in srgb,var(--critical) 14%,transparent)}
+.pill.warn{color:var(--accent-ink);background:color-mix(in srgb,var(--warning) 18%,transparent)}
+.chip{font:500 11.5px var(--mono);padding:2px 8px;border-radius:6px;background:var(--sunk);color:var(--ink);white-space:nowrap}
+.chip.up{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent-ink)}
+
+/* RUN lens: team graph */
+.teamgraph{position:relative;display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:26px 34px;padding:6px 4px;overflow-x:auto}
+.teamgraph svg.edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.col{display:grid;gap:14px;align-content:center}
+.node{position:relative;z-index:1;display:grid;gap:6px;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;min-width:0}
+.node:hover{border-color:var(--accent)}
+.node[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.node header{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.node b{font:600 15px var(--display)}
+.node .models{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.node .meta{font:500 11.5px var(--mono);color:var(--muted)}
+.node.gpu::after{content:"GPU";position:absolute;top:-9px;right:10px;font:600 10px var(--mono);background:var(--accent);color:#1b0b00;padding:1px 6px;border-radius:5px}
+ol.journal{list-style:none;margin:0;padding:0;display:grid;max-height:470px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.journal li{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:7px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+.journal li:last-child{border-bottom:0}
+.journal .k{font:500 11.5px var(--mono);color:var(--muted);padding-top:1px}
+.journal .v{min-width:0;overflow-wrap:anywhere}
+.journal li.good{background:color-mix(in srgb,var(--good) 8%,transparent)}
+.journal li.bad{background:color-mix(in srgb,var(--critical) 8%,transparent)}
+.journal li.up{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+ul.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.checks li{display:grid;grid-template-columns:22px 1fr;gap:6px;font-size:14px}
+.checks .ic{font-weight:700}
+.checks .ic.ok{color:var(--good-ink)} .checks .ic.no{color:var(--bad-ink)}
+.checks small{display:block;color:var(--muted);font-size:12.5px}
+.itin{display:grid;gap:8px;font-size:14px}
+.itin .row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.itin .row:last-child{border-bottom:0;font-weight:600}
+
+/* TRACE lens: causal DAG */
+.dagwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+svg.dag{display:block}
+svg.dag text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+svg.dag .lane{fill:var(--sunk)}
+svg.dag .edge{stroke:var(--line);stroke-width:1.5;fill:none}
+svg.dag .edge.cross{stroke:var(--accent);stroke-width:2;opacity:.85}
+svg.dag .ev{cursor:pointer}
+svg.dag .ev circle{stroke:var(--surface);stroke-width:2}
+svg.dag .ev:hover circle,svg.dag .ev:focus circle{stroke:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-top:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.riskrow{display:grid;grid-template-columns:86px 1fr 52px;gap:8px;align-items:center;font-size:13.5px;padding:5px 0}
+.bar{height:10px;border-radius:5px;background:var(--sunk);position:relative;overflow:hidden}
+.bar>i{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--serious)}
+.riskrow .sig{grid-column:2/-1;font-size:12px;color:var(--muted);margin-top:-2px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.tablewrap table{min-width:560px}
+tr:last-child td{border-bottom:0}
+
+/* DIFF lens */
+.pairs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.pairs button{font:500 14px var(--body);padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left}
+.pairs button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.verdict{background:var(--hero-a);color:var(--hero-ink);border-radius:14px;padding:16px 18px;font:13.5px/1.55 var(--mono);display:grid;gap:6px}
+.verdict div{display:grid;grid-template-columns:96px 1fr;gap:10px}
+.verdict b{color:#ffb07f;font-weight:600}
+.lanes{display:grid;grid-template-columns:1fr 34px 1fr;gap:8px 0;align-items:stretch}
+.lanes .head{font:600 13px var(--display);padding-bottom:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lanes .op{display:grid;place-items:center;font:600 13px var(--mono);color:var(--muted)}
+.step{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;min-width:0;background:var(--surface)}
+.step .t{display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap}
+.step .o{color:var(--muted);overflow-wrap:anywhere;font-size:12.5px}
+.step.empty{border-style:dashed;background:transparent;color:var(--muted);display:grid;place-items:center;font-size:12.5px}
+.step.decisive{border-color:var(--critical);box-shadow:0 0 0 3px color-mix(in srgb,var(--critical) 18%,transparent)}
+.step.bad{background:color-mix(in srgb,var(--critical) 6%,var(--surface))}
+.step.good{background:color-mix(in srgb,var(--good) 6%,var(--surface))}
+ol.divs{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none;border:0;cursor:pointer}
+
+/* EVALUATE lens */
+.qa{display:grid;gap:12px}
+.q{font:600 18px var(--display)}
+.attempts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.attempt{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:10px;align-content:start;min-width:0}
+.attempt .ans{font-size:16px;line-height:1.6}
+.attempt .ans mark{background:color-mix(in srgb,var(--good) 18%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.attempt .ans s{text-decoration:underline wavy var(--critical);text-decoration-thickness:1px;text-underline-offset:3px}
+.meter{display:grid;grid-template-columns:110px 1fr 46px;gap:8px;align-items:center;font-size:13px}
+.meter .bar{height:12px}
+.meter .bar>i.pass{background:var(--good)} .meter .bar>i.fail{background:var(--critical)}
+.meter .bar>b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.evidence{display:grid;gap:6px;font-size:13px}
+.evidence div{border-left:3px solid var(--s1);padding:4px 10px;background:var(--sunk);border-radius:0 8px 8px 0}
+svg.scatter{display:block;width:100%;height:auto}
+svg.scatter text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+svg.scatter .grid line{stroke:var(--line)}
+svg.scatter .pt{stroke:var(--surface);stroke-width:2;cursor:pointer}
+svg.scatter .pt:hover{stroke:var(--ink)}
+svg.scatter .front{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-dasharray:4 4;opacity:.7}
+svg.scatter .lbl{fill:var(--ink);font-weight:500}
+details.tbl summary{cursor:pointer;color:var(--link);font-weight:600;font-size:14px;margin-top:10px}
+
+/* LEAN lens */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:4px;align-content:start}
+.tile b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.tile span{font-size:13px;color:var(--muted)}
+.hbars{display:grid;gap:10px}
+.hbar{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;font-size:13.5px}
+.hbar .bar{height:14px}
+.hbar .bar>i{background:var(--s1)}
+.hbar .bar>i.alt{background:var(--s2)}
+
+.tip{position:fixed;z-index:30;pointer-events:none;max-width:320px;background:var(--hero-a);color:var(--hero-ink);font:12.5px/1.45 var(--body);padding:8px 10px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tip b{font-family:var(--mono);font-weight:600;color:#ffb07f}
+footer{border-top:1px solid var(--line);padding-block:28px;color:var(--muted);font-size:14px}
+footer .wrap{display:grid;gap:10px}
+footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;overflow-x:auto;font:12.5px/1.6 var(--mono);color:var(--ink)}
+.loading{padding:40px 0;color:var(--muted)}
+
+@media (max-width:1000px){
+  .coststrip{grid-template-columns:1fr 1fr}
+  .hood{grid-template-columns:1fr 1fr}
+  .grid2,.attempts{grid-template-columns:1fr}
+  .tiles{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .tabs{top:calc(env(safe-area-inset-top,0px) + 92px)}
+  .lanes{grid-template-columns:1fr 22px 1fr}
+  .journal li{grid-template-columns:1fr}
+  .hbar{grid-template-columns:110px 1fr 52px}
+  .meter{grid-template-columns:90px 1fr 42px}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="../">
+      <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#ffffff" fill-opacity=".1"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="#ff8a47"/></svg>
+      AgentSparks <small>reliability stack</small>
+    </a>
+    <nav aria-label="Site">
+      <a href="./" aria-current="page">Stack</a>
+      <a href="../sparkrun/">sparkrun docs</a>
+      <a href="../sparkrun/trip/">Travel demo</a>
+      <a href="../sparkrun/play/">Playground</a>
+      <a href="https://github.com/MLSparks/sparseml">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">AgentSparks · one real multi-agent travel run</span>
+    <h1>A trip planned, checked and booked by six agents, for <em>pennies</em>.</h1>
+    <p class="lede">AgentSparks plans travel with a team of small, cheap agents. Every answer and booking is checked before the traveler sees it, a stronger model is paid for only when a cheap one is caught failing, and a repeat request costs almost nothing.</p>
+    <div class="coststrip" id="coststrip" aria-label="Cost and speed of this run"></div>
+    <div class="prov" id="prov"></div>
+  </div>
+</section>
+
+<div class="tabs">
+  <div class="wrap" role="tablist" aria-label="Lenses" id="tabs">
+    <button role="tab" data-lens="value">What you get</button>
+    <span class="tabsep" aria-hidden="true">Under the hood</span>
+    <button role="tab" data-lens="run">Run<span>sparkrun</span></button>
+    <button role="tab" data-lens="trace">Trace<span>Omniscope</span></button>
+    <button role="tab" data-lens="diff">Diff<span>AgentDiff</span></button>
+    <button role="tab" data-lens="eval">Evaluate<span>ARES</span></button>
+  </div>
+</div>
+
+<main class="wrap" id="main"><p class="loading" id="loading">Loading the run…</p></main>
+
+<footer>
+  <div class="wrap">
+    <p id="gen"></p>
+    <pre>pip install "agentsparks-sparkrun @ git+https://github.com/MLSparks/sparseml#subdirectory=sparkrun"
+python sparkrun/examples/stack.py --out stack-data --with-tools   # reproduce this page's data</pre>
+    <p>Tools: <a href="https://github.com/MLSparks/sparseml/tree/main/sparkrun">sparkrun</a> · <a href="https://github.com/sugeerth/simple_agent_tracer">Omniscope</a> · <a href="https://github.com/sugeerth/agent-trace-viz">agent-trace-viz</a> · <a href="https://github.com/sugeerth/Agenttracing">AgentDiff</a> · <a href="https://github.com/sugeerth/ares">ARES</a>. Models in this run are scripted stand-ins so it is free and repeatable; the agents, checks, journals and every tool's analysis are real.</p>
+  </div>
+</footer>
+
+<div class="tip" id="tip" hidden></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => "$" + Number(n).toLocaleString(undefined, {maximumFractionDigits: 0});
+const usd4 = n => "$" + Number(n).toFixed(4);
+const ORDER = ["flights", "hotels", "guide", "rank", "activities", "booking"];
+const NAMES = {flights: "Flights", hotels: "Hotels", guide: "Guide", rank: "Ranker", activities: "Activities", booking: "Booking"};
+const LENSES = ["value", "run", "trace", "diff", "eval"];
+let D = null, lens = "value", role = "guide", pairIx = 0;
+
+// ---------- tooltip ----------
+const tip = $("tip");
+function showTip(html, x, y){ tip.innerHTML = html; tip.hidden = false;
+  const r = tip.getBoundingClientRect(); tip.style.left = Math.min(x + 14, innerWidth - r.width - 8) + "px"; tip.style.top = Math.min(y + 14, innerHeight - r.height - 8) + "px"; }
+function hideTip(){ tip.hidden = true; }
+document.addEventListener("scroll", hideTip, {passive: true});
+
+// ---------- journal text ----------
+function describe(e){
+  switch (e.kind) {
+    case "run_started": return ["", "Run started."];
+    case "model_call": return ["", `<span class="mono">${esc(e.model)}</span>: ${esc((e.reply || "").slice(0, 140))}`];
+    case "tool_result": return [e.ok ? "" : "bad", `<span class="mono">${esc(e.tool)}</span> → ${esc(String(e.result).slice(0, 220))}`];
+    case "tool_replayed": return ["good", `Duplicate prevented: ${esc(e.tool)} already done.`];
+    case "claimed_done": return ["", `Says done: “${esc(e.answer)}”`];
+    case "verified": return [e.passed ? "good" : "bad", (e.passed ? "✓ Checks passed. " : "✗ Checks failed. ") + e.evidence.map(x => `${x.passed ? "✓" : "✗"} ${esc(x.check)} <span class="muted">(${esc(x.detail)})</span>`).join("; ")];
+    case "escalated": return ["up", `↑ Escalated to <span class="mono">${esc(e.model)}</span>: ${esc(e.reason)}`];
+    case "approval_requested": return ["up", `Waiting for a person: ${esc(e.note || "")}`];
+    case "approved": return ["good", "A person approved."];
+    case "bad_reply": return ["bad", `Invalid reply: ${esc(e.error)}`];
+    case "feedback": return ["", esc(e.text)];
+    case "remember": return ["", `Remembered: ${esc(e.text)}`];
+    case "finished": return [e.status === "verified" ? "good" : "bad", `Finished: <b>${esc(e.status)}</b> (${esc(e.reason || "")})`];
+    default: return ["", esc(e.kind)];
+  }
+}
+const statusPill = s => `<span class="pill ${s === "verified" ? "ok" : s === "needs_approval" ? "warn" : "bad"}">${s === "verified" ? "✓ " : ""}${esc(s)}</span>`;
+
+// ---------- RUN ----------
+function renderRun(){
+  const t = D.team, roles = Object.fromEntries(t.roles.map(r => [r.name, r]));
+  const waves = []; const done = new Set();
+  while (done.size < t.roles.length) {
+    const w = t.roles.filter(r => !done.has(r.name) && r.after.every(a => done.has(a))).map(r => r.name);
+    if (!w.length) break; w.forEach(n => done.add(n)); waves.push(w);
+  }
+  const node = r => {
+    const models = r.models.map((m, i) => `${i ? `<span class="muted">→</span>` : ""}<span class="chip ${i ? "up" : ""}">${esc(m.replace(r.name + "-", ""))}</span>`).join("");
+    return `<button class="node ${r.name === "rank" ? "gpu" : ""}" data-role="${r.name}" aria-pressed="${r.name === role}">
+      <header><b>${esc(NAMES[r.name] || r.name)}</b>${statusPill(r.status)}</header>
+      <div class="models">${models}</div>
+      <div class="meta">${r.steps} steps · ${usd4(r.cost_usd)}${r.escalations ? ` · ${r.escalations} escalation` : ""}</div></button>`;
+  };
+  const b = t.board, opt = b.option, req = b.request;
+  const r = roles[role];
+  return `
+  <div class="lens-head"><span class="tool-tag">sparkrun · <a href="../sparkrun/">docs</a></span><h2>The travel team, step by step</h2>
+    <p>Six agents in four waves. Agents in the same wave run in parallel. Each starts on a cheap model and escalates only when an independent check fails. The ranker scores every flight × hotel pair on the fastest backend available, and booking waits for a person.</p></div>
+  <div class="card"><div class="teamgraph" id="teamgraph"><svg class="edges" id="edges" aria-hidden="true"></svg>
+    ${waves.map(w => `<div class="col">${w.map(n => node(roles[n])).join("")}</div>`).join("")}</div>
+    <p class="hint" style="margin-top:8px">Pick an agent to read its journal. Orange chips mark the stronger model it escalated to.</p></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>${esc(NAMES[role])} journal <span class="pill">${r.events.length} events</span></h3>
+      <ol class="journal">${r.events.map(e => { const [c, h] = describe(e); return `<li class="${c}"><span class="k">${esc(e.kind)}</span><span class="v">${h}</span></li>`; }).join("")}</ol></div>
+    <div class="stack">
+      <div class="card"><h3>Team checks ${statusPill(t.status)}</h3><ul class="checks">${t.verdict.map(v => `<li><span class="ic ${v.passed ? "ok" : "no"}">${v.passed ? "✓" : "✗"}</span><span>${esc(v.check)}<small>${esc(v.detail)}</small></span></li>`).join("")}</ul></div>
+      <div class="card"><h3>The trip</h3><div class="itin">
+        <div class="row"><span>${esc(req.origin)} → ${esc(req.destination)} · ${esc(opt.flight.airline)} ${esc(opt.flight.id)}</span><span class="num">${money(opt.flight.price * req.travelers)}</span></div>
+        <div class="row"><span>${esc(opt.hotel.name)} · ${req.nights} nights from ${esc(opt.flight.arrive)}</span><span class="num">${money(opt.hotel.price * req.nights)}</span></div>
+        <div class="row"><span>${b.activities.length} activities</span><span class="num">${money(b.activities.reduce((a, x) => a + x.cost, 0))}</span></div>
+        <div class="row"><span>Total, budget ${money(req.budget)}</span><span class="num">${money(b.total)}</span></div></div>
+        <p class="hint" style="margin-top:8px">Guide's answer: “${esc(D.guide.answer)}”</p></div>
+    </div>
+  </div>`;
+}
+
+function drawTeamEdges(){
+  const g = $("teamgraph"), svg = $("edges"); if (!g || !svg) return;
+  const box = g.getBoundingClientRect();
+  svg.setAttribute("width", g.scrollWidth); svg.setAttribute("height", g.scrollHeight);
+  const pos = n => { const el = g.querySelector(`.node[data-role="${n}"]`); const r = el.getBoundingClientRect();
+    return {l: r.left - box.left + g.scrollLeft, r: r.right - box.left + g.scrollLeft, y: r.top - box.top + r.height / 2}; };
+  svg.innerHTML = `<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--muted)"/></marker></defs>` +
+    D.team.roles.flatMap(r => r.after.map(a => { const s = pos(a), t = pos(r.name); const mx = (s.r + t.l) / 2;
+      return `<path d="M${s.r} ${s.y} C${mx} ${s.y} ${mx} ${t.y} ${t.l - 3} ${t.y}" fill="none" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ah)"/>`; })).join("");
+}
+
+// ---------- TRACE ----------
+const EV_COLOR = t => ({llm_call: "var(--s1)", tool_call: "var(--s2)", agent_decision: "var(--s3)"})[t] || "var(--muted)";
+function renderTrace(){
+  const evs = D.omniscope.events, risk = D.omniscope.risk;
+  const agents = ORDER.filter(a => evs.some(e => e.agent_id === a));
+  // fit the available width; below 18 px per event, scroll instead of cramming
+  const avail = ($("main").clientWidth || 1000) - 4;
+  const X0 = 96, LH = 46, DX = Math.max(18, Math.min(30, (avail - X0 - 20) / evs.length));
+  const W = X0 + evs.length * DX + 20, H = agents.length * LH + 28;
+  const idx = new Map(evs.map((e, i) => [e.event_id, i]));
+  const px = i => X0 + i * DX + DX / 2, py = a => agents.indexOf(a) * LH + LH / 2 + 4;
+  const lanes = agents.map((a, i) => `<rect class="lane" x="0" y="${i * LH + 4}" width="${W}" height="${LH - 6}" rx="8" opacity="${i % 2 ? .55 : .9}"/><text x="12" y="${i * LH + LH / 2 + 8}">${esc(NAMES[a])}</text>`).join("");
+  const edges = evs.flatMap((e, i) => e.causal_parents.filter(p => idx.has(p)).map(p => {
+    const j = idx.get(p), pe = evs[j], cross = pe.agent_id !== e.agent_id;
+    const x1 = px(j), y1 = py(pe.agent_id), x2 = px(i), y2 = py(e.agent_id);
+    return `<path class="edge ${cross ? "cross" : ""}" d="M${x1} ${y1} C${(x1 + x2) / 2} ${y1} ${(x1 + x2) / 2} ${y2} ${x2} ${y2}"/>`; })).join("");
+  const nodes = evs.map((e, i) => {
+    const judge = e.event_type === "judge_evaluation", ok = e.confidence_score === 1;
+    const fill = judge ? (ok ? "var(--good)" : "var(--critical)") : EV_COLOR(e.event_type);
+    const r = e.event_type === "agent_start" || e.event_type === "agent_end" ? 5 : 8;
+    const glyph = judge ? `<text x="${px(i)}" y="${py(e.agent_id) + 4}" text-anchor="middle" style="fill:#fff;font-size:10px;font-weight:700">${ok ? "✓" : "✗"}</text>` : "";
+    const human = e.tags && e.tags.needs_human ? `<rect x="${px(i) - 10}" y="${py(e.agent_id) - 10}" width="20" height="20" rx="4" fill="none" stroke="var(--accent)" stroke-width="2"/>` : "";
+    return `<g class="ev" tabindex="0" data-i="${i}">${human}<circle cx="${px(i)}" cy="${py(e.agent_id)}" r="${r}" fill="${fill}"/>${glyph}</g>`;
+  }).join("");
+  const riskRows = risk ? agents.map(a => { const s = risk[a]; const v = s ? s.overall_failure_risk : 0;
+    return `<div class="riskrow"><span>${esc(NAMES[a])}</span><span class="bar" role="img" aria-label="${esc(NAMES[a])} risk ${v.toFixed(3)}"><i style="width:${Math.max(v * 100 * 4, v ? 2 : 0)}%"></i></span><span class="mono num">${v.toFixed(3)}</span>
+      ${s && s.contributing_signals.length ? `<span class="sig">⚠ ${s.contributing_signals.map(x => esc(x.signal)).join(", ")}</span>` : ""}</div>`; }).join("")
+    : `<p class="hint">Omniscope was not installed when this data was generated.</p>`;
+  const tv = D.trace_viz;
+  return `
+  <div class="lens-head"><span class="tool-tag">Omniscope · <a href="https://github.com/sugeerth/simple_agent_tracer">repo</a> &nbsp; agent-trace-viz · <a href="https://github.com/sugeerth/agent-trace-viz">repo</a></span>
+    <h2>The causal graph of the run</h2>
+    <p>Every model call, tool call, check and decision as an Omniscope event. Lines follow causality; orange lines cross agents, where one agent's result is what another waited for. Omniscope's own RiskEngine scored each agent.</p></div>
+  <div class="dagwrap"><svg class="dag" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Causal graph of ${evs.length} events across ${agents.length} agents">${lanes}${edges}${nodes}</svg></div>
+  <div class="legend"><span><i style="background:var(--s1)"></i>model call</span><span><i style="background:var(--s2)"></i>tool call</span><span><i style="background:var(--s3)"></i>decision (escalation, approval)</span><span><i style="background:var(--good)"></i>✓ check passed</span><span><i style="background:var(--critical)"></i>✗ check failed</span><span><i style="background:transparent;border:2px solid var(--accent);border-radius:3px"></i>needs a person</span></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>agent-trace-viz traces</h3><div class="tablewrap"><table><thead><tr><th>Trace</th><th>Strategy</th><th>Tool steps</th><th>Cost</th><th>Result</th></tr></thead><tbody>
+      ${tv.map(x => `<tr><td class="mono">${esc(x.task_id)}</td><td class="mono">${esc(x.strategy)}</td><td class="num">${x.steps.length}</td><td class="num">${usd4(x.total_cost)}</td><td>${x.succeeded ? '<span class="pill ok">✓ verified</span>' : '<span class="pill bad">failed</span>'}</td></tr>`).join("")}</tbody></table></div></div>
+    <div class="card"><h3>Omniscope risk by agent</h3><p class="hint" style="margin-bottom:8px">Overall failure risk, 0 to 0.25 shown</p>${riskRows}
+      <p class="hint" style="margin-top:10px">The two agents flagged are the two whose cheap model claimed success it hadn't earned. Omniscope found them from the event stream alone.</p></div>
+  </div>`;
+}
+function bindTrace(){
+  document.querySelectorAll("svg.dag .ev").forEach(g => {
+    const e = D.omniscope.events[+g.dataset.i];
+    const html = () => `<b>${esc(e.event_type)}</b> · ${esc(NAMES[e.agent_id] || e.agent_id)}<br>${esc(e.model_name || e.tool_name || "")}${e.output_preview ? "<br>" + esc(e.output_preview.slice(0, 180)) : ""}`;
+    g.addEventListener("mousemove", ev => showTip(html(), ev.clientX, ev.clientY));
+    g.addEventListener("mouseleave", hideTip);
+    g.addEventListener("focus", () => { const r = g.getBoundingClientRect(); showTip(html(), r.right, r.bottom); });
+    g.addEventListener("blur", hideTip);
+  });
+}
+
+// ---------- DIFF ----------
+function stepCard(s, side, decisive){
+  if (!s) return `<div class="step empty">skipped</div>`;
+  const q = s.quality === "bad" ? "bad" : s.quality === "good" ? "good" : "";
+  return `<div class="step ${q} ${decisive ? "decisive" : ""}"><div class="t"><span class="chip">${esc(s.type)}</span><b class="mono">${esc(s.name)}</b>${decisive ? '<span class="pill bad">decisive step</span>' : ""}</div>
+    <div class="o">${esc((s.output || s.input || "").slice(0, 200))}</div></div>`;
+}
+function renderDiff(){
+  const p = D.agentdiff[pairIx], rep = p.report;
+  const lines = rep ? rep.verdict_card : [];
+  const cause = lines.find(l => l.key === "cause");
+  const decisive = cause && cause.side === "a" ? cause.step : null;
+  const align = rep ? rep.alignment : p.a.steps.map((_, i) => ({a_index: i, b_index: i < p.b.steps.length ? i : null, op: "match"}));
+  const sym = {match: "=", a_only: "−", b_only: "+", substitute: "≠"};
+  const rows = align.map(al => {
+    const sa = al.a_index != null ? p.a.steps[al.a_index] : null, sb = al.b_index != null ? p.b.steps[al.b_index] : null;
+    return `${stepCard(sa, "a", al.a_index != null && al.a_index === decisive)}<div class="op" title="${esc(al.op)}">${sym[al.op] || "≈"}</div>${stepCard(sb, "b", false)}`;
+  }).join("");
+  return `
+  <div class="lens-head"><span class="tool-tag">AgentDiff · <a href="https://github.com/sugeerth/Agenttracing">repo</a></span><h2>Why the cheap model failed</h2>
+    <p>Every escalation is a natural A/B test: the same task and tools, a cheap model and the stronger one it escalated to. sparkrun exports both attempts as AgentDiff trajectories, and AgentDiff names the decisive step.</p></div>
+  <div class="pairs" role="group" aria-label="Pairs">${D.agentdiff.map((x, i) => `<button type="button" data-pair="${i}" aria-pressed="${i === pairIx}">${esc(x.title)}</button>`).join("")}</div>
+  <div class="grid2">
+    <div class="card">
+      <div class="lanes">
+        <div class="head">A · ${esc(p.a.agent.name)} <span class="pill bad">failed</span></div><div></div><div class="head">B · ${esc(p.b.agent.name)} <span class="pill ok">✓ solved</span></div>
+        ${rows}
+      </div>
+      <p class="hint" style="margin-top:10px">= matched step · + only B did it · − only A did it. The task: “${esc(p.a.task.prompt.split("\n")[0])}”</p>
+    </div>
+    <div class="stack">
+      ${rep ? `<div class="verdict" aria-label="AgentDiff verdict card">${lines.map(l => `<div><b>${esc(l.key.toUpperCase())}</b><span>${esc(l.text)}</span></div>`).join("")}</div>` : `<div class="card"><p class="hint">AgentDiff was not installed when this data was generated.</p></div>`}
+      ${rep && rep.divergences.length ? `<div class="card"><h3>Divergences, ranked</h3><ol class="divs">${rep.divergences.slice(0, 3).map(d => `<li><span class="chip">${esc(d.kind)}</span> ${esc(d.summary)}</li>`).join("")}</ol></div>` : ""}
+      ${rep && rep.report_html ? `<a class="btn" id="fullreport" href="data/${esc(rep.report_html)}" target="_blank" rel="noopener">Open the full AgentDiff report ↗</a>` : ""}
+    </div>
+  </div>`;
+}
+
+// ---------- EVALUATE ----------
+const ARES_STOP = new Set(["a", "an", "the"]);
+const norm = s => (s || "").toLowerCase().replace(/[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/g, "").split(/\s+/).filter(w => w && !ARES_STOP.has(w));
+function groundedHTML(answer, evidence){
+  const ev = new Set(norm(evidence));
+  return answer.split(/(\s+)/).map(tok => { const n = norm(tok); if (!n.length) return esc(tok);
+    return n.every(w => ev.has(w)) ? `<mark>${esc(tok)}</mark>` : `<s>${esc(tok)}</s>`; }).join("");
+}
+function meter(label, value, threshold, passed){
+  return `<div class="meter"><span>${esc(label)}</span><span class="bar" role="img" aria-label="${esc(label)} ${value.toFixed(2)}, needs ${threshold}"><i class="${passed ? "pass" : "fail"}" style="width:${Math.min(100, value * 100)}%"></i><b style="left:${threshold * 100}%"></b></span><span class="mono num">${value.toFixed(2)}</span></div>`;
+}
+function renderEval(){
+  const g = D.guide, events = D.team.roles.find(r => r.name === "guide").events;
+  const attempts = []; let cur = {model: null, evidence: [], answer: null, verdict: null};
+  for (const e of events) {
+    if (e.kind === "model_call" && !cur.model) cur.model = e.model;
+    if (e.kind === "tool_result") { try { JSON.parse(e.result).forEach(h => cur.evidence.push(h)); } catch { const t = g.corpus.filter(c => String(e.result).includes(c.title)); cur.evidence.push(...t); } }
+    if (e.kind === "claimed_done") cur.answer = e.answer;
+    if (e.kind === "verified") { cur.verdict = e; attempts.push(cur); cur = {model: null, evidence: [], answer: null, verdict: null}; }
+  }
+  const num = (d, re) => { const m = re.exec(d); return m ? parseFloat(m[1]) : 0; };
+  const card = (a, i) => {
+    const gr = a.verdict.evidence.find(x => x.check.includes("grounded")), f1 = a.verdict.evidence.find(x => x.check.includes("F1"));
+    const ev = a.evidence.map(h => h.text).join(" ");
+    return `<div class="attempt"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>Attempt ${i + 1} · <span class="mono">${esc(a.model)}</span></b>${a.verdict.passed ? '<span class="pill ok">✓ passed</span>' : '<span class="pill bad">✗ rejected</span>'}</div>
+      <div class="ans">${a.evidence.length ? groundedHTML(a.answer || "", ev) : `<s>${esc(a.answer || "")}</s>`}</div>
+      ${meter("Groundedness", num(gr.detail, /([\d.]+)/), 0.8, gr.passed)}
+      ${meter("F1 vs gold", num(f1.detail, /F1 ([\d.]+)/), 0.4, f1.passed)}
+      <div class="evidence">${a.evidence.length ? a.evidence.map(h => `<div><b>${esc(h.title)}</b> · ${esc(h.text)}</div>`).join("") : '<p class="hint">No evidence retrieved: it answered from memory.</p>'}</div></div>`;
+  };
+  return `
+  <div class="lens-head"><span class="tool-tag">ARES · <a href="https://github.com/sugeerth/ares">repo</a> · metrics from <span class="mono">${esc(D.ares.source)}</span></span><h2>Answers graded on their evidence</h2>
+    <p>The Guide answers a traveler's question from a travel guide. ARES groundedness is its check: highlighted words appear in the passages it actually retrieved, and wavy-underlined words don't. Answering from memory gets rejected and escalated.</p></div>
+  <div class="card qa"><div class="q">“${esc(g.question)}”</div><p class="hint">Gold answer: ${esc(g.gold)}</p>
+    <div class="attempts">${attempts.map(card).join("")}</div></div>
+  ${D.ares.leaderboard ? renderScatter(D.ares.leaderboard) : ""}`;
+}
+function renderScatter(rows){
+  const W = 760, H = 380, m = {l: 54, r: 16, t: 16, b: 46};
+  const xs = rows.map(r => r.tokens), ys = rows.map(r => r.f1);
+  const x0 = Math.floor(Math.min(...xs) / 10) * 10, x1 = Math.ceil(Math.max(...xs) / 10) * 10;
+  const y0 = Math.floor(Math.min(...ys) * 20) / 20, y1 = Math.ceil(Math.max(...ys) * 20) / 20;
+  const X = v => m.l + (v - x0) / (x1 - x0) * (W - m.l - m.r), Y = v => H - m.b - (v - y0) / (y1 - y0) * (H - m.t - m.b);
+  const phases = ["synthesis", "ablation", "neighbour-search"], col = {synthesis: "var(--s1)", ablation: "var(--s2)", "neighbour-search": "var(--s3)"};
+  const sorted = [...rows].sort((a, b) => a.tokens - b.tokens || b.f1 - a.f1); const front = []; let best = -1;
+  for (const r of sorted) if (r.f1 > best) { front.push(r); best = r.f1; }
+  const top = rows.reduce((a, b) => b.f1 > a.f1 ? b : a);
+  const xt = []; for (let v = x0; v <= x1; v += 10) xt.push(v);
+  const yt = []; for (let v = y0; v <= y1 + 1e-9; v += 0.05) yt.push(+v.toFixed(2));
+  const pts = rows.map((r, i) => `<circle class="pt" data-i="${i}" cx="${X(r.tokens)}" cy="${Y(r.f1)}" r="${r === top ? 7 : 5}" fill="${col[r.phase] || "var(--muted)"}"/>`).join("");
+  const window_ = `
+  <div class="card" style="margin-top:18px"><h3>ARES: 55 agentic-RAG configurations, quality vs cost</h3>
+    <p class="hint" style="margin:-4px 0 10px">From ARES's own leaderboard on HotpotQA. Cost axis is tokens per question (ARES's latency column includes cached runs at 0 s). Dashed line: the frontier, the cheapest config for each level of F1.</p>
+    <svg class="scatter" viewBox="0 0 ${W} ${H}" role="img" aria-label="Scatter of F1 against tokens per question for ${rows.length} configurations">
+      <g class="grid">${yt.map(v => `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l - 8}" y="${Y(v) + 4}" text-anchor="end">${v.toFixed(2)}</text>`).join("")}
+        ${xt.map(v => `<text x="${X(v)}" y="${H - m.b + 18}" text-anchor="middle">${v}</text>`).join("")}</g>
+      <text x="${(W + m.l) / 2}" y="${H - 8}" text-anchor="middle">tokens per question</text>
+      <text x="14" y="${(H - m.b) / 2}" transform="rotate(-90 14 ${(H - m.b) / 2})" text-anchor="middle">F1</text>
+      <path class="front" d="${front.map((r, i) => `${i ? "L" : "M"}${X(r.tokens)} ${Y(r.f1)}`).join(" ")}"/>
+      ${pts}
+      <text class="lbl" x="${X(top.tokens) + 10}" y="${Y(top.f1) + 4}">${esc(top.name)} · F1 ${top.f1.toFixed(3)}</text>
+    </svg>
+    <div class="legend">${phases.map(p => `<span><i style="background:${col[p]}"></i>${p} (${rows.filter(r => r.phase === p).length})</span>`).join("")}<span><i style="background:transparent;border:1.5px dashed var(--ink)"></i>frontier</span></div>
+    <details class="tbl"><summary>Show the top 10 as a table</summary><div class="tablewrap" style="margin-top:8px"><table><thead><tr><th>Config</th><th>Phase</th><th>F1</th><th>Groundedness</th><th>Recall</th><th>Tokens/q</th></tr></thead><tbody>
+      ${[...rows].sort((a, b) => b.f1 - a.f1).slice(0, 10).map(r => `<tr><td class="mono">${esc(r.name)}</td><td>${esc(r.phase)}</td><td class="num">${r.f1.toFixed(3)}</td><td class="num">${r.grounding.toFixed(3)}</td><td class="num">${r.recall.toFixed(2)}</td><td class="num">${r.tokens.toFixed(1)}</td></tr>`).join("")}</tbody></table></div></details>
+  </div>`;
+  return window_;
+}
+function bindEval(){
+  const rows = D.ares.leaderboard || [];
+  document.querySelectorAll("svg.scatter .pt").forEach(c => {
+    const r = rows[+c.dataset.i];
+    const html = `<b>${esc(r.name)}</b><br>F1 ${r.f1.toFixed(3)} · EM ${r.em.toFixed(2)} · groundedness ${r.grounding.toFixed(2)}<br>${r.tokens.toFixed(1)} tokens/q · k=${r.k} · ${esc(r.prompt)} prompt${r.decompose ? " · decompose" : ""}${r.reflect ? " · reflect" : ""}`;
+    c.addEventListener("mousemove", ev => showTip(html, ev.clientX, ev.clientY));
+    c.addEventListener("mouseleave", hideTip);
+  });
+}
+
+// ---------- LEAN ----------
+function renderValue(){
+  const L = D.lean, C = L.cost, t = D.team, rs = t.board.rank_stats, b = t.board, opt = b.option, req = b.request;
+  const speed = L.parallel.sequential_s / L.parallel.workers_32_s, maxS = L.parallel.sequential_s;
+  const bars = [["Every call on the strong model", C.strong_only_usd, "alt"], ["AgentSparks, cheap model first", C.first_run_usd, ""], ["Same trip again", C.repeat.usd, ""]];
+  const maxC = Math.max(...bars.map(x => x[1]));
+  const caught = t.roles.filter(r => r.escalations > 0).map(r => {
+    const failed = r.events.find(e => e.kind === "verified" && !e.passed);
+    const claim = r.events.find(e => e.kind === "claimed_done");
+    const fix = r.events.filter(e => e.kind === "claimed_done").pop();
+    const why = failed ? failed.evidence.filter(x => !x.passed).map(x => `${x.check}: ${x.detail}`).join("; ") : "";
+    const got = r.name === "guide" ? D.guide.answer : r.name === "activities" ? `${b.activities.length} activities planned within budget, inside the stay` : (fix && fix.answer);
+    return `<div class="catch"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(NAMES[r.name])} agent</b><span class="pill warn">caught, then fixed</span></div>
+      <div class="said">The cheap model said: <s>“${esc(claim ? claim.answer : "")}”</s></div>
+      <div class="why">✗ ${esc(why)}</div>
+      <div class="got">${esc(got)}</div></div>`;
+  }).join("");
+  const checks = t.verdict.map(v => `<li><span class="ic ${v.passed ? "ok" : "no"}">${v.passed ? "✓" : "✗"}</span><span>${esc(v.check)}<small>${esc(v.detail)}</small></span></li>`).join("");
+  return `
+  <div class="lens-head"><h2>What the traveler gets</h2>
+    <p>One request, ${esc(req.origin)} to ${esc(req.destination)} for ${req.travelers}, ${req.nights} nights, ${money(req.budget)} budget. Six agents planned it in parallel, a person approved each booking, and every result was checked before it was shown.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>The trip ${statusPill(t.status)}</h3><div class="itin">
+      <div class="row"><span>Flight · ${esc(opt.flight.airline)} ${esc(opt.flight.id)}, ${opt.flight.stops ? opt.flight.stops + " stop" : "nonstop"}, arrives ${esc(opt.flight.arrive)}</span><span class="num">${money(opt.flight.price * req.travelers)}</span></div>
+      <div class="row"><span>Hotel · ${esc(opt.hotel.name)}, ${opt.hotel.rating}★, ${req.nights} nights</span><span class="num">${money(opt.hotel.price * req.nights)}</span></div>
+      ${b.activities.map(a => `<div class="row"><span>${esc(a.day)} · ${esc(a.name)}</span><span class="num">${a.cost ? money(a.cost) : "free"}</span></div>`).join("")}
+      <div class="row"><span>Total</span><span class="num">${money(b.total)} of ${money(req.budget)}</span></div></div>
+      <p style="margin-top:12px"><b>Traveler's question:</b> ${esc(D.guide.question)}<br><span class="muted">${esc(D.guide.answer)}</span></p>
+      <ul class="checks" style="margin-top:12px">${checks}<li><span class="ic ok">✓</span><span>each booking made exactly once, after a person approved it<small>${b.bookings.map(x => x.ref).join(" · ")}</small></span></li></ul></div>
+    <div class="card"><h3>Mistakes caught before anyone saw them</h3><div class="caught">${caught}</div>
+      <p class="hint" style="margin-top:10px">Each was caught by an independent check, not by the model's own judgment, and escalated to a stronger model only for that one task.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>What it cost</h3>
+      <div class="hbars" role="img" aria-label="${bars.map(x => x[0] + " " + usd4(x[1])).join(", ")}">
+        ${bars.map(x => `<div class="hbar"><span>${esc(x[0])}</span><span class="bar"><i class="${x[2]}" style="width:${Math.max(0.6, x[1] / maxC * 100)}%"></i></span><span class="mono num">${usd4(x[1])}</span></div>`).join("")}
+      </div>
+      <p class="hint" style="margin-top:10px">${C.cheap_calls} of ${C.model_calls} model calls stayed on the cheap model. Strong-only prices the same ${C.model_calls} calls at the strong rate. Prices are the demo's stand-ins (${usd4(C.prices.small)} and ${usd4(C.prices.strong)} per call); point it at real models to price your own traffic.</p></div>
+    <div class="card"><h3>How fast</h3>
+      <div class="hbars" role="img" aria-label="${L.parallel.tasks} trips one at a time ${maxS} seconds, in parallel ${L.parallel.workers_32_s} seconds">
+        <div class="hbar"><span>${L.parallel.tasks} requests, one at a time</span><span class="bar"><i class="alt" style="width:100%"></i></span><span class="mono num">${maxS.toFixed(2)} s</span></div>
+        <div class="hbar"><span>${L.parallel.tasks} requests in parallel</span><span class="bar"><i style="width:${Math.max(1, L.parallel.workers_32_s / maxS * 100)}%"></i></span><span class="mono num">${L.parallel.workers_32_s.toFixed(2)} s</span></div>
+      </div>
+      <p class="hint" style="margin-top:10px">${speed.toFixed(0)}× more requests per second, each with three ${L.parallel.model_latency_ms} ms model calls. The runtime adds ${L.overhead_ms_per_step.toFixed(2)} ms per agent step; ${(rs.pairs / 1000).toFixed(0)}k flight × hotel options were ranked in ${rs.ms.toFixed(0)} ms. Small models can run on a rented GPU: <a href="https://github.com/MLSparks/sparseml/tree/main/deploy/vast">deploy/vast</a>.</p></div>
+  </div>
+  <h3 style="margin:28px 0 10px">Under the hood</h3>
+  <div class="hood">
+    <button type="button" data-go="run"><em>Run · sparkrun</em><b>The six agents, step by step</b><span>every model call, check and approval in each agent's journal</span></button>
+    <button type="button" data-go="trace"><em>Trace · Omniscope</em><b>${D.omniscope.events.length} events, causally linked</b><span>and the two risky agents its RiskEngine flagged</span></button>
+    <button type="button" data-go="diff"><em>Diff · AgentDiff</em><b>Why each cheap model failed</b><span>the decisive step, diffed against the model that fixed it</span></button>
+    <button type="button" data-go="eval"><em>Evaluate · ARES</em><b>Answers graded on evidence</b><span>groundedness, F1, and 55 RAG configs on quality vs cost</span></button>
+  </div>`;
+}
+
+// ---------- shell ----------
+function hero(){
+  const C = D.lean.cost, caught = D.team.roles.filter(r => r.escalations > 0).length;
+  $("coststrip").innerHTML = `
+    <div><b>${usd4(C.first_run_usd)}</b><span>model cost of the verified, booked trip</span></div>
+    <div><b><em>${C.savings_x}×</em> cheaper</b><span>than running every call on the strong model (${usd4(C.strong_only_usd)})</span></div>
+    <div><b>${caught} mistakes</b><span>caught and fixed before the traveler saw them</span></div>
+    <div><b>${usd4(C.repeat.usd)}</b><span>for the same trip again (${C.repeat.cache_hits} of ${C.repeat.calls} answers reused)</span></div>`;
+  const T = D.environment.tools;
+  $("prov").innerHTML = [["sparkrun " + D.environment.sparkrun, true], ["AgentDiff", T.agentdiff], ["Omniscope RiskEngine", T.omniscope], ["agent-trace-viz", T.agent_trace_viz], ["ARES (" + T.ares + ")", true]]
+    .map(([n, on]) => `<span class="${on ? "" : "off"}">${esc(n)}${on ? "" : " (not run)"}</span>`).join("");
+  $("gen").textContent = `Data generated ${D.generated_at} by sparkrun/examples/stack.py.`;
+}
+
+function show(next, push){
+  lens = LENSES.includes(next) ? next : "value";
+  document.querySelectorAll("[data-lens]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.lens === lens)));
+  const main = $("main"); hideTip();
+  main.innerHTML = {value: renderValue, run: renderRun, trace: renderTrace, diff: renderDiff, eval: renderEval}[lens]();
+  if (lens === "run") { drawTeamEdges(); main.querySelectorAll(".node").forEach(n => n.addEventListener("click", () => { role = n.dataset.role; show("run"); })); }
+  if (lens === "trace") bindTrace();
+  if (lens === "eval") bindEval();
+  if (lens === "value") main.querySelectorAll(".hood [data-go]").forEach(b => b.addEventListener("click", () => { show(b.dataset.go, true); document.querySelector(".tabs").scrollIntoView(); }));
+  if (lens === "diff") main.querySelectorAll("[data-pair]").forEach(b => b.addEventListener("click", () => { pairIx = +b.dataset.pair; show("diff"); }));
+  if (push && location.hash.slice(1) !== lens) history.replaceState(null, "", "#" + lens);
+}
+document.querySelectorAll("[data-lens]").forEach(b => b.addEventListener("click", () => {
+  show(b.dataset.lens, true);
+}));
+addEventListener("hashchange", () => D && show(location.hash.slice(1)));
+let resizeT = 0;
+addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (lens === "run") drawTeamEdges(); if (lens === "trace") show("trace"); }, 150); });
+
+fetch("data/stack.json").then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(d => {
+  D = d; hero(); show(location.hash.slice(1) || "value");
+}).catch(err => { $("main").innerHTML = `<p class="loading">Couldn't load the run data (${esc(err.message)}). Generate it with <span class="mono">python sparkrun/examples/stack.py --out site/stack/data --with-tools</span>.</p>`; });
+</script>
+</body>
+</html>

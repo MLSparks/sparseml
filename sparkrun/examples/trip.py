@@ -38,6 +38,22 @@ from sparkrun import Agent, Policy, Role, ScriptedModel, Team, compute, stable_h
 
 AIRLINES = ["Atlas Air", "Brightjet", "Coastline", "Delta Wing", "Eastwind", "Fjord Air"]
 AREAS = ["Old Town", "Riverside", "Harbor", "Hillside", "Market Quarter", "University"]
+# A small travel guide the Guide agent searches. Its answers are graded by ARES groundedness:
+# they must be supported by the passages it actually retrieved.
+GUIDES = {
+    "Lisbon": [
+        ("Money", "Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash."),
+        ("Tram 28", "Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town."),
+        ("Belem Tower", "Belem Tower is a 16th-century fortification on the Tagus and a UNESCO World Heritage Site."),
+        ("Lisboa Card", "The Lisboa Card covers public transport and free or discounted entry to many museums."),
+        ("Pasteis de Belem", "Pasteis de Belem has been baking custard tarts in Belem since 1837."),
+        ("Fado", "Fado, Lisbon's traditional music, is on UNESCO's list of Intangible Cultural Heritage."),
+    ],
+}
+GUIDE_QUESTIONS = {"Lisbon": ("What currency does Portugal use, and which tram line runs through Alfama?", "euro, Tram 28")}
+
+PRICES = {"small": 0.0002, "strong": 0.003}  # stand-in models' cost per call, in dollars
+
 ACTIVITIES = [  # (name, interest, price per person)
     ("Free walking tour of the old town", "history", 0), ("City history museum", "history", 18),
     ("Castle and viewpoints", "history", 15), ("Street food crawl", "food", 45),
@@ -117,8 +133,11 @@ def _did(prompt: str, tool_name: str) -> bool:
 # --------------------------------------------------------------------------- team
 
 def build_team(req: TripRequest, runs_dir: str | Path, *, board: dict | None = None,
-               gate=None, models: dict | None = None, on_event=None) -> Team:
-    """models: optional {role: [model, ...]} to use real models instead of stand-ins."""
+               gate=None, models: dict | None = None, on_event=None, guide: bool = False,
+               wrap=None) -> Team:
+    """models: optional {role: [model, ...]} to use real models instead of stand-ins.
+    guide: add a Guide agent that answers a traveler question from a travel guide (graded by ARES).
+    wrap: optional function applied to every model, e.g. lambda m: CachedModel(m, shared_cache)."""
     board = board if board is not None else {}
     board.setdefault("request", asdict(req))
     req_json = json.dumps(asdict(req))
@@ -236,11 +255,12 @@ def build_team(req: TripRequest, runs_dir: str | Path, *, board: dict | None = N
         return {"done": "Booked flight and hotel"}
 
     models = models or {}
-    small, strong = 0.0002, 0.003
+    small, strong = PRICES["small"], PRICES["strong"]
 
     def agent(role, tools, policy, checks, fallback=None, gated=False):
         ms = models.get(role) or ([stand_in(f"{role}-small", policy, small)] if fallback is None else
                                   [stand_in(f"{role}-small", fallback, small), stand_in(f"{role}-strong", policy, strong)])
+        ms = [wrap(m) for m in ms] if wrap else ms
         return Agent(ms, tools, checks=checks, runs_dir=runs_dir,
                      policy=Policy(max_steps=10, gate=gate if gated else None, **p))
 
@@ -263,6 +283,37 @@ def build_team(req: TripRequest, runs_dir: str | Path, *, board: dict | None = N
              lambda b: f"Book the best option.\nREQUEST: {req_json}\nOPTION: {json.dumps(b['options'][0])[:400]}",
              after=("rank", "activities")),
     ]
+
+    if guide and req.destination in GUIDES:
+        question, gold = GUIDE_QUESTIONS[req.destination]
+        passages = GUIDES[req.destination]
+
+        @tool
+        def search_guide(query: str, k: int = 2):
+            """Search the travel guide for the destination; returns the best passages."""
+            words = set(re.findall(r"[a-z0-9]+", query.lower()))
+            hits = sorted(passages, key=lambda p_: -len(words & set(re.findall(r"[a-z0-9]+", " ".join(p_).lower()))))[:int(k)]
+            board.setdefault("guide_evidence", []).extend(text for _, text in hits)
+            return [{"title": t, "text": x} for t, x in hits]
+
+        def from_memory(prompt):  # a cheap model answering without looking anything up
+            return {"done": "Portugal uses the escudo, and Tram 15 goes through Alfama."}
+
+        def with_guide(prompt):
+            if not _did(prompt, "search_guide"):
+                return {"tool": "search_guide", "args": {"query": "Portugal currency euro tram Alfama", "k": 2}}
+            return {"done": "Portugal uses the euro, and Tram 28 runs through Alfama."}
+
+        def answer_saved(c):
+            board["guide_answer"] = c["answer"]
+            return True, c["answer"]
+
+        roles.append(Role("guide", agent("guide", [search_guide], with_guide,
+                                         [verify.grounded(lambda c: " ".join(board.get("guide_evidence", [])), min_score=0.8),
+                                          verify.answer_f1(gold, min_score=0.4),
+                                          verify.predicate(answer_saved, "answer recorded")],
+                                         fallback=from_memory),
+                          f"Answer the traveler's question using the travel guide.\nQUESTION: {question}"))
 
     def trip_checks():
         def one_each(c):

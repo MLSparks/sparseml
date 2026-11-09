@@ -31,7 +31,7 @@ The package installs as `agentsparks-sparkrun` and imports as `sparkrun`. Docs: 
 cd sparkrun
 python examples/demo.py                                   # offline, no model needed
 ollama pull qwen2.5:3b && python examples/demo.py --ollama qwen2.5:3b   # a real local small model
-python -m unittest discover -s tests                      # 34 tests
+python -m unittest discover -s tests                      # 57 tests
 ```
 
 ```python
@@ -84,6 +84,33 @@ every combination, a cheap activities model is caught claiming false success, an
 `sparkrun.compute.best_pairs()` does the one heavy step agents hit, scoring every pair from two large candidate
 sets under a budget. It uses a GPU through CuPy or PyTorch with CUDA when installed, otherwise NumPy, otherwise
 plain Python, with the same result every way. Everything else stays on the CPU, where it's cheap.
+
+## Cheaper every time: `CachedModel`
+
+```python
+from sparkrun import CachedModel
+small = CachedModel(OpenAICompatible("http://localhost:11434/v1", "qwen2.5:3b"), "cache/")
+```
+
+An identical prompt is answered from the cache for $0. sparkrun's prompts are compact and stable, so
+repeats are common: in the travel demo, the same trip requested again reused 14 of its 15 model answers.
+Use it with deterministic (temperature 0) models.
+
+## Plays well with the rest of the stack
+
+`sparkrun.export` turns any journal into the input of other tools, with none of them installed:
+
+```python
+from sparkrun import export
+a, b = export.escalation_pair("runs/trip.guide/journal.jsonl")   # cheap attempt vs the model it escalated to
+export.write_json(a, "a.json"); export.write_json(b, "b.json")    # then: python -m agentdiff compare a.json b.json
+events = export.team_omniscope(team, "trip")                       # Omniscope events, causal edges across agents
+trace = export.to_trace_viz("runs/trip.booking/journal.jsonl")     # agent-trace-viz Trace dict
+```
+
+`verify.grounded(...)` and `verify.answer_f1(...)` use ARES's groundedness and F1 (the real `ares.metrics`
+when installed, identical copies otherwise), so a retrieval agent's answer must be supported by what it
+actually retrieved. `python examples/stack.py --with-tools` runs all of it on the travel team.
 
 ## How a run works
 
