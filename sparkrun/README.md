@@ -74,8 +74,7 @@ team.approve("trip-42", "booking"); team.run("trip-42")
 ```
 
 `Policy(gate=...)` lets an outside policy pause any tool call for approval, and `on_event` mirrors every event to a
-bus or UI. The [Sparks bridge](https://github.com/MLSparks/Auto-startup-) uses both to run sparkrun teams under
-Sparks guardrails.
+message bus or UI.
 
 `python examples/trip.py` runs a five-agent trip booking: flights and hotels search in parallel, ranking scores
 every combination, a cheap activities model is caught claiming false success, and booking waits for approval.
