@@ -22,10 +22,25 @@ def stable_hash(obj: Any) -> str:
 class Journal:
     """A JSON-lines file of events. Each append is flushed and fsynced before returning."""
 
-    def __init__(self, path: str | os.PathLike):
+    DURABILITY = ("side_effects", "always", "never")
+
+    def __init__(self, path: str | os.PathLike, durability: str = "side_effects"):
+        """durability decides when an event is forced to disk with fsync:
+
+        side_effects  (default) only events marked critical: around side effects, approvals,
+                      pauses and the end of a run. Every event is still written and flushed at
+                      once, so a process crash loses nothing; a power cut can lose at most the
+                      latest non-critical events, which only means re-asking the model.
+        always        every event. Safest, slowest.
+        never         no fsync. Fastest; survives process crashes, not power loss.
+        """
+        if durability not in self.DURABILITY:
+            raise ValueError(f"durability must be one of {self.DURABILITY}")
         self.path = Path(path)
+        self.durability = durability
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.events: list[dict] = []
+        self._f = None
         if self.path.exists():
             self._load()
 
@@ -50,15 +65,29 @@ class Journal:
                 os.fsync(f.fileno())
             os.replace(tmp, self.path)
 
-    def append(self, kind: str, **data: Any) -> dict:
+    def append(self, kind: str, *, critical: bool = False, **data: Any) -> dict:
+        """Write one event. critical=True forces it to disk under the default durability."""
         event = {"seq": len(self.events), "t": round(time.time(), 3), "kind": kind, **data}
         line = json.dumps(event, default=str, ensure_ascii=False)
-        with self.path.open("a", encoding="utf-8") as f:
-            f.write(line + "\n")
-            f.flush()
-            os.fsync(f.fileno())
+        if self._f is None:
+            self._f = self.path.open("a", encoding="utf-8")
+        self._f.write(line + "\n")
+        self._f.flush()  # in the OS from here on: a process crash can't lose it
+        if self.durability == "always" or (critical and self.durability == "side_effects"):
+            os.fsync(self._f.fileno())
         self.events.append(event)
         return event
+
+    def close(self) -> None:
+        if self._f is not None:
+            self._f.close()
+            self._f = None
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:
+            pass
 
     def of(self, kind: str) -> list[dict]:
         return [e for e in self.events if e["kind"] == kind]

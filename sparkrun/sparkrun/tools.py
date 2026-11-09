@@ -67,3 +67,6 @@ class Policy:
     """The same call this many times in a short window counts as stuck."""
     allowed_tools: set[str] | None = None
     backoff_s: float = 0.5
+    gate: Callable[[str, dict], "str | None"] | None = None
+    """Outside policy hook: gate(tool_name, args) returns None to allow, or a reason to
+    pause the run for human approval (for example a company's spending rules)."""

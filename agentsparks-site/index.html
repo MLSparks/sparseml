@@ -186,7 +186,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     </a>
     <nav aria-label="Main">
       <a href="#product">Product</a>
-      <a href="#family">Auto Startup</a>
       <a class="hiring" href="#jobs">We're hiring →</a>
     </nav>
   </div>
@@ -247,28 +246,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
           <p>Deploy on the CPUs you already have, inside your own network. Your data never has to leave the building.</p>
         </div>
       </div>
-      <div class="builton">Built on open source: <code>SparseML</code> <code>ONNX</code> <code>PyTorch</code> <span style="margin-left:auto">Our open-source agent reliability runtime: <a href="sparkrun/"><code>sparkrun</code></a></span></div>
+      <div class="builton">Built on open source: <code>ONNX</code> <code>PyTorch</code> <span style="margin-left:auto">Our open-source agent reliability runtime: <a href="sparkrun/"><code>sparkrun</code></a></span></div>
     </div>
   </section>
 
-  <section class="band" id="family">
-    <div class="wrap">
-      <div class="sister">
-        <div>
-          <span class="eyebrow">Sister startup</span>
-          <h3>Meet Auto Startup</h3>
-          <p>A company run by AI agents. Seven specialist agents handle research, data science, engineering, sales, marketing, finance and safety on free infrastructure, and a person signs off on anything involving money, security or outreach.</p>
-          <div class="agents" aria-label="Auto Startup's agents"><span>research</span><span>data science</span><span>backend</span><span>sales</span><span>marketing</span><span>finance</span><span>safety</span></div>
-          <p style="margin-top:18px"><a class="btn" id="auto-link" href="#" target="_blank" rel="noopener" hidden>Visit Auto Startup ↗</a><span class="soon" id="auto-soon">Public site launching soon</span></p>
-        </div>
-        <div class="facts">
-          <div class="fact"><b>7</b><span>agents run day-to-day operations</span></div>
-          <div class="fact"><b>$0</b><span>infrastructure spend, all free tiers</span></div>
-          <div class="fact"><b>1</b><span>person approves money, security and outreach</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="band" id="jobs">
     <div class="wrap">
@@ -306,7 +287,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <footer>
   <div class="wrap">
     <span>© 2026 AgentSparks</span>
-    <span><a href="#jobs">Careers</a> · <a href="#family">Auto Startup</a></span>
+    <span><a href="#jobs">Careers</a></span>
   </div>
 </footer>
 
@@ -319,7 +300,7 @@ const JOBS = [
    want:["3+ years shipping ML systems","Strong Python and PyTorch","You've built something with LLM agents"]},
   {title:"Inference & Sparsity Engineer", team:"Engineering", type:"Full-time", loc:"Remote",
    about:"Make our models smaller and faster without losing accuracy.",
-   do:["Prune, quantize and distill models with SparseML-style recipes","Profile and speed up CPU inference","Export and benchmark ONNX models"],
+   do:["Prune, quantize and distill models with sparsification recipes","Profile and speed up CPU inference","Export and benchmark ONNX models"],
    want:["Experience with model compression or compilers","Comfort with performance profiling","C++ or Rust is a plus"]},
   {title:"Full-Stack Engineer", team:"Engineering", type:"Full-time", loc:"Remote",
    about:"Build the console where customers create, run and inspect agents.",
@@ -392,13 +373,6 @@ renderFilters(); renderJobs();
 // While it is empty, the form stays hidden and people apply by email.
 const SHEET_ENDPOINT = "";
 
-// Auto Startup's public website. While it is empty, the block says "launching soon".
-const AUTO_STARTUP_URL = "";
-if (AUTO_STARTUP_URL) {
-  const a = document.getElementById("auto-link");
-  a.href = AUTO_STARTUP_URL; a.hidden = false;
-  document.getElementById("auto-soon").hidden = true;
-}
 const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "";
 if (SHEET_ENDPOINT) document.querySelectorAll("form.appform[data-role]").forEach(f => f.hidden = false);
 listEl.addEventListener("submit", async e => {

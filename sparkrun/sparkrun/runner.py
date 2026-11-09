@@ -15,7 +15,7 @@ import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Callable, Iterable, Sequence
 
 from .journal import Journal, stable_hash
 from .memory import TaskState
@@ -33,6 +33,8 @@ Tools:
 {tools}"""
 
 TERMINAL = {"verified", "unverified", "failed", "budget_exceeded", "stuck"}
+# Events that must survive a power cut: side-effect boundaries, approvals and outcomes.
+CRITICAL = {"approval_requested", "approved", "paused", "finished"}
 
 
 # --------------------------------------------------------------------------- parsing
@@ -152,11 +154,11 @@ class _State:
             self.tokens += e.get("tokens", 0)
         elif k == "bad_reply":
             self.bad_replies += 1
-            self.task.recent.append(f"Your last reply was rejected ({e['error']}). Reply with ONE JSON object.")
+            self.task.add_step(f"Your last reply was rejected ({e['error']}). Reply with ONE JSON object.")
         elif k == "feedback":
-            self.task.recent.append(e["text"])
+            self.task.add_step(e["text"])
         elif k == "remember":
-            self.task.facts.append(e["text"])
+            self.task.add_fact(e["text"])
         elif k == "escalated":
             self.level = e["level"]
             self.escalations += 1
@@ -167,7 +169,7 @@ class _State:
         elif k == "tool_replayed":
             self.replayed += 1
             self.recent_keys.append(e["key"])
-            self.task.recent.append(f"{_call_str(e['tool'], e['args'])} already succeeded earlier, so it was "
+            self.task.add_step(f"{_call_str(e['tool'], e['args'])} already succeeded earlier, so it was "
                                     f"not run again. Result: {e['result']}")
         elif k == "tool_result":
             self.started.pop(e["key"], None)
@@ -175,7 +177,7 @@ class _State:
             if e["side_effect"] and e["ok"]:
                 self.done_results[e["key"]] = e["result"]
             status = "OK" if e["ok"] else "ERROR"
-            self.task.recent.append(f"{_call_str(e['tool'], e['args'])} -> {status}: {e['result']}")
+            self.task.add_step(f"{_call_str(e['tool'], e['args'])} -> {status}: {e['result']}")
             if self.pending and self.pending["key"] == e["key"]:
                 self.pending = None
         elif k == "approval_requested":
@@ -192,7 +194,7 @@ class _State:
             else:
                 self.verify_failures += 1
                 self.task.open_items = [f"{f.check}: {f.detail}" for f in self.verdict.failures]
-                self.task.recent.append("You said done, but independent checks failed. "
+                self.task.add_step("You said done, but independent checks failed. "
                                         "Fix everything under MUST FIX, then say done again.")
         elif k == "finished":
             self.finished = e
@@ -234,7 +236,8 @@ def approve_pending(journal_path: str | Path, key: str | None = None) -> dict:
         if not s.pending:
             raise ValueError("this run is not waiting for approval")
         key = s.pending["key"]
-    j.append("approved", key=key)
+    j.append("approved", key=key, critical=True)
+    j.close()
     return s.pending or {"key": key}
 
 
@@ -252,7 +255,8 @@ class Agent:
     def __init__(self, models: Model | Sequence[Model], tools: Iterable[Tool], *,
                  checks: Iterable[Check] = (), policy: Policy | None = None,
                  runs_dir: str | Path = "runs", context_chars: int = 6000,
-                 max_tokens: int = 384, instructions: str = ""):
+                 max_tokens: int = 384, instructions: str = "", durability: str = "side_effects",
+                 on_event: Callable[[dict], Any] | None = None):
         self.models = list(models) if isinstance(models, (list, tuple)) else [models]
         if not self.models:
             raise ValueError("at least one model is required")
@@ -262,6 +266,11 @@ class Agent:
         self.runs_dir = Path(runs_dir)
         self.context_chars = context_chars
         self.max_tokens = max_tokens
+        if durability not in Journal.DURABILITY:
+            raise ValueError(f"durability must be one of {Journal.DURABILITY}")
+        self.durability = durability
+        self.on_event = on_event
+        """Called with every journal event as it is written (mirror to a bus, a UI, metrics)."""
         extra = f"\n{instructions.strip()}" if instructions.strip() else ""
         specs = "\n".join(t.spec() for t in self.tools.values()) or "(none)"
         self.system = SYSTEM_PROMPT.format(instructions=extra, tools=specs)
@@ -271,7 +280,20 @@ class Agent:
     def run(self, goal: str | None = None, *, run_id: str | None = None) -> Result:
         """Start a run, or resume one by passing its run_id."""
         run_id = run_id or time.strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:6]
-        j = Journal(self.runs_dir / run_id / "journal.jsonl")
+        j = Journal(self.runs_dir / run_id / "journal.jsonl", self.durability)
+        try:
+            return self._start(j, run_id, goal)
+        finally:
+            j.close()
+
+    def run_many(self, goals: Iterable[str], *, workers: int = 8) -> list[Result]:
+        """Run independent goals in parallel. Agents spend most of their time waiting on
+        model calls, so threads give near-linear speedups. Models must be thread-safe
+        (OpenAICompatible and ScriptedModel are)."""
+        from .team import parallel_map
+        return parallel_map(lambda g: self.run(g), goals, workers)
+
+    def _start(self, j: Journal, run_id: str, goal: str | None) -> Result:
         if not j.events:
             if not goal:
                 raise ValueError("a goal is required to start a new run")
@@ -366,9 +388,10 @@ class Agent:
             if tool.side_effect and key in s.done_results:
                 self._emit(j, s, "tool_replayed", key=key, tool=name, args=args, result=s.done_results[key])
                 continue
-            if tool.needs_approval and key not in s.approved:
+            gated = p.gate(name, args) if p.gate and key not in s.approved else None
+            if (tool.needs_approval or gated) and key not in s.approved:
                 self._emit(j, s, "approval_requested", key=key, tool=name, args=args, reason="needs_approval",
-                           note=f"Approve {_call_str(name, args)} to continue.")
+                           note=gated or f"Approve {_call_str(name, args)} to continue.")
                 continue
             self._execute(j, s, name, args, key)
 
@@ -419,7 +442,14 @@ class Agent:
     # helpers ----------------------------------------------------------------
 
     def _emit(self, j: Journal, s: _State, kind: str, **data: Any) -> None:
-        s.apply(j.append(kind, **data))
+        critical = kind in CRITICAL or (kind in ("tool_started", "tool_result") and data.get("side_effect", False))
+        event = j.append(kind, critical=critical, **data)
+        s.apply(event)
+        if self.on_event is not None:
+            try:
+                self.on_event(event)
+            except Exception:  # an observer must never break a run
+                pass
 
     def _escalate(self, j: Journal, s: _State, reason: str) -> None:
         if s.level < len(self.models) - 1:
