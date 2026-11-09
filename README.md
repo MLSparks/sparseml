@@ -1,12 +1,14 @@
 # AgentSparks
 
-**Multi-agent travel planning that costs pennies and checks every claim.**
+**Infrastructure for reliable multi-agent systems at a fraction of the cost.**
 
-A team of small, cheap agents plans and books a trip. Every answer and booking is verified before the
-traveler sees it, a stronger model is paid for only when a cheap one is caught failing, and repeat requests
-are served from cache. In the reference run, a six-agent trip cost **$0.0142** in model calls, **3.2× less**
-than running every call on the strong model; both cheap-model mistakes were caught and fixed, and the same
-trip requested again cost **$0.0002**.
+AgentSparks runs any team of agents on cheap models first and pays for a stronger model only when an
+independent check catches a cheap one failing. Every result is verified before it's used, side effects
+happen exactly once, repeat work is served from cache, and every failure is traced and explained.
+
+Measured on the example workload (a six-agent team that plans and books a trip): **$0.0142** in model
+calls, **3.2× less** than running every call on the strong model; both cheap-model mistakes were caught
+and fixed; the same workload run again cost **$0.0002**; the runtime adds about **0.1 ms** per agent step.
 
 **See it:** https://mlsparks.github.io/sparseml/stack/
 
@@ -16,7 +18,7 @@ trip requested again cost **$0.0002**.
 sparkrun/        the lean agent runtime (plain Python, no dependencies)
   sparkrun/      runner, team, journal, memory, models (+ CachedModel), verify (+ ARES checks),
                  compute (GPU ranking), export (AgentDiff, Omniscope, agent-trace-viz)
-  examples/      trip.py (the travel team), stack.py (the run behind the Stack page), demo.py
+  examples/      trip.py (example workload: a travel team), stack.py (the run behind the Stack page), demo.py
   tests/         57 tests; the CI "stack" job runs them against every tool, nothing skipped
 site/            every web page, built by site/build.py and deployed by .github/workflows/pages.yml
   index.html     AgentSparks home and job board

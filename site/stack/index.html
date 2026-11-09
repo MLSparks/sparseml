@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Agent Reliability Stack</title>
-<meta name="description" content="One multi-agent travel run seen through four tools: sparkrun runs it, Omniscope traces it, AgentDiff explains every failure, ARES grades the answers.">
-<meta property="og:title" content="Agent Reliability Stack">
-<meta property="og:description" content="Run · Trace · Diff · Evaluate. A six-agent travel team, checked by four independent tools.">
+<title>AgentSparks Agent Infrastructure</title>
+<meta name="description" content="Infrastructure for reliable multi-agent systems at a fraction of the cost: cheap models first, every result checked, side effects exactly once, repeats from cache. Measured on an example travel workload.">
+<meta property="og:title" content="AgentSparks Agent Infrastructure">
+<meta property="og:description" content="Reliable multi-agent systems at a fraction of the cost, measured on an example workload.">
 <meta name="theme-color" content="#0f1a2e">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%230f1a2e'/%3E%3Cpath d='M15.5 4 8 16h5l-1.5 8L20 12h-5z' fill='%23ff6a1a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,6 +85,10 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backgroun
 .tabs button span{font:500 11px var(--mono);opacity:.7;margin-left:6px}
 .tabsep{flex:none;align-self:center;font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 4px 0 12px;border-left:1px solid var(--line);margin-left:6px}
 .caught{display:grid;gap:12px}
+.guar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.guar div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:4px;border-top:3px solid var(--accent)}
+.guar b{font:700 17px var(--display)}
+.guar span{font-size:14px;color:var(--muted)}
 .catch{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:8px}
 .catch .said{font-size:15px}
 .catch .said s{text-decoration:line-through;text-decoration-color:var(--critical);color:var(--muted)}
@@ -234,10 +238,12 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
 @media (max-width:1000px){
   .coststrip{grid-template-columns:1fr 1fr}
   .hood{grid-template-columns:1fr 1fr}
+  .guar{grid-template-columns:1fr 1fr}
   .grid2,.attempts{grid-template-columns:1fr}
   .tiles{grid-template-columns:1fr 1fr}
 }
 @media (max-width:620px){
+  .guar{grid-template-columns:1fr}
   .tabs{top:calc(env(safe-area-inset-top,0px) + 92px)}
   .lanes{grid-template-columns:1fr 22px 1fr}
   .journal li{grid-template-columns:1fr}
@@ -251,7 +257,7 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
   <div class="wrap">
     <a class="logo" href="../">
       <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#ffffff" fill-opacity=".1"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="#ff8a47"/></svg>
-      AgentSparks <small>reliability stack</small>
+      AgentSparks <small>agent infrastructure</small>
     </a>
     <nav aria-label="Site">
       <a href="./" aria-current="page">Stack</a>
@@ -265,9 +271,9 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
 
 <section class="hero">
   <div class="wrap">
-    <span class="eyebrow">AgentSparks · one real multi-agent travel run</span>
-    <h1>A trip planned, checked and booked by six agents, for <em>pennies</em>.</h1>
-    <p class="lede">AgentSparks plans travel with a team of small, cheap agents. Every answer and booking is checked before the traveler sees it, a stronger model is paid for only when a cheap one is caught failing, and a repeat request costs almost nothing.</p>
+    <span class="eyebrow">AgentSparks · agent infrastructure</span>
+    <h1>Reliable multi-agent systems at a <em>fraction</em> of the cost.</h1>
+    <p class="lede">AgentSparks is the infrastructure under your agents: cheap models first, every result checked independently, side effects exactly once, repeats served from cache, and every failure traced and explained. It works for any agent workload. This page measures it on one example: a six-agent team that plans and books a trip.</p>
     <div class="coststrip" id="coststrip" aria-label="Cost and speed of this run"></div>
     <div class="prov" id="prov"></div>
   </div>
@@ -275,7 +281,7 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
 
 <div class="tabs">
   <div class="wrap" role="tablist" aria-label="Lenses" id="tabs">
-    <button role="tab" data-lens="value">What you get</button>
+    <button role="tab" data-lens="value">What it delivers</button>
     <span class="tabsep" aria-hidden="true">Under the hood</span>
     <button role="tab" data-lens="run">Run<span>sparkrun</span></button>
     <button role="tab" data-lens="trace">Trace<span>Omniscope</span></button>
@@ -573,8 +579,18 @@ function renderValue(){
   }).join("");
   const checks = t.verdict.map(v => `<li><span class="ic ${v.passed ? "ok" : "no"}">${v.passed ? "✓" : "✗"}</span><span>${esc(v.check)}<small>${esc(v.detail)}</small></span></li>`).join("");
   return `
-  <div class="lens-head"><h2>What the traveler gets</h2>
-    <p>One request, ${esc(req.origin)} to ${esc(req.destination)} for ${req.travelers}, ${req.nights} nights, ${money(req.budget)} budget. Six agents planned it in parallel, a person approved each booking, and every result was checked before it was shown.</p></div>
+  <div class="lens-head"><h2>What every workload gets</h2>
+    <p>These hold for any agents you run on AgentSparks. The numbers are measured on the example workload below.</p></div>
+  <div class="guar">
+    <div><b>Cheap by default</b><span>${C.cheap_calls} of ${C.model_calls} calls stayed on the cheap model; ${C.savings_x}× cheaper than strong-only</span></div>
+    <div><b>Verified, not trusted</b><span>${t.roles.filter(r => r.escalations).length} false claims caught by independent checks, then fixed</span></div>
+    <div><b>Repeats nearly free</b><span>${Math.round(C.repeat.cache_hits / C.repeat.calls * 100)}% of answers reused on a repeat run</span></div>
+    <div><b>Side effects exactly once</b><span>${b.bookings.length} bookings, each after a person approved it, never repeated</span></div>
+    <div><b>Fast</b><span>${L.overhead_ms_per_step.toFixed(2)} ms runtime overhead per step; ${speed.toFixed(0)}× throughput in parallel</span></div>
+    <div><b>Explained</b><span>every failure diffed by AgentDiff and risk-scored by Omniscope</span></div>
+  </div>
+  <div class="lens-head" style="margin-top:30px"><span class="eyebrow">Example workload</span><h2>A six-agent travel team</h2>
+    <p>One request, ${esc(req.origin)} to ${esc(req.destination)} for ${req.travelers}, ${req.nights} nights, ${money(req.budget)} budget. Flights, hotels and a guide ran in parallel, a ranker scored every option, a person approved each booking, and every result was checked before it was shown. Swap in your own agents and checks; the infrastructure stays the same.</p></div>
   <div class="grid2">
     <div class="card"><h3>The trip ${statusPill(t.status)}</h3><div class="itin">
       <div class="row"><span>Flight · ${esc(opt.flight.airline)} ${esc(opt.flight.id)}, ${opt.flight.stops ? opt.flight.stops + " stop" : "nonstop"}, arrives ${esc(opt.flight.arrive)}</span><span class="num">${money(opt.flight.price * req.travelers)}</span></div>
@@ -591,7 +607,7 @@ function renderValue(){
       <div class="hbars" role="img" aria-label="${bars.map(x => x[0] + " " + usd4(x[1])).join(", ")}">
         ${bars.map(x => `<div class="hbar"><span>${esc(x[0])}</span><span class="bar"><i class="${x[2]}" style="width:${Math.max(0.6, x[1] / maxC * 100)}%"></i></span><span class="mono num">${usd4(x[1])}</span></div>`).join("")}
       </div>
-      <p class="hint" style="margin-top:10px">${C.cheap_calls} of ${C.model_calls} model calls stayed on the cheap model. Strong-only prices the same ${C.model_calls} calls at the strong rate. Prices are the demo's stand-ins (${usd4(C.prices.small)} and ${usd4(C.prices.strong)} per call); point it at real models to price your own traffic.</p></div>
+      <p class="hint" style="margin-top:10px">For the example workload. ${C.cheap_calls} of ${C.model_calls} model calls stayed on the cheap model. Strong-only prices the same ${C.model_calls} calls at the strong rate. Prices are the demo's stand-ins (${usd4(C.prices.small)} and ${usd4(C.prices.strong)} per call); point it at real models to price your own traffic.</p></div>
     <div class="card"><h3>How fast</h3>
       <div class="hbars" role="img" aria-label="${L.parallel.tasks} trips one at a time ${maxS} seconds, in parallel ${L.parallel.workers_32_s} seconds">
         <div class="hbar"><span>${L.parallel.tasks} requests, one at a time</span><span class="bar"><i class="alt" style="width:100%"></i></span><span class="mono num">${maxS.toFixed(2)} s</span></div>
@@ -612,10 +628,10 @@ function renderValue(){
 function hero(){
   const C = D.lean.cost, caught = D.team.roles.filter(r => r.escalations > 0).length;
   $("coststrip").innerHTML = `
-    <div><b>${usd4(C.first_run_usd)}</b><span>model cost of the verified, booked trip</span></div>
+    <div><b>${usd4(C.first_run_usd)}</b><span>model cost of the example workload, verified end to end</span></div>
     <div><b><em>${C.savings_x}×</em> cheaper</b><span>than running every call on the strong model (${usd4(C.strong_only_usd)})</span></div>
-    <div><b>${caught} mistakes</b><span>caught and fixed before the traveler saw them</span></div>
-    <div><b>${usd4(C.repeat.usd)}</b><span>for the same trip again (${C.repeat.cache_hits} of ${C.repeat.calls} answers reused)</span></div>`;
+    <div><b>${caught} caught</b><span>model mistakes, fixed by a stronger model before anyone saw them</span></div>
+    <div><b>${usd4(C.repeat.usd)}</b><span>to run the same workload again (${C.repeat.cache_hits} of ${C.repeat.calls} answers reused)</span></div>`;
   const T = D.environment.tools;
   $("prov").innerHTML = [["sparkrun " + D.environment.sparkrun, true], ["AgentDiff", T.agentdiff], ["Omniscope RiskEngine", T.omniscope], ["agent-trace-viz", T.agent_trace_viz], ["ARES (" + T.ares + ")", true]]
     .map(([n, on]) => `<span class="${on ? "" : "off"}">${esc(n)}${on ? "" : " (not run)"}</span>`).join("");
