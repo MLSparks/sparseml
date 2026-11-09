@@ -1,0 +1,74 @@
+name: sparkrun release
+
+# Push a tag like sparkrun-v0.1.0 to build the package and publish a GitHub Release.
+# PyPI publishing runs only after you set the repository variable PYPI_PUBLISH=true and
+# add this workflow as a trusted publisher for "agentsparks-sparkrun" on pypi.org.
+
+on:
+  push:
+    tags: ["sparkrun-v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check the tag matches the package version
+        working-directory: sparkrun
+        run: |
+          version=$(python -c "import re;print(re.search(r'^version = \"(.+)\"', open('pyproject.toml').read(), re.M).group(1))")
+          test "sparkrun-v$version" = "$GITHUB_REF_NAME" || { echo "Tag $GITHUB_REF_NAME does not match version $version"; exit 1; }
+      - name: Test
+        working-directory: sparkrun
+        run: python -m unittest discover -s tests
+      - name: Build
+        working-directory: sparkrun
+        run: |
+          python -m pip install --quiet build
+          python -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: sparkrun/dist/
+
+  github-release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" \
+            --title "sparkrun ${GITHUB_REF_NAME#sparkrun-v}" \
+            --notes "Lean, verified, crash-safe execution for AI agents on small models.
+
+          Install: pip install \"agentsparks-sparkrun @ https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME/agentsparks_sparkrun-${GITHUB_REF_NAME#sparkrun-v}-py3-none-any.whl\"
+
+          Docs: https://mlsparks.github.io/sparseml/sparkrun/"
+
+  pypi:
+    needs: build
+    if: vars.PYPI_PUBLISH == 'true'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1

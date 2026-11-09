@@ -16,6 +16,15 @@ loop and answers three questions for every run:
 Plain Python standard library, no dependencies. It runs on free local small models
 (Ollama, llama.cpp, vLLM) or any OpenAI-compatible API.
 
+## Install
+
+```bash
+pip install "agentsparks-sparkrun @ git+https://github.com/MLSparks/sparseml#subdirectory=sparkrun"
+```
+
+Or download the wheel from the [latest `sparkrun-v*` release](https://github.com/MLSparks/sparseml/releases).
+The package installs as `agentsparks-sparkrun` and imports as `sparkrun`. Docs: https://mlsparks.github.io/sparseml/sparkrun/
+
 ## Quick start
 
 ```bash
