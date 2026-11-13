@@ -31,7 +31,7 @@ The package installs as `agentsparks-sparkrun` and imports as `sparkrun`. Docs: 
 cd sparkrun
 python examples/demo.py                                   # offline, no model needed
 ollama pull qwen2.5:3b && python examples/demo.py --ollama qwen2.5:3b   # a real local small model
-python -m unittest discover -s tests                      # 57 tests
+python -m unittest discover -s tests                      # 69 tests
 ```
 
 ```python
@@ -53,6 +53,42 @@ agent = Agent([small, strong], [write_file],
 result = agent.run("Make the failing test in project/ pass")
 print(result.status, result.cost_usd, result.verdict.failures if result.verdict else None)
 ```
+
+## Bring your own loop: `Harness`
+
+Already have agents in LangGraph, CrewAI, the OpenAI Agents SDK or your own code? Keep the loop and wrap
+its tools and models. You get the same guarantees without a rewrite:
+
+```python
+from sparkrun import Harness, verify
+
+with Harness("refund-1042", "Refund order 1042", checks=[refunded_once], gate=refund_policy) as h:
+    refund = h.tool(issue_refund, side_effect=True)   # at most once per run, across crashes
+    llm = h.model(your_model)                         # cost and tokens per verified run
+    ...                                               # your loop calls refund(...) and llm.complete(...)
+    if not h.check(draft).passed:                     # independent checks, retry before finishing
+        h.escalate("strong-model", "checks failed")
+        ...
+    result = h.done(answer)
+```
+
+A tool that needs approval (or that the `gate` policy flags) raises `PendingApproval`; the `with` block records
+the pause, `h.approve()` (or `python -m sparkrun approve runs/<id>`) approves it, and running the same code again
+continues. Harness journals use the same format as `Agent`, so reports, exports and approvals all work.
+
+## Example workloads
+
+`examples/workloads/` applies the same infrastructure to four different jobs, each with a cheap model that makes
+a realistic mistake an independent check catches:
+
+| Workload | Plugs in as | The check that catches the cheap model |
+|---|---|---|
+| Plan and book a trip (`travel.py`) | `Team` of six agents | itinerary checks; ARES groundedness for the guide |
+| Fix a failing test (`coding.py`) | `Agent` with file tools | the real test suite has to pass |
+| Refund a damaged item (`support.py`) | `Harness` around your own loop | the refund ledger and the reply must agree |
+| Answer from internal docs (`research.py`) | `Agent` with retrieval | ARES groundedness and F1 |
+
+`python examples/stack.py` runs all four, once and then again with a warm cache, and measures them the same way.
 
 ## Multi-agent teams
 

@@ -126,6 +126,14 @@ class TestAres(unittest.TestCase):
         self.assertIn("groundedness", bad.detail)
         self.assertFalse(verify.grounded(lambda c: "")({"answer": "x"}).passed)
 
+    def test_command_output_uses_relative_paths(self):
+        import tempfile as _t
+        with _t.TemporaryDirectory() as d:
+            ev = verify.command([sys.executable, "-c", "import os; print(os.getcwd() + '/x.py failed'); raise SystemExit(1)"], cwd=d)({})
+        self.assertFalse(ev.passed)
+        self.assertIn("./x.py failed", ev.detail)
+        self.assertNotIn(d, ev.detail)
+
     def test_answer_f1(self):
         self.assertTrue(verify.answer_f1("1937")({"answer": "In 1937."}).passed)
         self.assertFalse(verify.answer_f1("1937")({"answer": "1952"}).passed)
