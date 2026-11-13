@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>AgentSparks Agent Infrastructure</title>
-<meta name="description" content="Infrastructure for reliable multi-agent systems at a fraction of the cost: cheap models first, every result checked, side effects exactly once, repeats from cache. Measured on an example travel workload.">
+<title>AgentSparks Agent Framework</title>
+<meta name="description" content="An agent framework you apply anywhere: cheap models first, every result checked, side effects exactly once, repeats from cache. Measured on travel, coding, support and research workloads.">
 <meta property="og:title" content="AgentSparks Agent Infrastructure">
 <meta property="og:description" content="Reliable multi-agent systems at a fraction of the cost, measured on an example workload.">
 <meta name="theme-color" content="#0f1a2e">
@@ -85,6 +85,13 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;backgroun
 .tabs button span{font:500 11px var(--mono);opacity:.7;margin-left:6px}
 .tabsep{flex:none;align-self:center;font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 4px 0 12px;border-left:1px solid var(--line);margin-left:6px}
 .caught{display:grid;gap:12px}
+.wltiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.wltiles div{background:var(--sunk);border-radius:12px;padding:12px;display:grid;gap:2px}
+.wltiles b{font:800 24px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.wltiles span{font-size:12.5px;color:var(--muted)}
+.plug{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plug .card{display:grid;gap:8px;align-content:start}
+.plug pre{margin:0;background:var(--hero-a);color:var(--hero-ink);border-radius:10px;padding:12px;overflow-x:auto;font:12.5px/1.55 var(--mono)}
 .guar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .guar div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:4px;border-top:3px solid var(--accent)}
 .guar b{font:700 17px var(--display)}
@@ -239,6 +246,8 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
   .coststrip{grid-template-columns:1fr 1fr}
   .hood{grid-template-columns:1fr 1fr}
   .guar{grid-template-columns:1fr 1fr}
+  .wltiles{grid-template-columns:1fr 1fr}
+  .plug{grid-template-columns:1fr}
   .grid2,.attempts{grid-template-columns:1fr}
   .tiles{grid-template-columns:1fr 1fr}
 }
@@ -257,7 +266,7 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
   <div class="wrap">
     <a class="logo" href="../">
       <svg width="24" height="24" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#ffffff" fill-opacity=".1"/><path d="M15.5 4 8 16h5l-1.5 8L20 12h-5z" fill="#ff8a47"/></svg>
-      AgentSparks <small>agent infrastructure</small>
+      AgentSparks <small>agent framework</small>
     </a>
     <nav aria-label="Site">
       <a href="./" aria-current="page">Stack</a>
@@ -271,9 +280,9 @@ footer pre{margin:0;background:var(--sunk);border-radius:10px;padding:12px 14px;
 
 <section class="hero">
   <div class="wrap">
-    <span class="eyebrow">AgentSparks · agent infrastructure</span>
-    <h1>Reliable multi-agent systems at a <em>fraction</em> of the cost.</h1>
-    <p class="lede">AgentSparks is the infrastructure under your agents: cheap models first, every result checked independently, side effects exactly once, repeats served from cache, and every failure traced and explained. It works for any agent workload. This page measures it on one example: a six-agent team that plans and books a trip.</p>
+    <span class="eyebrow">AgentSparks · agent framework</span>
+    <h1>One framework. Any agent. A <em>fraction</em> of the cost.</h1>
+    <p class="lede">AgentSparks is agent infrastructure you apply anywhere: run agents on it, compose them into teams, or wrap the loop you already have in any framework. Cheap models first, every result checked independently, side effects exactly once, repeats from cache, every failure explained. Measured below on four very different workloads.</p>
     <div class="coststrip" id="coststrip" aria-label="Cost and speed of this run"></div>
     <div class="prov" id="prov"></div>
   </div>
@@ -312,7 +321,33 @@ const usd4 = n => "$" + Number(n).toFixed(4);
 const ORDER = ["flights", "hotels", "guide", "rank", "activities", "booking"];
 const NAMES = {flights: "Flights", hotels: "Hotels", guide: "Guide", rank: "Ranker", activities: "Activities", booking: "Booking"};
 const LENSES = ["value", "run", "trace", "diff", "eval"];
-let D = null, lens = "value", role = "guide", pairIx = 0;
+let D = null, lens = "value", role = "guide", pairIx = 0, wlIx = 0;
+const sum = (xs, f) => xs.reduce((a, x) => a + f(x), 0);
+function agg(){
+  const W = D.workloads || [];
+  return {n: W.length, verified: W.filter(w => w.status === "verified").length, domains: W.map(w => w.domain.toLowerCase()).join(", "),
+    cost: sum(W, w => w.cost_usd), strong: sum(W, w => w.strong_only_usd), caught: sum(W, w => w.caught.length),
+    repeat: sum(W, w => w.repeat.cost_usd), rcalls: sum(W, w => w.repeat.model_calls), rhits: sum(W, w => w.repeat.cache_hits),
+    calls: sum(W, w => w.model_calls), cheap: sum(W, w => w.cheap_calls), effects: sum(W, w => w.side_effects.length),
+    approvals: sum(W, w => w.approvals)};
+}
+function renderWorkload(w){
+  const tiles = [
+    [usd4(w.cost_usd), `model cost, vs ${usd4(w.strong_only_usd)} strong-only (${w.savings_x}× cheaper)`],
+    [`${w.cheap_calls} of ${w.model_calls}`, "model calls on the cheap model"],
+    [usd4(w.repeat.cost_usd), `to run it again (${w.repeat.cache_hits} of ${w.repeat.model_calls} answers reused)`],
+    [`${w.side_effects.length}`, `side effects, each exactly once${w.approvals ? `, ${w.approvals} after approval` : ""}`]];
+  return `<div class="card wlpanel">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><div><span class="eyebrow">${esc(w.domain)}</span><h3 style="font-size:22px;margin-top:4px">${esc(w.title)}</h3></div>${statusPill(w.status)}</div>
+    <p class="muted" style="margin-top:6px">${esc(w.summary)}</p>
+    <p class="mono" style="margin-top:6px;color:var(--accent-ink)">${esc(w.style)}</p>
+    <div class="wltiles">${tiles.map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join("")}</div>
+    <div class="grid2" style="margin-top:14px">
+      <div><h3 style="margin-bottom:8px">Caught before anyone saw it</h3><div class="caught">${w.caught.map(c => `<div class="catch">
+        <div class="said">${esc(c.agent)}: <s>“${esc(c.said || "")}”</s></div><div class="why">✗ ${esc(c.why)}</div><div class="got">${esc(c.delivered || "")}</div></div>`).join("")}</div></div>
+      <div><h3 style="margin-bottom:8px">Side effects</h3>${w.side_effects.length ? `<ul class="checks">${w.side_effects.map(e => `<li><span class="ic ok">✓</span><span><span class="mono">${esc(e.tool)}</span><small>${esc(e.result)}</small></span></li>`).join("")}</ul>` : `<p class="hint">Read-only workload: nothing to change in the world.</p>`}</div>
+    </div></div>`;
+}
 
 // ---------- tooltip ----------
 const tip = $("tip");
@@ -562,7 +597,7 @@ function bindEval(){
 
 // ---------- LEAN ----------
 function renderValue(){
-  const L = D.lean, C = L.cost, t = D.team, rs = t.board.rank_stats, b = t.board, opt = b.option, req = b.request;
+  const L = D.lean, C = L.cost, t = D.team, rs = t.board.rank_stats, b = t.board, opt = b.option, req = b.request, A = agg();
   const speed = L.parallel.sequential_s / L.parallel.workers_32_s, maxS = L.parallel.sequential_s;
   const bars = [["Every call on the strong model", C.strong_only_usd, "alt"], ["AgentSparks, cheap model first", C.first_run_usd, ""], ["Same trip again", C.repeat.usd, ""]];
   const maxC = Math.max(...bars.map(x => x[1]));
@@ -579,17 +614,42 @@ function renderValue(){
   }).join("");
   const checks = t.verdict.map(v => `<li><span class="ic ${v.passed ? "ok" : "no"}">${v.passed ? "✓" : "✗"}</span><span>${esc(v.check)}<small>${esc(v.detail)}</small></span></li>`).join("");
   return `
-  <div class="lens-head"><h2>What every workload gets</h2>
-    <p>These hold for any agents you run on AgentSparks. The numbers are measured on the example workload below.</p></div>
+  <div class="lens-head"><h2>Applies anywhere</h2>
+    <p>The same infrastructure under four very different agents. Pick one: every number is measured the same way, from its journals.</p></div>
+  <div class="pairs" role="group" aria-label="Workloads">${D.workloads.map((w, i) => `<button type="button" data-wl="${i}" aria-pressed="${i === wlIx}"><b>${esc(w.domain)}</b> · ${esc(w.title)}</button>`).join("")}</div>
+  <div id="wlpanel">${renderWorkload(D.workloads[wlIx])}</div>
+
+  <div class="lens-head" style="margin-top:30px"><h2>Three ways to plug it in</h2>
+    <p>Start where your agents are. Every way gets the same journal, checks, exactly-once side effects, approvals and cost accounting.</p></div>
+  <div class="plug">
+    <div class="card"><span class="eyebrow">Agent · coding, knowledge work</span><h3>Let sparkrun run the loop</h3><pre><code>agent = Agent([small, strong], tools,
+              checks=[tests_pass])
+agent.run("Make the failing tests pass")</code></pre></div>
+    <div class="card"><span class="eyebrow">Team · travel</span><h3>Compose agents into a team</h3><pre><code>team = Team([Role("flights", a1, goal),
+             Role("rank", a2, goal,
+                  after=("flights", "hotels"))],
+            checks=[fits_budget])
+team.run("trip-42")</code></pre></div>
+    <div class="card"><span class="eyebrow">Harness · customer support</span><h3>Wrap the loop you already have</h3><pre><code>with Harness("refund-1042", goal,
+             checks=[refunded_once]) as h:
+    refund = h.tool(issue_refund,
+                    side_effect=True)
+    llm = h.model(your_model)
+    ...  # LangGraph, CrewAI, your own code
+    h.done(answer)</code></pre></div>
+  </div>
+
+  <div class="lens-head" style="margin-top:30px"><h2>What every workload gets</h2>
+    <p>Totals across all ${A.n} workloads.</p></div>
   <div class="guar">
-    <div><b>Cheap by default</b><span>${C.cheap_calls} of ${C.model_calls} calls stayed on the cheap model; ${C.savings_x}× cheaper than strong-only</span></div>
-    <div><b>Verified, not trusted</b><span>${t.roles.filter(r => r.escalations).length} false claims caught by independent checks, then fixed</span></div>
-    <div><b>Repeats nearly free</b><span>${Math.round(C.repeat.cache_hits / C.repeat.calls * 100)}% of answers reused on a repeat run</span></div>
-    <div><b>Side effects exactly once</b><span>${b.bookings.length} bookings, each after a person approved it, never repeated</span></div>
+    <div><b>Cheap by default</b><span>${A.cheap} of ${A.calls} calls stayed on the cheap model; ${(A.strong / A.cost).toFixed(1)}× cheaper than strong-only overall</span></div>
+    <div><b>Verified, not trusted</b><span>${A.caught} false claims caught by independent checks, each fixed before anyone saw it</span></div>
+    <div><b>Repeats nearly free</b><span>${Math.round(A.rhits / A.rcalls * 100)}% of answers reused when all ${A.n} ran again</span></div>
+    <div><b>Side effects exactly once</b><span>${A.effects} side effects across ${A.n} workloads, none repeated; ${A.approvals} waited for a person</span></div>
     <div><b>Fast</b><span>${L.overhead_ms_per_step.toFixed(2)} ms runtime overhead per step; ${speed.toFixed(0)}× throughput in parallel</span></div>
     <div><b>Explained</b><span>every failure diffed by AgentDiff and risk-scored by Omniscope</span></div>
   </div>
-  <div class="lens-head" style="margin-top:30px"><span class="eyebrow">Example workload</span><h2>A six-agent travel team</h2>
+  <div class="lens-head" style="margin-top:36px"><span class="eyebrow">Deep dive</span><h2>Inside the six-agent travel team</h2>
     <p>One request, ${esc(req.origin)} to ${esc(req.destination)} for ${req.travelers}, ${req.nights} nights, ${money(req.budget)} budget. Flights, hotels and a guide ran in parallel, a ranker scored every option, a person approved each booking, and every result was checked before it was shown. Swap in your own agents and checks; the infrastructure stays the same.</p></div>
   <div class="grid2">
     <div class="card"><h3>The trip ${statusPill(t.status)}</h3><div class="itin">
@@ -626,12 +686,12 @@ function renderValue(){
 
 // ---------- shell ----------
 function hero(){
-  const C = D.lean.cost, caught = D.team.roles.filter(r => r.escalations > 0).length;
+  const A = agg();
   $("coststrip").innerHTML = `
-    <div><b>${usd4(C.first_run_usd)}</b><span>model cost of the example workload, verified end to end</span></div>
-    <div><b><em>${C.savings_x}×</em> cheaper</b><span>than running every call on the strong model (${usd4(C.strong_only_usd)})</span></div>
-    <div><b>${caught} caught</b><span>model mistakes, fixed by a stronger model before anyone saw them</span></div>
-    <div><b>${usd4(C.repeat.usd)}</b><span>to run the same workload again (${C.repeat.cache_hits} of ${C.repeat.calls} answers reused)</span></div>`;
+    <div><b>${A.verified} of ${A.n}</b><span>workloads verified end to end, across ${A.domains}</span></div>
+    <div><b>${usd4(A.cost)}</b><span>model cost for all ${A.n}, vs ${usd4(A.strong)} on the strong model only</span></div>
+    <div><b>${A.caught} caught</b><span>model mistakes, fixed before anyone saw them</span></div>
+    <div><b>${usd4(A.repeat)}</b><span>to run all ${A.n} again (${A.rhits} of ${A.rcalls} answers reused)</span></div>`;
   const T = D.environment.tools;
   $("prov").innerHTML = [["sparkrun " + D.environment.sparkrun, true], ["AgentDiff", T.agentdiff], ["Omniscope RiskEngine", T.omniscope], ["agent-trace-viz", T.agent_trace_viz], ["ARES (" + T.ares + ")", true]]
     .map(([n, on]) => `<span class="${on ? "" : "off"}">${esc(n)}${on ? "" : " (not run)"}</span>`).join("");
@@ -646,6 +706,9 @@ function show(next, push){
   if (lens === "run") { drawTeamEdges(); main.querySelectorAll(".node").forEach(n => n.addEventListener("click", () => { role = n.dataset.role; show("run"); })); }
   if (lens === "trace") bindTrace();
   if (lens === "eval") bindEval();
+  if (lens === "value") main.querySelectorAll("[data-wl]").forEach(b => b.addEventListener("click", () => {
+    wlIx = +b.dataset.wl; main.querySelectorAll("[data-wl]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    $("wlpanel").innerHTML = renderWorkload(D.workloads[wlIx]); }));
   if (lens === "value") main.querySelectorAll(".hood [data-go]").forEach(b => b.addEventListener("click", () => { show(b.dataset.go, true); document.querySelector(".tabs").scrollIntoView(); }));
   if (lens === "diff") main.querySelectorAll("[data-pair]").forEach(b => b.addEventListener("click", () => { pairIx = +b.dataset.pair; show("diff"); }));
   if (push && location.hash.slice(1) !== lens) history.replaceState(null, "", "#" + lens);

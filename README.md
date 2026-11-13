@@ -1,14 +1,15 @@
 # AgentSparks
 
-**Infrastructure for reliable multi-agent systems at a fraction of the cost.**
+**One agent framework. Any agent. A fraction of the cost.**
 
-AgentSparks runs any team of agents on cheap models first and pays for a stronger model only when an
-independent check catches a cheap one failing. Every result is verified before it's used, side effects
-happen exactly once, repeat work is served from cache, and every failure is traced and explained.
+Run agents on it, compose them into teams, or wrap the loop you already have in any framework. Cheap models
+go first and a stronger model is paid for only when an independent check catches a cheap one failing. Every
+result is verified before it's used, side effects happen exactly once, repeat work comes from cache, and every
+failure is traced and explained.
 
-Measured on the example workload (a six-agent team that plans and books a trip): **$0.0142** in model
-calls, **3.2× less** than running every call on the strong model; both cheap-model mistakes were caught
-and fixed; the same workload run again cost **$0.0002**; the runtime adds about **0.1 ms** per agent step.
+Measured on four different workloads (travel, coding, customer support, internal-docs research): all four
+verified, **5 cheap-model mistakes caught** before anyone saw them, **$0.0358** in model calls versus $0.0750
+on the strong model only, and **$0.0002** to run all four again.
 
 **See it:** https://mlsparks.github.io/sparseml/stack/
 
@@ -16,10 +17,11 @@ and fixed; the same workload run again cost **$0.0002**; the runtime adds about 
 
 ```
 sparkrun/        the lean agent runtime (plain Python, no dependencies)
-  sparkrun/      runner, team, journal, memory, models (+ CachedModel), verify (+ ARES checks),
+  sparkrun/      runner (Agent), team (Team), harness (Harness: your own loop), journal, memory,
+                 models (+ CachedModel), verify (+ ARES checks),
                  compute (GPU ranking), export (AgentDiff, Omniscope, agent-trace-viz)
-  examples/      trip.py (example workload: a travel team), stack.py (the run behind the Stack page), demo.py
-  tests/         57 tests; the CI "stack" job runs them against every tool, nothing skipped
+  examples/      workloads/ (travel, coding, support, research), trip.py, stack.py (the Stack page's data), demo.py
+  tests/         69 tests; the CI "stack" job runs them against every tool, nothing skipped
 site/            every web page, built by site/build.py and deployed by .github/workflows/pages.yml
   index.html     AgentSparks home and job board
   stack/         Stack Explorer: what the traveler got, then the tools under the hood

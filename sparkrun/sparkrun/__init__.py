@@ -7,6 +7,7 @@ Answers three questions for every run:
 """
 from . import compute, verify
 from .evolve import Variants
+from .harness import Harness, PendingApproval
 from .journal import Journal, stable_hash
 from .memory import TaskState
 from .models import CachedModel, Model, OpenAICompatible, PermanentError, ScriptedModel, Usage
@@ -18,7 +19,7 @@ from .verify import Evidence, Verdict
 
 __version__ = "0.1.0"
 __all__ = [
-    "Agent", "CachedModel", "Evidence", "Role", "Team", "TeamResult", "compute", "Journal", "Model", "OpenAICompatible", "ParseError", "PermanentError",
+    "Agent", "CachedModel", "Evidence", "Harness", "PendingApproval", "Role", "Team", "TeamResult", "compute", "Journal", "Model", "OpenAICompatible", "ParseError", "PermanentError",
     "Policy", "Result", "ScriptedModel", "TaskState", "Tool", "TransientError", "Usage", "Variants",
     "Verdict", "approve_pending", "format_report", "parse_action", "stable_hash", "summarize", "tool",
     "verify",

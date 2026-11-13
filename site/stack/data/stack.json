@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09 08:49 UTC",
+  "generated_at": "2026-11-13 06:50 UTC",
   "environment": {
     "python": "3.12.3",
     "machine": "x86_64",
@@ -14,7 +14,7 @@
   },
   "team": {
     "status": "verified",
-    "seconds": 0.161,
+    "seconds": 1.052,
     "approvals": 2,
     "steps": 15,
     "cost_usd": 0.0142,
@@ -33,12 +33,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.602
+            "t": 1794552634.007
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.603,
+            "t": 1794552634.008,
             "model": "flights-small",
             "level": 0,
             "tokens": 226,
@@ -48,7 +48,7 @@
           {
             "kind": "tool_result",
             "seq": 3,
-            "t": 1794214163.609,
+            "t": 1794552634.012,
             "tool": "search_flights",
             "args": {
               "origin": "SFO",
@@ -62,7 +62,7 @@
           {
             "kind": "model_call",
             "seq": 4,
-            "t": 1794214163.615,
+            "t": 1794552634.014,
             "model": "flights-small",
             "level": 0,
             "tokens": 242,
@@ -72,13 +72,13 @@
           {
             "kind": "claimed_done",
             "seq": 5,
-            "t": 1794214163.615,
+            "t": 1794552634.014,
             "answer": "Found flights"
           },
           {
             "kind": "verified",
             "seq": 6,
-            "t": 1794214163.615,
+            "t": 1794552634.014,
             "passed": true,
             "evidence": [
               {
@@ -91,7 +91,7 @@
           {
             "kind": "finished",
             "seq": 7,
-            "t": 1794214163.615,
+            "t": 1794552634.014,
             "reason": "all checks passed",
             "status": "verified",
             "answer": "Found flights"
@@ -112,12 +112,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.608
+            "t": 1794552634.008
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.611,
+            "t": 1794552634.014,
             "model": "hotels-small",
             "level": 0,
             "tokens": 216,
@@ -127,7 +127,7 @@
           {
             "kind": "tool_result",
             "seq": 3,
-            "t": 1794214163.614,
+            "t": 1794552634.016,
             "tool": "search_hotels",
             "args": {
               "city": "Lisbon",
@@ -140,7 +140,7 @@
           {
             "kind": "model_call",
             "seq": 4,
-            "t": 1794214163.618,
+            "t": 1794552634.02,
             "model": "hotels-small",
             "level": 0,
             "tokens": 229,
@@ -150,13 +150,13 @@
           {
             "kind": "claimed_done",
             "seq": 5,
-            "t": 1794214163.618,
+            "t": 1794552634.02,
             "answer": "Found hotels"
           },
           {
             "kind": "verified",
             "seq": 6,
-            "t": 1794214163.619,
+            "t": 1794552634.02,
             "passed": true,
             "evidence": [
               {
@@ -169,7 +169,7 @@
           {
             "kind": "finished",
             "seq": 7,
-            "t": 1794214163.619,
+            "t": 1794552634.02,
             "reason": "all checks passed",
             "status": "verified",
             "answer": "Found hotels"
@@ -193,12 +193,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.63
+            "t": 1794552634.031
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.63,
+            "t": 1794552634.031,
             "model": "rank-small",
             "level": 0,
             "tokens": 229,
@@ -208,19 +208,19 @@
           {
             "kind": "tool_result",
             "seq": 3,
-            "t": 1794214163.697,
+            "t": 1794552634.998,
             "tool": "rank_itineraries",
             "args": {
               "budget": 4200.0,
               "top": 5
             },
             "ok": true,
-            "result": "ranked 293,400 combinations on numpy in 67.4 ms; best total $1181"
+            "result": "ranked 293,400 combinations on numpy in 966.7 ms; best total $1181"
           },
           {
             "kind": "model_call",
             "seq": 4,
-            "t": 1794214163.7,
+            "t": 1794552635.0,
             "model": "rank-small",
             "level": 0,
             "tokens": 247,
@@ -230,13 +230,13 @@
           {
             "kind": "claimed_done",
             "seq": 5,
-            "t": 1794214163.7,
+            "t": 1794552635.0,
             "answer": "Ranked options"
           },
           {
             "kind": "verified",
             "seq": 6,
-            "t": 1794214163.7,
+            "t": 1794552635.0,
             "passed": true,
             "evidence": [
               {
@@ -249,7 +249,7 @@
           {
             "kind": "finished",
             "seq": 7,
-            "t": 1794214163.7,
+            "t": 1794552635.0,
             "reason": "all checks passed",
             "status": "verified",
             "answer": "Ranked options"
@@ -273,12 +273,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.704
+            "t": 1794552635.004
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.704,
+            "t": 1794552635.004,
             "model": "activities-small",
             "level": 0,
             "tokens": 219,
@@ -288,13 +288,13 @@
           {
             "kind": "claimed_done",
             "seq": 2,
-            "t": 1794214163.704,
+            "t": 1794552635.004,
             "answer": "Planned great activities"
           },
           {
             "kind": "verified",
             "seq": 3,
-            "t": 1794214163.704,
+            "t": 1794552635.004,
             "passed": false,
             "evidence": [
               {
@@ -307,7 +307,7 @@
           {
             "kind": "escalated",
             "seq": 4,
-            "t": 1794214163.704,
+            "t": 1794552635.004,
             "model": "activities-strong",
             "level": 1,
             "reason": "verification failed"
@@ -315,7 +315,7 @@
           {
             "kind": "model_call",
             "seq": 5,
-            "t": 1794214163.705,
+            "t": 1794552635.005,
             "model": "activities-strong",
             "level": 1,
             "tokens": 269,
@@ -325,7 +325,7 @@
           {
             "kind": "tool_result",
             "seq": 7,
-            "t": 1794214163.705,
+            "t": 1794552635.005,
             "tool": "plan_activities",
             "args": {
               "interests": [
@@ -340,23 +340,23 @@
           {
             "kind": "model_call",
             "seq": 8,
-            "t": 1794214163.706,
+            "t": 1794552635.006,
             "model": "activities-strong",
             "level": 1,
-            "tokens": 280,
+            "tokens": 288,
             "cost_usd": 0.003,
-            "reply": "{\"done\": \"Planned activities\"}"
+            "reply": "{\"done\": \"Planned 4 activities inside the stay, within budget\"}"
           },
           {
             "kind": "claimed_done",
             "seq": 9,
-            "t": 1794214163.706,
-            "answer": "Planned activities"
+            "t": 1794552635.006,
+            "answer": "Planned 4 activities inside the stay, within budget"
           },
           {
             "kind": "verified",
             "seq": 10,
-            "t": 1794214163.706,
+            "t": 1794552635.006,
             "passed": true,
             "evidence": [
               {
@@ -369,10 +369,10 @@
           {
             "kind": "finished",
             "seq": 11,
-            "t": 1794214163.706,
+            "t": 1794552635.006,
             "reason": "all checks passed",
             "status": "verified",
-            "answer": "Planned activities"
+            "answer": "Planned 4 activities inside the stay, within budget"
           }
         ]
       },
@@ -393,12 +393,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.71
+            "t": 1794552635.013
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.71,
+            "t": 1794552635.013,
             "model": "booking-small",
             "level": 0,
             "tokens": 307,
@@ -408,7 +408,7 @@
           {
             "kind": "approval_requested",
             "seq": 2,
-            "t": 1794214163.711,
+            "t": 1794552635.013,
             "tool": "book_flight",
             "args": {
               "flight_id": "F0089"
@@ -419,12 +419,12 @@
           {
             "kind": "approved",
             "seq": 4,
-            "t": 1794214163.714
+            "t": 1794552635.017
           },
           {
             "kind": "tool_result",
             "seq": 7,
-            "t": 1794214163.731,
+            "t": 1794552635.03,
             "tool": "book_flight",
             "args": {
               "flight_id": "F0089"
@@ -435,7 +435,7 @@
           {
             "kind": "model_call",
             "seq": 8,
-            "t": 1794214163.734,
+            "t": 1794552635.033,
             "model": "booking-small",
             "level": 0,
             "tokens": 337,
@@ -445,7 +445,7 @@
           {
             "kind": "approval_requested",
             "seq": 9,
-            "t": 1794214163.734,
+            "t": 1794552635.033,
             "tool": "book_hotel",
             "args": {
               "hotel_id": "H0581",
@@ -458,12 +458,12 @@
           {
             "kind": "approved",
             "seq": 11,
-            "t": 1794214163.738
+            "t": 1794552635.037
           },
           {
             "kind": "tool_result",
             "seq": 14,
-            "t": 1794214163.753,
+            "t": 1794552635.049,
             "tool": "book_hotel",
             "args": {
               "hotel_id": "H0581",
@@ -476,7 +476,7 @@
           {
             "kind": "model_call",
             "seq": 15,
-            "t": 1794214163.757,
+            "t": 1794552635.052,
             "model": "booking-small",
             "level": 0,
             "tokens": 357,
@@ -486,13 +486,13 @@
           {
             "kind": "claimed_done",
             "seq": 16,
-            "t": 1794214163.757,
+            "t": 1794552635.052,
             "answer": "Booked flight and hotel"
           },
           {
             "kind": "verified",
             "seq": 17,
-            "t": 1794214163.757,
+            "t": 1794552635.052,
             "passed": true,
             "evidence": [
               {
@@ -505,7 +505,7 @@
           {
             "kind": "finished",
             "seq": 18,
-            "t": 1794214163.757,
+            "t": 1794552635.052,
             "reason": "all checks passed",
             "status": "verified",
             "answer": "Booked flight and hotel"
@@ -527,12 +527,12 @@
           {
             "kind": "run_started",
             "seq": 0,
-            "t": 1794214163.61
+            "t": 1794552634.014
           },
           {
             "kind": "model_call",
             "seq": 1,
-            "t": 1794214163.614,
+            "t": 1794552634.019,
             "model": "guide-small",
             "level": 0,
             "tokens": 201,
@@ -542,13 +542,13 @@
           {
             "kind": "claimed_done",
             "seq": 2,
-            "t": 1794214163.614,
+            "t": 1794552634.019,
             "answer": "Portugal uses the escudo, and Tram 15 goes through Alfama."
           },
           {
             "kind": "verified",
             "seq": 3,
-            "t": 1794214163.614,
+            "t": 1794552634.019,
             "passed": false,
             "evidence": [
               {
@@ -571,7 +571,7 @@
           {
             "kind": "escalated",
             "seq": 4,
-            "t": 1794214163.614,
+            "t": 1794552634.019,
             "model": "guide-strong",
             "level": 1,
             "reason": "verification failed"
@@ -579,7 +579,7 @@
           {
             "kind": "model_call",
             "seq": 5,
-            "t": 1794214163.614,
+            "t": 1794552634.019,
             "model": "guide-strong",
             "level": 1,
             "tokens": 273,
@@ -589,7 +589,7 @@
           {
             "kind": "tool_result",
             "seq": 7,
-            "t": 1794214163.615,
+            "t": 1794552634.02,
             "tool": "search_guide",
             "args": {
               "query": "Portugal currency euro tram Alfama",
@@ -601,7 +601,7 @@
           {
             "kind": "model_call",
             "seq": 8,
-            "t": 1794214163.621,
+            "t": 1794552634.025,
             "model": "guide-strong",
             "level": 1,
             "tokens": 349,
@@ -611,13 +611,13 @@
           {
             "kind": "claimed_done",
             "seq": 9,
-            "t": 1794214163.621,
+            "t": 1794552634.025,
             "answer": "Portugal uses the euro, and Tram 28 runs through Alfama."
           },
           {
             "kind": "verified",
             "seq": 10,
-            "t": 1794214163.621,
+            "t": 1794552634.025,
             "passed": true,
             "evidence": [
               {
@@ -640,7 +640,7 @@
           {
             "kind": "finished",
             "seq": 11,
-            "t": 1794214163.621,
+            "t": 1794552634.025,
             "reason": "all checks passed",
             "status": "verified",
             "answer": "Portugal uses the euro, and Tram 28 runs through Alfama."
@@ -738,7 +738,7 @@
       "total": 1297.0,
       "rank_stats": {
         "backend": "numpy",
-        "ms": 67.37,
+        "ms": 966.72,
         "pairs": 293400
       },
       "request": {
@@ -904,7 +904,7 @@
         "agent_id": "flights",
         "event_type": "agent_start",
         "causal_parents": [],
-        "timestamp": "2026-11-09T08:49:23.602Z",
+        "timestamp": "2026-11-13T06:50:34.007Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -920,7 +920,7 @@
         "causal_parents": [
           "trip:flights:0"
         ],
-        "timestamp": "2026-11-09T08:49:23.603Z",
+        "timestamp": "2026-11-13T06:50:34.008Z",
         "model_name": "flights-small",
         "tool_name": null,
         "output_preview": "{\"tool\": \"search_flights\", \"args\": {\"origin\": \"SFO\", \"destination\": \"Lisbon\", \"date\": \"2026-12-18\", \"max_stops\": 1}}",
@@ -934,7 +934,7 @@
         "agent_id": "hotels",
         "event_type": "agent_start",
         "causal_parents": [],
-        "timestamp": "2026-11-09T08:49:23.608Z",
+        "timestamp": "2026-11-13T06:50:34.008Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -950,7 +950,7 @@
         "causal_parents": [
           "trip:flights:1"
         ],
-        "timestamp": "2026-11-09T08:49:23.609Z",
+        "timestamp": "2026-11-13T06:50:34.012Z",
         "model_name": null,
         "tool_name": "search_flights",
         "output_preview": "",
@@ -960,123 +960,13 @@
         }
       },
       {
-        "event_id": "trip:guide:0",
-        "agent_id": "guide",
-        "event_type": "agent_start",
-        "causal_parents": [],
-        "timestamp": "2026-11-09T08:49:23.610Z",
-        "model_name": null,
-        "tool_name": null,
-        "output_preview": "",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "run_started"
-        }
-      },
-      {
-        "event_id": "trip:hotels:1",
-        "agent_id": "hotels",
-        "event_type": "llm_call",
-        "causal_parents": [
-          "trip:hotels:0"
-        ],
-        "timestamp": "2026-11-09T08:49:23.611Z",
-        "model_name": "hotels-small",
-        "tool_name": null,
-        "output_preview": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "model_call"
-        }
-      },
-      {
-        "event_id": "trip:hotels:3",
-        "agent_id": "hotels",
-        "event_type": "tool_call",
-        "causal_parents": [
-          "trip:hotels:1"
-        ],
-        "timestamp": "2026-11-09T08:49:23.614Z",
-        "model_name": null,
-        "tool_name": "search_hotels",
-        "output_preview": "",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "tool_result"
-        }
-      },
-      {
-        "event_id": "trip:guide:1",
-        "agent_id": "guide",
-        "event_type": "llm_call",
-        "causal_parents": [
-          "trip:guide:0"
-        ],
-        "timestamp": "2026-11-09T08:49:23.614Z",
-        "model_name": "guide-small",
-        "tool_name": null,
-        "output_preview": "{\"done\": \"Portugal uses the escudo, and Tram 15 goes through Alfama.\"}",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "model_call"
-        }
-      },
-      {
-        "event_id": "trip:guide:3",
-        "agent_id": "guide",
-        "event_type": "judge_evaluation",
-        "causal_parents": [
-          "trip:guide:1"
-        ],
-        "timestamp": "2026-11-09T08:49:23.614Z",
-        "model_name": null,
-        "tool_name": null,
-        "output_preview": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.17 against 'euro, Tram 28'; answer recorded: Portugal uses the escudo, and Tram 15 goes through Alfama.",
-        "confidence_score": 0.0,
-        "tags": {
-          "sparkrun_kind": "verified"
-        }
-      },
-      {
-        "event_id": "trip:guide:4",
-        "agent_id": "guide",
-        "event_type": "agent_decision",
-        "causal_parents": [
-          "trip:guide:3"
-        ],
-        "timestamp": "2026-11-09T08:49:23.614Z",
-        "model_name": "guide-strong",
-        "tool_name": null,
-        "output_preview": "escalated to guide-strong: verification failed",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "escalated"
-        }
-      },
-      {
-        "event_id": "trip:guide:5",
-        "agent_id": "guide",
-        "event_type": "llm_call",
-        "causal_parents": [
-          "trip:guide:4"
-        ],
-        "timestamp": "2026-11-09T08:49:23.614Z",
-        "model_name": "guide-strong",
-        "tool_name": null,
-        "output_preview": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "model_call"
-        }
-      },
-      {
         "event_id": "trip:flights:4",
         "agent_id": "flights",
         "event_type": "llm_call",
         "causal_parents": [
           "trip:flights:3"
         ],
-        "timestamp": "2026-11-09T08:49:23.615Z",
+        "timestamp": "2026-11-13T06:50:34.014Z",
         "model_name": "flights-small",
         "tool_name": null,
         "output_preview": "{\"done\": \"Found flights\"}",
@@ -1092,7 +982,7 @@
         "causal_parents": [
           "trip:flights:4"
         ],
-        "timestamp": "2026-11-09T08:49:23.615Z",
+        "timestamp": "2026-11-13T06:50:34.014Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "flights found: 489 flights",
@@ -1108,7 +998,166 @@
         "causal_parents": [
           "trip:flights:6"
         ],
-        "timestamp": "2026-11-09T08:49:23.615Z",
+        "timestamp": "2026-11-13T06:50:34.014Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "verified: all checks passed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "finished",
+          "status": "verified"
+        }
+      },
+      {
+        "event_id": "trip:hotels:1",
+        "agent_id": "hotels",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:hotels:0"
+        ],
+        "timestamp": "2026-11-13T06:50:34.014Z",
+        "model_name": "hotels-small",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"search_hotels\", \"args\": {\"city\": \"Lisbon\", \"check_in\": \"2026-12-18\", \"nights\": 5}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:0",
+        "agent_id": "guide",
+        "event_type": "agent_start",
+        "causal_parents": [],
+        "timestamp": "2026-11-13T06:50:34.014Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "run_started"
+        }
+      },
+      {
+        "event_id": "trip:hotels:3",
+        "agent_id": "hotels",
+        "event_type": "tool_call",
+        "causal_parents": [
+          "trip:hotels:1"
+        ],
+        "timestamp": "2026-11-13T06:50:34.016Z",
+        "model_name": null,
+        "tool_name": "search_hotels",
+        "output_preview": "",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "tool_result"
+        }
+      },
+      {
+        "event_id": "trip:guide:1",
+        "agent_id": "guide",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:guide:0"
+        ],
+        "timestamp": "2026-11-13T06:50:34.019Z",
+        "model_name": "guide-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Portugal uses the escudo, and Tram 15 goes through Alfama.\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:guide:3",
+        "agent_id": "guide",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:guide:1"
+        ],
+        "timestamp": "2026-11-13T06:50:34.019Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.17 against 'euro, Tram 28'; answer recorded: Portugal uses the escudo, and Tram 15 goes through Alfama.",
+        "confidence_score": 0.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:guide:4",
+        "agent_id": "guide",
+        "event_type": "agent_decision",
+        "causal_parents": [
+          "trip:guide:3"
+        ],
+        "timestamp": "2026-11-13T06:50:34.019Z",
+        "model_name": "guide-strong",
+        "tool_name": null,
+        "output_preview": "escalated to guide-strong: verification failed",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "escalated"
+        }
+      },
+      {
+        "event_id": "trip:guide:5",
+        "agent_id": "guide",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:guide:4"
+        ],
+        "timestamp": "2026-11-13T06:50:34.019Z",
+        "model_name": "guide-strong",
+        "tool_name": null,
+        "output_preview": "{\"tool\": \"search_guide\", \"args\": {\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:hotels:4",
+        "agent_id": "hotels",
+        "event_type": "llm_call",
+        "causal_parents": [
+          "trip:hotels:3"
+        ],
+        "timestamp": "2026-11-13T06:50:34.020Z",
+        "model_name": "hotels-small",
+        "tool_name": null,
+        "output_preview": "{\"done\": \"Found hotels\"}",
+        "confidence_score": null,
+        "tags": {
+          "sparkrun_kind": "model_call"
+        }
+      },
+      {
+        "event_id": "trip:hotels:6",
+        "agent_id": "hotels",
+        "event_type": "judge_evaluation",
+        "causal_parents": [
+          "trip:hotels:4"
+        ],
+        "timestamp": "2026-11-13T06:50:34.020Z",
+        "model_name": null,
+        "tool_name": null,
+        "output_preview": "hotels found: 600 hotels",
+        "confidence_score": 1.0,
+        "tags": {
+          "sparkrun_kind": "verified"
+        }
+      },
+      {
+        "event_id": "trip:hotels:7",
+        "agent_id": "hotels",
+        "event_type": "agent_end",
+        "causal_parents": [
+          "trip:hotels:6"
+        ],
+        "timestamp": "2026-11-13T06:50:34.020Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "verified: all checks passed",
@@ -1125,7 +1174,7 @@
         "causal_parents": [
           "trip:guide:5"
         ],
-        "timestamp": "2026-11-09T08:49:23.615Z",
+        "timestamp": "2026-11-13T06:50:34.020Z",
         "model_name": null,
         "tool_name": "search_guide",
         "output_preview": "",
@@ -1135,62 +1184,13 @@
         }
       },
       {
-        "event_id": "trip:hotels:4",
-        "agent_id": "hotels",
-        "event_type": "llm_call",
-        "causal_parents": [
-          "trip:hotels:3"
-        ],
-        "timestamp": "2026-11-09T08:49:23.618Z",
-        "model_name": "hotels-small",
-        "tool_name": null,
-        "output_preview": "{\"done\": \"Found hotels\"}",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "model_call"
-        }
-      },
-      {
-        "event_id": "trip:hotels:6",
-        "agent_id": "hotels",
-        "event_type": "judge_evaluation",
-        "causal_parents": [
-          "trip:hotels:4"
-        ],
-        "timestamp": "2026-11-09T08:49:23.619Z",
-        "model_name": null,
-        "tool_name": null,
-        "output_preview": "hotels found: 600 hotels",
-        "confidence_score": 1.0,
-        "tags": {
-          "sparkrun_kind": "verified"
-        }
-      },
-      {
-        "event_id": "trip:hotels:7",
-        "agent_id": "hotels",
-        "event_type": "agent_end",
-        "causal_parents": [
-          "trip:hotels:6"
-        ],
-        "timestamp": "2026-11-09T08:49:23.619Z",
-        "model_name": null,
-        "tool_name": null,
-        "output_preview": "verified: all checks passed",
-        "confidence_score": null,
-        "tags": {
-          "sparkrun_kind": "finished",
-          "status": "verified"
-        }
-      },
-      {
         "event_id": "trip:guide:8",
         "agent_id": "guide",
         "event_type": "llm_call",
         "causal_parents": [
           "trip:guide:7"
         ],
-        "timestamp": "2026-11-09T08:49:23.621Z",
+        "timestamp": "2026-11-13T06:50:34.025Z",
         "model_name": "guide-strong",
         "tool_name": null,
         "output_preview": "{\"done\": \"Portugal uses the euro, and Tram 28 runs through Alfama.\"}",
@@ -1206,7 +1206,7 @@
         "causal_parents": [
           "trip:guide:8"
         ],
-        "timestamp": "2026-11-09T08:49:23.621Z",
+        "timestamp": "2026-11-13T06:50:34.025Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "answer grounded in retrieved evidence (ARES, >= 80%): groundedness 1.00; answer matches gold (ARES F1 >= 0.40): F1 0.50 against 'euro, Tram 28'; answer recorded: Portugal uses the euro, and Tram 28 runs through Alfama.",
@@ -1222,7 +1222,7 @@
         "causal_parents": [
           "trip:guide:10"
         ],
-        "timestamp": "2026-11-09T08:49:23.621Z",
+        "timestamp": "2026-11-13T06:50:34.025Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "verified: all checks passed",
@@ -1240,7 +1240,7 @@
           "trip:flights:7",
           "trip:hotels:7"
         ],
-        "timestamp": "2026-11-09T08:49:23.630Z",
+        "timestamp": "2026-11-13T06:50:34.031Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1256,7 +1256,7 @@
         "causal_parents": [
           "trip:rank:0"
         ],
-        "timestamp": "2026-11-09T08:49:23.630Z",
+        "timestamp": "2026-11-13T06:50:34.031Z",
         "model_name": "rank-small",
         "tool_name": null,
         "output_preview": "{\"tool\": \"rank_itineraries\", \"args\": {\"budget\": 4200.0, \"top\": 5}}",
@@ -1272,7 +1272,7 @@
         "causal_parents": [
           "trip:rank:1"
         ],
-        "timestamp": "2026-11-09T08:49:23.697Z",
+        "timestamp": "2026-11-13T06:50:34.998Z",
         "model_name": null,
         "tool_name": "rank_itineraries",
         "output_preview": "",
@@ -1288,7 +1288,7 @@
         "causal_parents": [
           "trip:rank:3"
         ],
-        "timestamp": "2026-11-09T08:49:23.700Z",
+        "timestamp": "2026-11-13T06:50:35.000Z",
         "model_name": "rank-small",
         "tool_name": null,
         "output_preview": "{\"done\": \"Ranked options\"}",
@@ -1304,7 +1304,7 @@
         "causal_parents": [
           "trip:rank:4"
         ],
-        "timestamp": "2026-11-09T08:49:23.700Z",
+        "timestamp": "2026-11-13T06:50:35.000Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "options found: 5 options",
@@ -1320,7 +1320,7 @@
         "causal_parents": [
           "trip:rank:6"
         ],
-        "timestamp": "2026-11-09T08:49:23.700Z",
+        "timestamp": "2026-11-13T06:50:35.000Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "verified: all checks passed",
@@ -1337,7 +1337,7 @@
         "causal_parents": [
           "trip:rank:7"
         ],
-        "timestamp": "2026-11-09T08:49:23.704Z",
+        "timestamp": "2026-11-13T06:50:35.004Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1353,7 +1353,7 @@
         "causal_parents": [
           "trip:activities:0"
         ],
-        "timestamp": "2026-11-09T08:49:23.704Z",
+        "timestamp": "2026-11-13T06:50:35.004Z",
         "model_name": "activities-small",
         "tool_name": null,
         "output_preview": "{\"done\": \"Planned great activities\"}",
@@ -1369,7 +1369,7 @@
         "causal_parents": [
           "trip:activities:1"
         ],
-        "timestamp": "2026-11-09T08:49:23.704Z",
+        "timestamp": "2026-11-13T06:50:35.004Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "activities found: 0 activities",
@@ -1385,7 +1385,7 @@
         "causal_parents": [
           "trip:activities:3"
         ],
-        "timestamp": "2026-11-09T08:49:23.704Z",
+        "timestamp": "2026-11-13T06:50:35.004Z",
         "model_name": "activities-strong",
         "tool_name": null,
         "output_preview": "escalated to activities-strong: verification failed",
@@ -1401,7 +1401,7 @@
         "causal_parents": [
           "trip:activities:4"
         ],
-        "timestamp": "2026-11-09T08:49:23.705Z",
+        "timestamp": "2026-11-13T06:50:35.005Z",
         "model_name": "activities-strong",
         "tool_name": null,
         "output_preview": "{\"tool\": \"plan_activities\", \"args\": {\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}}",
@@ -1417,7 +1417,7 @@
         "causal_parents": [
           "trip:activities:5"
         ],
-        "timestamp": "2026-11-09T08:49:23.705Z",
+        "timestamp": "2026-11-13T06:50:35.005Z",
         "model_name": null,
         "tool_name": "plan_activities",
         "output_preview": "",
@@ -1433,10 +1433,10 @@
         "causal_parents": [
           "trip:activities:7"
         ],
-        "timestamp": "2026-11-09T08:49:23.706Z",
+        "timestamp": "2026-11-13T06:50:35.006Z",
         "model_name": "activities-strong",
         "tool_name": null,
-        "output_preview": "{\"done\": \"Planned activities\"}",
+        "output_preview": "{\"done\": \"Planned 4 activities inside the stay, within budget\"}",
         "confidence_score": null,
         "tags": {
           "sparkrun_kind": "model_call"
@@ -1449,7 +1449,7 @@
         "causal_parents": [
           "trip:activities:8"
         ],
-        "timestamp": "2026-11-09T08:49:23.706Z",
+        "timestamp": "2026-11-13T06:50:35.006Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "activities found: 4 activities",
@@ -1465,7 +1465,7 @@
         "causal_parents": [
           "trip:activities:10"
         ],
-        "timestamp": "2026-11-09T08:49:23.706Z",
+        "timestamp": "2026-11-13T06:50:35.006Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "verified: all checks passed",
@@ -1483,7 +1483,7 @@
           "trip:rank:7",
           "trip:activities:11"
         ],
-        "timestamp": "2026-11-09T08:49:23.710Z",
+        "timestamp": "2026-11-13T06:50:35.013Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1499,7 +1499,7 @@
         "causal_parents": [
           "trip:booking:0"
         ],
-        "timestamp": "2026-11-09T08:49:23.710Z",
+        "timestamp": "2026-11-13T06:50:35.013Z",
         "model_name": "booking-small",
         "tool_name": null,
         "output_preview": "{\"tool\": \"book_flight\", \"args\": {\"flight_id\": \"F0089\"}}",
@@ -1515,7 +1515,7 @@
         "causal_parents": [
           "trip:booking:1"
         ],
-        "timestamp": "2026-11-09T08:49:23.711Z",
+        "timestamp": "2026-11-13T06:50:35.013Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "book_flight spends money; a person must approve it",
@@ -1532,7 +1532,7 @@
         "causal_parents": [
           "trip:booking:2"
         ],
-        "timestamp": "2026-11-09T08:49:23.711Z",
+        "timestamp": "2026-11-13T06:50:35.014Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1548,7 +1548,7 @@
         "causal_parents": [
           "trip:booking:3"
         ],
-        "timestamp": "2026-11-09T08:49:23.714Z",
+        "timestamp": "2026-11-13T06:50:35.017Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1564,7 +1564,7 @@
         "causal_parents": [
           "trip:booking:4"
         ],
-        "timestamp": "2026-11-09T08:49:23.731Z",
+        "timestamp": "2026-11-13T06:50:35.030Z",
         "model_name": null,
         "tool_name": "book_flight",
         "output_preview": "",
@@ -1580,7 +1580,7 @@
         "causal_parents": [
           "trip:booking:7"
         ],
-        "timestamp": "2026-11-09T08:49:23.734Z",
+        "timestamp": "2026-11-13T06:50:35.033Z",
         "model_name": "booking-small",
         "tool_name": null,
         "output_preview": "{\"tool\": \"book_hotel\", \"args\": {\"hotel_id\": \"H0581\", \"check_in\": \"2026-12-19\", \"nights\": 5}}",
@@ -1596,7 +1596,7 @@
         "causal_parents": [
           "trip:booking:8"
         ],
-        "timestamp": "2026-11-09T08:49:23.734Z",
+        "timestamp": "2026-11-13T06:50:35.033Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "book_hotel spends money; a person must approve it",
@@ -1613,7 +1613,7 @@
         "causal_parents": [
           "trip:booking:9"
         ],
-        "timestamp": "2026-11-09T08:49:23.735Z",
+        "timestamp": "2026-11-13T06:50:35.034Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1629,7 +1629,7 @@
         "causal_parents": [
           "trip:booking:10"
         ],
-        "timestamp": "2026-11-09T08:49:23.738Z",
+        "timestamp": "2026-11-13T06:50:35.037Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "",
@@ -1645,7 +1645,7 @@
         "causal_parents": [
           "trip:booking:11"
         ],
-        "timestamp": "2026-11-09T08:49:23.753Z",
+        "timestamp": "2026-11-13T06:50:35.049Z",
         "model_name": null,
         "tool_name": "book_hotel",
         "output_preview": "",
@@ -1661,7 +1661,7 @@
         "causal_parents": [
           "trip:booking:14"
         ],
-        "timestamp": "2026-11-09T08:49:23.757Z",
+        "timestamp": "2026-11-13T06:50:35.052Z",
         "model_name": "booking-small",
         "tool_name": null,
         "output_preview": "{\"done\": \"Booked flight and hotel\"}",
@@ -1677,7 +1677,7 @@
         "causal_parents": [
           "trip:booking:15"
         ],
-        "timestamp": "2026-11-09T08:49:23.757Z",
+        "timestamp": "2026-11-13T06:50:35.052Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "flight and hotel booked: 2 bookings",
@@ -1693,7 +1693,7 @@
         "causal_parents": [
           "trip:booking:17"
         ],
-        "timestamp": "2026-11-09T08:49:23.757Z",
+        "timestamp": "2026-11-13T06:50:35.052Z",
         "model_name": null,
         "tool_name": null,
         "output_preview": "verified: all checks passed",
@@ -1705,10 +1705,10 @@
       }
     ],
     "risk": {
-      "flights": {
+      "booking": {
         "loop_probability": 0.0,
         "hallucination_probability": 0.0,
-        "context_overflow_risk": 0.001,
+        "context_overflow_risk": 0.002,
         "tool_thrashing_risk": 0.0,
         "reasoning_collapse_risk": 0.0,
         "agent_divergence_risk": 0.0,
@@ -1717,7 +1717,7 @@
         "contributing_signals": [],
         "recommended_interventions": []
       },
-      "rank": {
+      "flights": {
         "loop_probability": 0.0,
         "hallucination_probability": 0.0,
         "context_overflow_risk": 0.001,
@@ -1747,10 +1747,10 @@
         ],
         "recommended_interventions": []
       },
-      "booking": {
+      "hotels": {
         "loop_probability": 0.0,
         "hallucination_probability": 0.0,
-        "context_overflow_risk": 0.002,
+        "context_overflow_risk": 0.001,
         "tool_thrashing_risk": 0.0,
         "reasoning_collapse_risk": 0.0,
         "agent_divergence_risk": 0.0,
@@ -1777,7 +1777,7 @@
         ],
         "recommended_interventions": []
       },
-      "hotels": {
+      "rank": {
         "loop_probability": 0.0,
         "hallucination_probability": 0.0,
         "context_overflow_risk": 0.001,
@@ -1821,7 +1821,7 @@
       "final_answer": "Found flights",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 13.0,
+      "elapsed_ms": 7.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -1859,7 +1859,7 @@
       "final_answer": "Found hotels",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 11.0,
+      "elapsed_ms": 12.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -1887,7 +1887,7 @@
             "cost": 1.0
           },
           "observation": {
-            "result": "ranked 293,400 combinations on numpy in 67.4 ms; best total $1181",
+            "result": "ranked 293,400 combinations on numpy in 966.7 ms; best total $1181",
             "error": null
           },
           "hypothesis": null
@@ -1896,7 +1896,7 @@
       "final_answer": "Ranked options",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 70.0,
+      "elapsed_ms": 969.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -1933,7 +1933,7 @@
           "hypothesis": null
         }
       ],
-      "final_answer": "Planned activities",
+      "final_answer": "Planned 4 activities inside the stay, within budget",
       "succeeded": true,
       "total_cost": 0.0062,
       "elapsed_ms": 2.0,
@@ -1990,7 +1990,7 @@
       "final_answer": "Booked flight and hotel",
       "succeeded": true,
       "total_cost": 0.0006,
-      "elapsed_ms": 47.0,
+      "elapsed_ms": 39.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -2045,7 +2045,7 @@
       "a": {
         "schema_version": 1,
         "trace_id": "sparkrun-trip.guide-L0",
-        "started_at": 1794214163.61,
+        "started_at": 1794552634.014,
         "agent": {
           "name": "guide-small",
           "model": "guide-small",
@@ -2065,7 +2065,7 @@
           "input_tokens": 184,
           "output_tokens": 17,
           "cost_usd": 0.0002,
-          "latency_s": 0.004
+          "latency_s": 0.005
         },
         "tools": [
           {
@@ -2079,7 +2079,7 @@
             "input": "",
             "output": "Portugal uses the escudo, and Tram 15 goes through Alfama.",
             "tokens": 201,
-            "latency_s": 0.004,
+            "latency_s": 0.005,
             "index": 0
           },
           {
@@ -2106,7 +2106,7 @@
       "b": {
         "schema_version": 1,
         "trace_id": "sparkrun-trip.guide-L1",
-        "started_at": 1794214163.61,
+        "started_at": 1794552634.014,
         "agent": {
           "name": "guide-strong",
           "model": "guide-strong",
@@ -2126,7 +2126,7 @@
           "input_tokens": 583,
           "output_tokens": 39,
           "cost_usd": 0.006,
-          "latency_s": 0.007
+          "latency_s": 0.006
         },
         "tools": [
           {
@@ -2151,7 +2151,7 @@
             "input": "",
             "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
             "tokens": 349,
-            "latency_s": 0.006,
+            "latency_s": 0.005,
             "index": 1
           },
           {
@@ -2268,7 +2268,7 @@
       "a": {
         "schema_version": 1,
         "trace_id": "sparkrun-trip.activities-L0",
-        "started_at": 1794214163.704,
+        "started_at": 1794552635.004,
         "agent": {
           "name": "activities-small",
           "model": "activities-small",
@@ -2329,7 +2329,7 @@
       "b": {
         "schema_version": 1,
         "trace_id": "sparkrun-trip.activities-L1",
-        "started_at": 1794214163.704,
+        "started_at": 1794552635.004,
         "agent": {
           "name": "activities-strong",
           "model": "activities-strong",
@@ -2342,12 +2342,12 @@
         },
         "outcome": {
           "success": true,
-          "answer": "Planned activities",
+          "answer": "Planned 4 activities inside the stay, within budget",
           "score": 1.0
         },
         "totals": {
           "input_tokens": 519,
-          "output_tokens": 30,
+          "output_tokens": 38,
           "cost_usd": 0.006,
           "latency_s": 0.001
         },
@@ -2372,8 +2372,8 @@
             "type": "reason",
             "name": "claimed_done",
             "input": "",
-            "output": "Planned activities",
-            "tokens": 280,
+            "output": "Planned 4 activities inside the stay, within budget",
+            "tokens": 288,
             "latency_s": 0.001,
             "index": 1
           },
@@ -2391,7 +2391,7 @@
             "type": "answer",
             "name": "answer",
             "input": "",
-            "output": "Planned activities",
+            "output": "Planned 4 activities inside the stay, within budget",
             "tokens": 0,
             "latency_s": 0.0,
             "index": 3
@@ -2414,7 +2414,7 @@
           },
           {
             "key": "cost",
-            "text": "activities-small spent 330 tokens and 1 step less than activities-strong — faster to nothing",
+            "text": "activities-small spent 338 tokens and 1 step less than activities-strong — faster to nothing",
             "source": "tradeoff.spend_delta_b_minus_a"
           },
           {
@@ -3261,14 +3261,178 @@
       }
     ]
   },
+  "workloads": [
+    {
+      "id": "travel",
+      "title": "Plan and book a trip",
+      "domain": "Travel",
+      "style": "sparkrun Team: six agents in parallel waves, GPU ranking, approvals",
+      "summary": "Flights, hotels and a guide search in parallel; a ranker scores every option; a person approves each booking.",
+      "seconds": 0.082,
+      "status": "verified",
+      "agents": 6,
+      "model_calls": 15,
+      "cheap_calls": 11,
+      "cost_usd": 0.0142,
+      "strong_only_usd": 0.045,
+      "savings_x": 3.2,
+      "caught": [
+        {
+          "agent": "activities",
+          "said": "Planned great activities",
+          "why": "activities found: 0 activities",
+          "delivered": "Planned 4 activities inside the stay, within budget"
+        },
+        {
+          "agent": "guide",
+          "said": "Portugal uses the escudo, and Tram 15 goes through Alfama.",
+          "why": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.17 against 'euro, Tram 28'",
+          "delivered": "Portugal uses the euro, and Tram 28 runs through Alfama."
+        }
+      ],
+      "side_effects": [
+        {
+          "agent": "booking",
+          "tool": "book_flight",
+          "result": "booked F0089 (Fjord Air), arriving 2026-12-19"
+        },
+        {
+          "agent": "booking",
+          "tool": "book_hotel",
+          "result": "booked Pousada Harbor 581 from 2026-12-19 for 5 nights"
+        }
+      ],
+      "duplicates_prevented": 0,
+      "approvals": 2,
+      "repeat": {
+        "status": "verified",
+        "cost_usd": 0.0002,
+        "model_calls": 15,
+        "cache_hits": 14
+      }
+    },
+    {
+      "id": "coding",
+      "title": "Fix a failing test",
+      "domain": "Software",
+      "style": "sparkrun Agent: file tools, verified by actually running the test suite",
+      "summary": "A coding agent fixes an off-by-one bug. Done means the tests pass, not that the model says so.",
+      "seconds": 0.122,
+      "status": "verified",
+      "agents": 1,
+      "model_calls": 4,
+      "cheap_calls": 1,
+      "cost_usd": 0.0092,
+      "strong_only_usd": 0.012,
+      "savings_x": 1.3,
+      "caught": [
+        {
+          "agent": "coding",
+          "said": "Fixed the off-by-one in average()",
+          "why": "test suite passes: exit code 1: --------------------------------\nTraceback (most recent call last):\n  File \"./test_calc.py\", line 9, in test_single\n    self.assertEqual(average([5]), 5)\n                     ^^^^^^^^^^^^\n  File \"./calc.py\", line 2, in average\n    return sum(xs) / (len(xs) - 1)\n           ~~~~~~~~^~~~~~~~~~~~~~~\nZeroDivisionError: division by zero\n\n======================================================================\nFAIL: test_mean (test_calc.TestAverage.test_mean)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"./test_calc.py\", line 6, in test_mean\n    self.assertEqual(average([2, 4, 6]), 4)\nAssertionError: 6.0 != 4\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nFAILED (failures=1, errors=1)",
+          "delivered": "average() divided by len - 1; now divides by len and rejects empty lists"
+        }
+      ],
+      "side_effects": [
+        {
+          "agent": "coding",
+          "tool": "write_file",
+          "result": "wrote 114 characters to calc.py"
+        }
+      ],
+      "duplicates_prevented": 0,
+      "approvals": 0,
+      "repeat": {
+        "status": "verified",
+        "cost_usd": 0.0,
+        "model_calls": 4,
+        "cache_hits": 4
+      }
+    },
+    {
+      "id": "support",
+      "title": "Refund a damaged item",
+      "domain": "Customer support",
+      "style": "sparkrun Harness: your own agent loop, wrapped; no rewrite",
+      "summary": "A support bot handles a refund request. The refund happens once, and the reply goes out only after checks pass.",
+      "seconds": 0.003,
+      "status": "verified",
+      "agents": 1,
+      "model_calls": 3,
+      "cheap_calls": 1,
+      "cost_usd": 0.0062,
+      "strong_only_usd": 0.009,
+      "savings_x": 1.5,
+      "caught": [
+        {
+          "agent": "support",
+          "said": "Sorry about that! I've refunded your order, it's on its way.",
+          "why": "exactly one refund of $45 for the damaged item: refunds issued: none; reply matches what was refunded: reply states the refunded amount",
+          "delivered": "We've refunded $45 for the damaged mug (ref RF-A-1042). Sorry about that!"
+        }
+      ],
+      "side_effects": [
+        {
+          "agent": "support",
+          "tool": "issue_refund",
+          "result": "{\"order\": \"A-1042\", \"amount\": 45, \"ref\": \"RF-A-1042\"}"
+        },
+        {
+          "agent": "support",
+          "tool": "send_reply",
+          "result": "sent"
+        }
+      ],
+      "duplicates_prevented": 0,
+      "approvals": 0,
+      "repeat": {
+        "status": "verified",
+        "cost_usd": 0.0,
+        "model_calls": 3,
+        "cache_hits": 3
+      }
+    },
+    {
+      "id": "research",
+      "title": "Answer from internal docs",
+      "domain": "Knowledge work",
+      "style": "sparkrun Agent: retrieval, graded by ARES groundedness and F1",
+      "summary": "An analyst agent answers a policy question. The answer must be supported by the documents it retrieved.",
+      "seconds": 0.002,
+      "status": "verified",
+      "agents": 1,
+      "model_calls": 3,
+      "cheap_calls": 1,
+      "cost_usd": 0.0062,
+      "strong_only_usd": 0.009,
+      "savings_x": 1.5,
+      "caught": [
+        {
+          "agent": "research",
+          "said": "Customers have 60 days, and the CEO approves large refunds.",
+          "why": "answer grounded in retrieved evidence (ARES, >= 80%): no evidence was retrieved; answer matches gold (ARES F1 >= 0.40): F1 0.15 against '30 days, a support lead'",
+          "delivered": "Within 30 days of delivery; refunds over $100 are approved by a support lead."
+        }
+      ],
+      "side_effects": [],
+      "duplicates_prevented": 0,
+      "approvals": 0,
+      "repeat": {
+        "status": "verified",
+        "cost_usd": 0.0,
+        "model_calls": 3,
+        "cache_hits": 3
+      }
+    }
+  ],
   "lean": {
-    "overhead_ms_per_step": 0.113,
+    "overhead_ms_per_step": 0.166,
     "steps": 400,
     "parallel": {
       "tasks": 32,
       "model_latency_ms": 50,
-      "sequential_s": 4.91,
-      "workers_32_s": 0.18
+      "sequential_s": 4.9,
+      "workers_32_s": 0.17
     },
     "cost": {
       "model_calls": 15,
@@ -3280,11 +3444,11 @@
         "small": 0.0002,
         "strong": 0.003
       },
-      "first_run_s": 0.161,
+      "first_run_s": 1.052,
       "repeat": {
         "status": "verified",
         "usd": 0.0002,
-        "seconds": 0.105,
+        "seconds": 0.094,
         "cache_hits": 14,
         "calls": 15
       },

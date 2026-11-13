@@ -241,7 +241,7 @@ def build_team(req: TripRequest, runs_dir: str | Path, *, board: dict | None = N
     def activities_policy(prompt):
         r = _request(prompt)
         if _did(prompt, "plan_activities"):
-            return {"done": "Planned activities"}
+            return {"done": f"Planned {len(board.get('activities', []))} activities inside the stay, within budget"}
         left = r["budget"] - board["options"][0]["cost"]
         return {"tool": "plan_activities", "args": {"interests": r["interests"], "budget_left": round(left, 2)}}
 

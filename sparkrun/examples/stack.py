@@ -141,6 +141,31 @@ def cost_story(team, first, again, first_s, again_s, first_hits, repeat_hits, jo
             "first_cache_hits": first_hits}
 
 
+def all_workloads() -> list[dict]:
+    """Every example workload, run once and then again with the cache warm."""
+    import workloads
+    out = []
+    for w in workloads.ALL:
+        cache, wrappers = {}, []
+
+        def wrap(m):
+            wrappers.append(CachedModel(m, cache))
+            return wrappers[-1]
+
+        t0 = time.perf_counter()
+        first = workloads.measure(w.run(Path(tempfile.mkdtemp(prefix="wl-")), wrap=wrap))
+        first_s = time.perf_counter() - t0
+        hits_before = sum(x.hits for x in wrappers)
+        again = workloads.measure(w.run(Path(tempfile.mkdtemp(prefix="wl-")), wrap=wrap))
+        out.append({"id": w.__name__.rsplit(".", 1)[-1], "title": w.TITLE, "domain": w.DOMAIN, "style": w.STYLE,
+                    "summary": w.SUMMARY, "seconds": round(first_s, 3), **first,
+                    "repeat": {"status": again["status"], "cost_usd": again["cost_usd"],
+                               "model_calls": again["model_calls"],
+                               "cache_hits": sum(x.hits for x in wrappers) - hits_before}})
+        print(f"workload {out[-1]['id']}: {first['status']} ${first['cost_usd']} (repeat ${again['cost_usd']})")
+    return out
+
+
 # --------------------------------------------------------------------------- main
 
 def main() -> None:
@@ -228,6 +253,7 @@ def main() -> None:
         "trace_viz": traces,
         "agentdiff": pairs,
         "ares": {"source": verify.ARES_SOURCE, "leaderboard": ares_leaderboard(args.ares_leaderboard)},
+        "workloads": all_workloads(),
         "lean": {**lean_bench(), "cost": cost_story(team, result, again, team_s, again_s, first_hits, repeat_hits, journals)},
     }
     export.write_json(bundle, out / "stack.json")
