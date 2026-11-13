@@ -118,7 +118,7 @@
         "input": "{\"query\": \"Portugal currency euro tram Alfama\", \"k\": 2}",
         "output": "[{\"title\": \"Money\", \"text\": \"Portugal uses the euro. Cards are widely accepted, but small cafes may prefer cash.\"}, {\"title\": \"Tram 28\", \"text\": \"Tram 28 runs through the Alfama, Baixa and Graca districts, the classic way to see the old town.\"}]",
         "tokens": 273,
-        "latency_s": 0.0,
+        "latency_s": 0.001,
         "quality": null,
         "note": null,
         "model": null,
@@ -139,7 +139,7 @@
         "input": "",
         "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
         "tokens": 349,
-        "latency_s": 0.006,
+        "latency_s": 0.005,
         "quality": null,
         "note": null,
         "model": null,
@@ -221,7 +221,7 @@
         },
         "delta": {
           "tokens": 148,
-          "latency_s": 0.001,
+          "latency_s": 0.0,
           "cost_usd": 0.003167
         },
         "quality": {
@@ -1075,14 +1075,14 @@
           {
             "index": 1,
             "name": "claimed_done",
-            "latency_s": 0.006,
-            "share": 1.0
+            "latency_s": 0.005,
+            "share": 0.8333
           },
           {
             "index": 0,
             "name": "search_guide",
-            "latency_s": 0.0,
-            "share": 0.0
+            "latency_s": 0.001,
+            "share": 0.1667
           },
           {
             "index": 2,
@@ -1091,7 +1091,7 @@
             "share": 0.0
           }
         ],
-        "gini": 0.75,
+        "gini": 0.6667,
         "top_share": 1.0,
         "concentrated": false,
         "note": null
@@ -1832,8 +1832,8 @@
           "index": 0,
           "type": "search",
           "name": "search_guide",
-          "latency_s": 0.0,
-          "share": 0.0,
+          "latency_s": 0.001,
+          "share": 0.1667,
           "category": "tool",
           "role": "feeds_answer",
           "wasted": null,
@@ -1845,8 +1845,8 @@
           "index": 1,
           "type": "reason",
           "name": "claimed_done",
-          "latency_s": 0.006,
-          "share": 1.0,
+          "latency_s": 0.005,
+          "share": 0.8333,
           "category": "think",
           "role": "feeds_answer",
           "wasted": null,
@@ -1883,12 +1883,12 @@
       ],
       "by_category": {
         "think": {
-          "seconds": 0.006,
-          "share": 1.0
+          "seconds": 0.005,
+          "share": 0.8333
         },
         "tool": {
-          "seconds": 0.0,
-          "share": 0.0
+          "seconds": 0.001,
+          "share": 0.1667
         },
         "answer": {
           "seconds": 0.0,
@@ -1898,10 +1898,10 @@
       "by_tool": {
         "search_guide": {
           "calls": 1,
-          "seconds": 0.0,
+          "seconds": 0.001,
           "wasted_calls": 0,
           "wasted_seconds": 0.0,
-          "share": 0.0
+          "share": 0.1667
         }
       },
       "wasted_s": 0.0,
@@ -1911,16 +1911,16 @@
           "index": 1,
           "name": "claimed_done",
           "type": "reason",
-          "latency_s": 0.006,
-          "share": 1.0,
+          "latency_s": 0.005,
+          "share": 0.8333,
           "wasted": null
         },
         {
           "index": 0,
           "name": "search_guide",
           "type": "search",
-          "latency_s": 0.0,
-          "share": 0.0,
+          "latency_s": 0.001,
+          "share": 0.1667,
           "wasted": null
         },
         {
@@ -1933,7 +1933,7 @@
         }
       ],
       "tokens_per_s": 103666.67,
-      "rationale": "guide-strong took 0.01s over 4 step(s); 100% thinking. No step is marked as wasted. The slowest step was 1 (claimed_done, 0.01s, 100% of the run).",
+      "rationale": "guide-strong took 0.01s over 4 step(s); 17% of it waiting on tools (search_guide ×1 = 0.00s); 83% thinking. No step is marked as wasted. The slowest step was 1 (claimed_done, 0.01s, 83% of the run).",
       "timeline": {
         "measurable": false,
         "reason": "no step records when it began",
@@ -1951,7 +1951,7 @@
     "delta": {
       "total_s": -0.001,
       "wasted_s": 0.0,
-      "tool_s": 0.0
+      "tool_s": -0.001
     },
     "narrative": "guide-strong took 0.00s longer than guide-small; none of that gap is in steps marked as wasted — it is slower per productive step (0.00s against 0.00s waiting on tools)."
   },
@@ -2177,7 +2177,7 @@
             "from": 0,
             "to": 0,
             "count": 1,
-            "seconds": 0.0,
+            "seconds": 0.001,
             "wasted_s": 0,
             "wasted_steps": 0,
             "tokens": 273,
@@ -2199,7 +2199,7 @@
                 "from": 0,
                 "to": 0,
                 "count": 1,
-                "seconds": 0.0,
+                "seconds": 0.001,
                 "wasted_s": 0,
                 "wasted_steps": 0,
                 "tokens": 273,
@@ -2228,7 +2228,7 @@
             "from": 1,
             "to": 2,
             "count": 2,
-            "seconds": 0.006,
+            "seconds": 0.005,
             "wasted_s": 0,
             "wasted_steps": 0,
             "tokens": 349,
@@ -2248,7 +2248,7 @@
                 "from": 1,
                 "to": 1,
                 "count": 1,
-                "seconds": 0.006,
+                "seconds": 0.005,
                 "wasted_s": 0,
                 "wasted_steps": 0,
                 "tokens": 349,
@@ -2342,7 +2342,7 @@
         "own_steps": 4,
         "delegations": 0
       },
-      "summary": "guide-strong: 4 step(s) in 3 subdivision(s); the longest, 'decide' (steps 1–2), took 0.01s — 100% of the run.",
+      "summary": "guide-strong: 4 step(s) in 3 subdivision(s); the longest, 'decide' (steps 1–2), took 0.01s — 83% of the run.",
       "basis": "subdivisions = the reading's phases, split again wherever the agent framed or decided; spans = step.span as recorded (none recorded means the root agent acted throughout); seconds as recorded, wasted per the reading",
       "graph": {
         "nodes": [
@@ -2568,14 +2568,14 @@
           "to": 0,
           "steps": 1,
           "start_s": 0.0,
-          "end_s": 0.0,
-          "seconds": 0.0,
+          "end_s": 0.001,
+          "seconds": 0.001,
           "lane": "guide-strong",
           "agents": [
             "guide-strong"
           ],
           "impact": 0.5435,
-          "score": 4.8911,
+          "score": 4.8913,
           "kind": "hot",
           "reasons": {
             "fault_steps": 0,
@@ -2604,15 +2604,15 @@
           "from": 1,
           "to": 1,
           "steps": 1,
-          "start_s": 0.0,
+          "start_s": 0.001,
           "end_s": 0.006,
-          "seconds": 0.006,
+          "seconds": 0.005,
           "lane": "guide-strong",
           "agents": [
             "guide-strong"
           ],
           "impact": 0.0557,
-          "score": 0.5012,
+          "score": 0.501,
           "kind": "quiet",
           "reasons": {
             "fault_steps": 0,
@@ -2722,9 +2722,9 @@
         }
       ],
       "scale": "pair",
-      "narrative": "guide-strong: 4 clusters over 4 steps and 0.01s; the hot one is c0 (guide-strong, steps 0–0: the first divergence; 1 divergence row); 100% of the wall-clock sits in quiet clusters."
+      "narrative": "guide-strong: 4 clusters over 4 steps and 0.01s; the hot one is c0 (guide-strong, steps 0–0: the first divergence; 1 divergence row); 83% of the wall-clock sits in quiet clusters."
     },
-    "narrative": "on the shared scale guide-small has 2 hot clusters against 1 for guide-strong; guide-small's hottest is c2 in guide-small (steps 2–2, impact 1.00: decisive step; on the fault's path; the answer); guide-strong's hottest is c0 in guide-strong (steps 0–0, impact 0.54: the first divergence; 1 divergence row); quiet clusters hold guide-small 100% and guide-strong 100% of the wall-clock."
+    "narrative": "on the shared scale guide-small has 2 hot clusters against 1 for guide-strong; guide-small's hottest is c2 in guide-small (steps 2–2, impact 1.00: decisive step; on the fault's path; the answer); guide-strong's hottest is c0 in guide-strong (steps 0–0, impact 0.54: the first divergence; 1 divergence row); quiet clusters hold guide-small 100% and guide-strong 83% of the wall-clock."
   },
   "trust": {
     "version": 1,
@@ -2834,7 +2834,7 @@
         "adapter": null,
         "synthetic": false,
         "graded_by": "ungraded",
-        "latency_measured_share": 0.25,
+        "latency_measured_share": 0.5,
         "tokens_measured_share": 0.0,
         "effects_declared_share": 0.0,
         "spans_recorded": false,
@@ -2842,17 +2842,16 @@
         "tool_steps": 1
       },
       "grade": {
-        "score": 0.8,
+        "score": 0.9,
         "label": "high",
         "reasons": [
-          "−0.10: latency recorded on 25% of steps, under 50%",
           "−0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated)"
         ]
       },
-      "narrative": "guide-strong made 1 tool call(s) over 4 step(s) (search_guide ×1); answered; termination undeclared; 1 read(s), 0 write(s), no forbidden call; data: adapter unknown, graded by ungraded, latency recorded on 25% and tokens measured on 0% of steps; trust high (0.80: −0.10: latency recorded on 25% of steps, under 50%; −0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated))."
+      "narrative": "guide-strong made 1 tool call(s) over 4 step(s) (search_guide ×1); answered; termination undeclared; 1 read(s), 0 write(s), no forbidden call; data: adapter unknown, graded by ungraded, latency recorded on 50% and tokens measured on 0% of steps; trust high (0.90: −0.10: tokens measured on 0% of steps, under 50% (a step without tokens_basis \"measured\" counts as estimated))."
     },
     "policy_applied": false,
-    "narrative": "guide-strong is the more trustworthy run (high 0.80 against guide-small's medium 0.75): guide-small loses −0.10: latency recorded on 33% of steps, under 50%; −0.05: the decisive step on this side is hypothesized, not replay-verified. guide-small made 0 tool call(s) to guide-strong's 1; neither declared why it stopped; writes 0 against 0, no forbidden call on either side. Data: neither run is marked synthetic; latency recorded on 33% of guide-small's steps and 25% of guide-strong's; tokens measured on 0% in both.",
+    "narrative": "guide-strong is the more trustworthy run (high 0.90 against guide-small's medium 0.75): guide-small loses −0.10: latency recorded on 33% of steps, under 50%; −0.05: the decisive step on this side is hypothesized, not replay-verified. guide-small made 0 tool call(s) to guide-strong's 1; neither declared why it stopped; writes 0 against 0, no forbidden call on either side. Data: neither run is marked synthetic; latency recorded on 33% of guide-small's steps and 50% of guide-strong's; tokens measured on 0% in both.",
     "note": "counts over the steps: tool_calls = tool_call and search steps; effects declared by the step or the tool table, else inferred from the tool name (undeclared = not declared); a step counts as measured only when its tokens_basis says so and as timed only with a recorded latency; the grade is the rubric in agentdiff.trust.RUBRIC, every deduction a reason"
   },
   "tools_profile": {
@@ -2888,7 +2887,7 @@
           "errors": 0,
           "wasted_calls": 0,
           "wasted_s": 0.0,
-          "seconds": 0.0,
+          "seconds": 0.001,
           "agents": {
             "guide-strong": 1
           },
@@ -2915,12 +2914,12 @@
               "error": false,
               "wasted": false,
               "agent": "guide-strong",
-              "seconds": 0.0
+              "seconds": 0.001
             }
           ],
           "distinct_inputs": 1,
-          "mean_s": 0.0,
-          "max_s": 0.0,
+          "mean_s": 0.001,
+          "max_s": 0.001,
           "wasted_share": 0.0,
           "error_rate": 0.0
         }
@@ -2954,7 +2953,7 @@
           "errors": 0,
           "wasted_calls": 0,
           "wasted_s": 0.0,
-          "seconds": 0.0,
+          "seconds": 0.001,
           "agents": {
             "guide-strong": 1
           },
@@ -2981,12 +2980,12 @@
               "error": false,
               "wasted": false,
               "agent": "guide-strong",
-              "seconds": 0.0
+              "seconds": 0.001
             }
           ],
           "distinct_inputs": 1,
-          "mean_s": 0.0,
-          "max_s": 0.0,
+          "mean_s": 0.001,
+          "max_s": 0.001,
           "wasted_share": 0.0,
           "error_rate": 0.0
         },
@@ -3628,8 +3627,8 @@
           "to": 0,
           "steps": 1,
           "start_s": 0.0,
-          "end_s": 0.0,
-          "seconds": 0.0,
+          "end_s": 0.001,
+          "seconds": 0.001,
           "lane": "guide-strong",
           "agents": [
             "guide-strong"
@@ -3663,9 +3662,9 @@
           "from": 1,
           "to": 1,
           "steps": 1,
-          "start_s": 0.0,
+          "start_s": 0.001,
           "end_s": 0.006,
-          "seconds": 0.006,
+          "seconds": 0.005,
           "lane": "guide-strong",
           "agents": [
             "guide-strong"
@@ -4445,7 +4444,7 @@
           "output_chars": 245,
           "tokens": 273,
           "tokens_basis": null,
-          "latency_s": null,
+          "latency_s": 0.001,
           "error": null,
           "effect": null,
           "repeat_of": null,

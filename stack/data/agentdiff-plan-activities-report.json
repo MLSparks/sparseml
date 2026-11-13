@@ -100,15 +100,15 @@
     },
     "outcome": {
       "success": true,
-      "answer": "Planned activities",
+      "answer": "Planned 4 activities inside the stay, within budget",
       "score": 1.0,
       "termination": null
     },
     "totals": {
       "input_tokens": 519,
-      "output_tokens": 30,
+      "output_tokens": 38,
       "cost_usd": 0.006,
-      "latency_s": 0.002
+      "latency_s": 0.001
     },
     "steps": [
       {
@@ -137,9 +137,9 @@
         "type": "reason",
         "name": "claimed_done",
         "input": "",
-        "output": "Planned activities",
-        "tokens": 280,
-        "latency_s": 0.002,
+        "output": "Planned 4 activities inside the stay, within budget",
+        "tokens": 288,
+        "latency_s": 0.001,
         "quality": null,
         "note": null,
         "model": null,
@@ -175,7 +175,7 @@
         "type": "answer",
         "name": "answer",
         "input": "",
-        "output": "Planned activities",
+        "output": "Planned 4 activities inside the stay, within budget",
         "tokens": 0,
         "latency_s": 0.0,
         "quality": null,
@@ -220,9 +220,9 @@
           "input_jaccard": 1.0
         },
         "delta": {
-          "tokens": 61,
-          "latency_s": 0.002,
-          "cost_usd": 0.00286
+          "tokens": 69,
+          "latency_s": 0.001,
+          "cost_usd": 0.002902
         },
         "quality": {
           "a": null,
@@ -299,8 +299,8 @@
       "summary": "Agent A skipped 1 step(s) that Agent B performed, where Agent B called tool \"plan_activities\" with \"{\"interests\": [\"food\", \"history\"], \"budget_left\": 3019.0}\".",
       "downstream": {
         "extra_steps_b": 1,
-        "extra_tokens_b": 330,
-        "extra_latency_s_b": 0.002,
+        "extra_tokens_b": 338,
+        "extra_latency_s_b": 0.001,
         "caused_failure": true,
         "failed_agent": "a"
       }
@@ -339,11 +339,19 @@
       ],
       [
         "del",
-        "great "
+        "great"
+      ],
+      [
+        "ins",
+        "4"
       ],
       [
         "eq",
-        "activities"
+        " activities"
+      ],
+      [
+        "ins",
+        " inside the stay, within budget"
       ]
     ],
     "a_vs_expected": {
@@ -362,7 +370,7 @@
     },
     "tokens": {
       "a": 219,
-      "b": 549
+      "b": 557
     },
     "cost_usd": {
       "a": 0.0002,
@@ -370,7 +378,7 @@
     },
     "latency_s": {
       "a": 0.0,
-      "b": 0.002
+      "b": 0.001
     },
     "tool_calls": {
       "a": 0,
@@ -430,7 +438,7 @@
         "a_index": 0,
         "b_index": 1,
         "lexical": 1.0,
-        "semantic": 0.8615
+        "semantic": 0.5061
       },
       {
         "row": 2,
@@ -444,10 +452,10 @@
         "a_index": 2,
         "b_index": 3,
         "lexical": 1.0,
-        "semantic": 0.8078
+        "semantic": 0.4086
       }
     ],
-    "first_semantic_break": null,
+    "first_semantic_break": 3,
     "claims": [
       {
         "id": "c1",
@@ -523,7 +531,7 @@
     },
     "independence": [],
     "contradictions": [],
-    "narrative": "Row 2 shows similar wording but drifting meaning (lexical 1.00 vs semantic 0.52)."
+    "narrative": "Meaning breaks from wording at alignment row 3 (lexical 1.00 vs semantic 0.41)."
   },
   "counterfactual": {
     "premise": "had activities-small made activities-strong's decision at step 1",
@@ -826,28 +834,28 @@
         "steps": 3
       },
       "b": {
-        "tokens": 549,
+        "tokens": 557,
         "cost_usd": 0.006,
-        "latency_s": 0.002,
+        "latency_s": 0.001,
         "steps": 4
       }
     },
     "spend_delta_b_minus_a": {
-      "tokens": 330,
+      "tokens": 338,
       "cost_usd": 0.0058,
-      "latency_s": 0.002,
+      "latency_s": 0.001,
       "steps": 1
     },
     "caveat": "one task, one run per side: every figure here is descriptive of this pair only, with no interval — batch-level exchange rates live in the aggregate",
     "case": "price_of_correctness",
     "dominant": "activities-strong",
     "price_of_correctness": {
-      "tokens": 330,
+      "tokens": 338,
       "cost_usd": 0.0058,
-      "latency_s": 0.002,
+      "latency_s": 0.001,
       "steps": 1
     },
-    "statement": "activities-strong is right; activities-small is not. The correct answer cost +0.00s, +330 tokens, $+0.0058 over activities-small's run. activities-small reaching its answer faster is not a saving — it is the same task still unsolved."
+    "statement": "activities-strong is right; activities-small is not. The correct answer cost +0.00s, +338 tokens, $+0.0058 over activities-small's run. activities-small reaching its answer faster is not a saving — it is the same task still unsolved."
   },
   "efficiency": {
     "a": {
@@ -952,15 +960,15 @@
       "agent": "activities-strong",
       "context_growth": {
         "turns": 4,
-        "step_tokens_total": 549,
+        "step_tokens_total": 557,
         "cumulative_step_tokens": [
           269,
-          549,
-          549,
-          549
+          557,
+          557,
+          557
         ],
         "input_tokens": 519,
-        "output_tokens": 30,
+        "output_tokens": 38,
         "prompt_tokens_estimate": 54,
         "basis": "estimated",
         "assumptions": [
@@ -971,10 +979,10 @@
         "tokens_note": null,
         "measurable": true,
         "reason": null,
-        "unique_content_estimate": 84,
-        "resend_overhead_tokens": 435,
-        "resend_share": 0.8382,
-        "prompt_cache_absorbable_tokens": 435
+        "unique_content_estimate": 92,
+        "resend_overhead_tokens": 427,
+        "resend_share": 0.8227,
+        "prompt_cache_absorbable_tokens": 427
       },
       "result_cache": {
         "calls": 1,
@@ -1007,12 +1015,12 @@
       "latency": {
         "measurable": true,
         "reason": null,
-        "step_latency_total_s": 0.002,
+        "step_latency_total_s": 0.001,
         "top": [
           {
             "index": 1,
             "name": "claimed_done",
-            "latency_s": 0.002,
+            "latency_s": 0.001,
             "share": 1.0
           },
           {
@@ -1053,25 +1061,25 @@
           "evidence": {
             "turns": 4,
             "input_tokens": 519,
-            "unique_content_estimate": 84,
-            "resend_share": 0.8382
+            "unique_content_estimate": 92,
+            "resend_share": 0.8227
           },
           "saving": {
-            "tokens": 435,
+            "tokens": 427,
             "latency_s": null,
-            "cost_usd": 0.004754
+            "cost_usd": 0.0046
           },
           "saving_notes": {
             "latency_s": "prompt caching cuts token cost; its latency effect is provider-dependent and not estimable from this log"
           },
           "basis": "estimated",
           "assumption": "assumes each turn re-sends the full prior conversation and that a stable-prefix prompt cache hits 100% of the re-send — a ceiling, not a forecast",
-          "action": "Cache the conversation prefix — ~435 of 519 input tokens (84%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)",
+          "action": "Cache the conversation prefix — ~427 of 519 input tokens (82%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)",
           "rank": 1
         }
       ]
     },
-    "narrative": "activities-small: cache the conversation prefix — ~147 of 210 input tokens (70%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling). activities-strong: cache the conversation prefix — ~435 of 519 input tokens (84%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)."
+    "narrative": "activities-small: cache the conversation prefix — ~147 of 210 input tokens (70%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling). activities-strong: cache the conversation prefix — ~427 of 519 input tokens (82%) are re-sent context a stable-prefix prompt cache could absorb (estimated ceiling)."
   },
   "diagnosis": {
     "version": 1,
@@ -1433,7 +1441,7 @@
       "outcome": {
         "success": true,
         "termination": "undeclared",
-        "answer": "Planned activities"
+        "answer": "Planned 4 activities inside the stay, within budget"
       },
       "phases": [
         {
@@ -1611,7 +1619,7 @@
           "type": "span",
           "step": 1,
           "field": "output",
-          "quote": "Planned activities",
+          "quote": "Planned 4 activities inside the stay, within budget",
           "note": "step 1 feeds_answer",
           "evidence_class": "stated"
         },
@@ -1629,7 +1637,7 @@
           "type": "span",
           "step": 3,
           "field": "output",
-          "quote": "Planned activities",
+          "quote": "Planned 4 activities inside the stay, within budget",
           "note": "step 3 answer",
           "evidence_class": "observable"
         },
@@ -1684,7 +1692,7 @@
     },
     "b": {
       "measurable": true,
-      "total_s": 0.002,
+      "total_s": 0.001,
       "steps": [
         {
           "index": 0,
@@ -1703,14 +1711,14 @@
           "index": 1,
           "type": "reason",
           "name": "claimed_done",
-          "latency_s": 0.002,
+          "latency_s": 0.001,
           "share": 1.0,
           "category": "think",
           "role": "feeds_answer",
           "wasted": null,
           "wasted_label": null,
           "retry_of": null,
-          "tokens": 280
+          "tokens": 288
         },
         {
           "index": 2,
@@ -1741,7 +1749,7 @@
       ],
       "by_category": {
         "think": {
-          "seconds": 0.002,
+          "seconds": 0.001,
           "share": 1.0
         },
         "tool": {
@@ -1769,7 +1777,7 @@
           "index": 1,
           "name": "claimed_done",
           "type": "reason",
-          "latency_s": 0.002,
+          "latency_s": 0.001,
           "share": 1.0,
           "wasted": null
         },
@@ -1790,14 +1798,14 @@
           "wasted": null
         }
       ],
-      "tokens_per_s": 274500.0,
+      "tokens_per_s": 557000.0,
       "rationale": "activities-strong took 0.00s over 4 step(s); 100% thinking. No step is marked as wasted. The slowest step was 1 (claimed_done, 0.00s, 100% of the run).",
       "timeline": {
         "measurable": false,
         "reason": "no step records when it began",
         "basis": "reconstructed",
         "span_s": null,
-        "sum_s": 0.002,
+        "sum_s": 0.001,
         "overlap_s": null,
         "concurrent_steps": null,
         "recorded_starts": 0,
@@ -1995,7 +2003,7 @@
     },
     "b": {
       "measurable": true,
-      "total_s": 0.002,
+      "total_s": 0.001,
       "steps": 4,
       "subdivisions": 3,
       "spans": 1,
@@ -2009,10 +2017,10 @@
         "from": 0,
         "to": 3,
         "count": 4,
-        "seconds": 0.002,
+        "seconds": 0.001,
         "wasted_s": 0,
         "wasted_steps": 0,
-        "tokens": 549,
+        "tokens": 557,
         "tool_calls": 1,
         "tools": {
           "plan_activities": 1
@@ -2082,10 +2090,10 @@
             "from": 1,
             "to": 2,
             "count": 2,
-            "seconds": 0.002,
+            "seconds": 0.001,
             "wasted_s": 0,
             "wasted_steps": 0,
-            "tokens": 280,
+            "tokens": 288,
             "tool_calls": 0,
             "tools": {},
             "top_tool": null,
@@ -2102,10 +2110,10 @@
                 "from": 1,
                 "to": 1,
                 "count": 1,
-                "seconds": 0.002,
+                "seconds": 0.001,
                 "wasted_s": 0,
                 "wasted_steps": 0,
-                "tokens": 280,
+                "tokens": 288,
                 "tool_calls": 0,
                 "tools": {},
                 "top_tool": null,
@@ -2204,7 +2212,7 @@
             "agent": "activities-strong",
             "delegations": 0,
             "steps": 4,
-            "seconds": 0.002,
+            "seconds": 0.001,
             "wasted_s": 0.0,
             "errors": 0,
             "tool_calls": 1,
@@ -2238,7 +2246,7 @@
             "agent": "activities-strong",
             "delegations": 0,
             "steps": 4,
-            "seconds": 0.002,
+            "seconds": 0.001,
             "wasted_s": 0.0,
             "errors": 0,
             "tool_calls": 1,
@@ -2249,7 +2257,7 @@
           "delta": {
             "delegations": 0,
             "steps": 1,
-            "seconds": 0.002,
+            "seconds": 0.001,
             "wasted_s": 0.0,
             "errors": 0
           }
@@ -2413,7 +2421,7 @@
     },
     "b": {
       "measurable": true,
-      "total_s": 0.002,
+      "total_s": 0.001,
       "total_steps": 4,
       "clusters": [
         {
@@ -2428,8 +2436,8 @@
           "agents": [
             "activities-strong"
           ],
-          "impact": 0.5534,
-          "score": 4.9804,
+          "impact": 0.5519,
+          "score": 4.967,
           "kind": "hot",
           "reasons": {
             "fault_steps": 0,
@@ -2459,14 +2467,14 @@
           "to": 1,
           "steps": 1,
           "start_s": 0.0,
-          "end_s": 0.002,
-          "seconds": 0.002,
+          "end_s": 0.001,
+          "seconds": 0.001,
           "lane": "activities-strong",
           "agents": [
             "activities-strong"
           ],
           "impact": 0.0556,
-          "score": 0.5004,
+          "score": 0.5002,
           "kind": "quiet",
           "reasons": {
             "fault_steps": 0,
@@ -2478,9 +2486,9 @@
             "divergence_rows": 0,
             "first_divergence": false,
             "answer": false,
-            "tokens": 280
+            "tokens": 288
           },
-          "why": "280 tokens, nothing else notable",
+          "why": "288 tokens, nothing else notable",
           "label": "thinking",
           "marks": []
         },
@@ -2489,8 +2497,8 @@
           "from": 2,
           "to": 2,
           "steps": 1,
-          "start_s": 0.002,
-          "end_s": 0.002,
+          "start_s": 0.001,
+          "end_s": 0.001,
           "seconds": 0.0,
           "lane": "activities-strong",
           "agents": [
@@ -2526,8 +2534,8 @@
           "from": 3,
           "to": 3,
           "steps": 1,
-          "start_s": 0.002,
-          "end_s": 0.002,
+          "start_s": 0.001,
+          "end_s": 0.001,
           "seconds": 0.0,
           "lane": "activities-strong",
           "agents": [
@@ -2885,7 +2893,7 @@
       },
       {
         "key": "cost",
-        "text": "activities-small spent 330 tokens and 1 step less than activities-strong — faster to nothing",
+        "text": "activities-small spent 338 tokens and 1 step less than activities-strong — faster to nothing",
         "source": "tradeoff.spend_delta_b_minus_a"
       },
       {
@@ -3036,7 +3044,7 @@
             "type": "answer",
             "name": "answer",
             "input": "",
-            "output": "Planned activities"
+            "output": "Planned 4 activities inside the stay, within budget"
           }
         ]
       },
@@ -3349,7 +3357,7 @@
       "positive": 3,
       "negative": 0,
       "zero": 1,
-      "seconds": 0.002,
+      "seconds": 0.001,
       "success": true,
       "rewards": [
         {
@@ -3492,8 +3500,8 @@
           "to": 1,
           "steps": 1,
           "start_s": 0.0,
-          "end_s": 0.002,
-          "seconds": 0.002,
+          "end_s": 0.001,
+          "seconds": 0.001,
           "lane": "activities-strong",
           "agents": [
             "activities-strong"
@@ -3511,7 +3519,7 @@
             "divergence_rows": 0,
             "first_divergence": false,
             "answer": false,
-            "tokens": 280,
+            "tokens": 288,
             "reward": 1.0,
             "positive": 1,
             "negative": 0,
@@ -3527,8 +3535,8 @@
           "from": 2,
           "to": 2,
           "steps": 1,
-          "start_s": 0.002,
-          "end_s": 0.002,
+          "start_s": 0.001,
+          "end_s": 0.001,
           "seconds": 0.0,
           "lane": "activities-strong",
           "agents": [
@@ -3563,8 +3571,8 @@
           "from": 3,
           "to": 3,
           "steps": 1,
-          "start_s": 0.002,
-          "end_s": 0.002,
+          "start_s": 0.001,
+          "end_s": 0.001,
           "seconds": 0.0,
           "lane": "activities-strong",
           "agents": [
@@ -3639,7 +3647,7 @@
             "type": "answer",
             "name": "answer",
             "input": "",
-            "output": "Planned activities"
+            "output": "Planned 4 activities inside the stay, within budget"
           }
         ]
       },
@@ -3729,7 +3737,7 @@
             "side": "b",
             "success": true,
             "steps": 4,
-            "seconds": 0.002,
+            "seconds": 0.001,
             "return": 7.0,
             "shaping_return": 2.0,
             "last_reward": 5.0,
@@ -3937,14 +3945,14 @@
               "episodes_n": 1,
               "return_total": 7.0,
               "steps_total": 4,
-              "seconds_total": 0.002,
+              "seconds_total": 0.001,
               "mean_return": 7.0,
               "return_per_step": 1.75,
-              "return_per_second": 3500.0,
+              "return_per_second": 7000.0,
               "mean_steps": 4.0
             }
           },
-          "note": "activities-strong earns 1.75 per step and 3500 per second; activities-small earns −2 per step — return per step separates a better policy from a longer one"
+          "note": "activities-strong earns 1.75 per step and 7000 per second; activities-small earns −2 per step — return per step separates a better policy from a longer one"
         },
         "tools": {
           "measurable": true,
@@ -4116,10 +4124,10 @@
       "measurable": true,
       "reason": null,
       "tokens": {
-        "total": 549,
+        "total": 557,
         "by_kind": {
           "plan": 0,
-          "reason": 280,
+          "reason": 288,
           "search": 0,
           "retrieve": 0,
           "read": 0,
@@ -4131,7 +4139,7 @@
         },
         "measured": 0,
         "estimated": 0,
-        "unknown": 549,
+        "unknown": 557,
         "unknown_steps": 0,
         "cached": null,
         "cached_steps": 0,
@@ -4168,22 +4176,22 @@
           1,
           "reason",
           "claimed_done",
-          280,
-          549
+          288,
+          557
         ],
         [
           2,
           "reason",
           "verification",
           0,
-          549
+          557
         ],
         [
           3,
           "answer",
           "answer",
           0,
-          549
+          557
         ]
       ],
       "burn_capped": false,
@@ -4193,15 +4201,15 @@
           "index": 1,
           "kind": "reason",
           "name": "claimed_done",
-          "tokens": 280,
-          "share": 0.51
+          "tokens": 288,
+          "share": 0.5171
         },
         {
           "index": 0,
           "kind": "tool_call",
           "name": "plan_activities",
           "tokens": 269,
-          "share": 0.49
+          "share": 0.4829
         }
       ],
       "waste": {
@@ -4214,17 +4222,17 @@
       "per_second": {
         "measurable": true,
         "reason": null,
-        "value": 274500.0,
-        "seconds": 0.002
+        "value": 557000.0,
+        "seconds": 0.001
       },
       "synthetic": false,
-      "narrative": "activities-strong spent 549 tokens over 4 steps: 51% on reason and 49% on tool call; 549 unlabelled; 246 in and 23 out, over 1 step that split them; the heaviest step was 1 (claimed_done, 280 tokens, 51%); 0 after the last evidence, 0 in errored calls and 0 in repeats; 274500 tokens per recorded second."
+      "narrative": "activities-strong spent 557 tokens over 4 steps: 52% on reason and 48% on tool call; 557 unlabelled; 246 in and 23 out, over 1 step that split them; the heaviest step was 1 (claimed_done, 288 tokens, 52%); 0 after the last evidence, 0 in errored calls and 0 in repeats; 557000 tokens per recorded second."
     },
     "delta": {
-      "total": -330,
+      "total": -338,
       "by_kind": {
         "plan": 0,
-        "reason": -61,
+        "reason": -69,
         "search": 0,
         "retrieve": 0,
         "read": 0,
@@ -4236,7 +4244,7 @@
       }
     },
     "cheaper": "activities-small",
-    "narrative": "activities-small spent 219 tokens against activities-strong's 549 (−330); the widest gap by kind is tool call (−269), by tool plan_activities (−269); activities-small was cheaper."
+    "narrative": "activities-small spent 219 tokens against activities-strong's 557 (−338); the widest gap by kind is tool call (−269), by tool plan_activities (−269); activities-small was cheaper."
   },
   "fetches": {
     "version": 1,
@@ -4353,9 +4361,9 @@
           {
             "id": "answer",
             "kind": "answer",
-            "label": "Planned activities",
+            "label": "Planned 4 activities inside the stay, within budget",
             "index": 3,
-            "size": 18
+            "size": 51
           }
         ],
         "edges": [],
@@ -4554,7 +4562,7 @@
             "reason": 2,
             "tool_call": 1
           },
-          "tokens": 549,
+          "tokens": 557,
           "temperature": null,
           "source": "trace.agent.model"
         }
@@ -4585,7 +4593,7 @@
         "id_basis": "sha256 of the tool name and the whitespace-normalised input, first 16 hex chars"
       },
       "provenance": {
-        "answer_chars": 18,
+        "answer_chars": 51,
         "answer_source": "steps[-1].output",
         "atoms": 0,
         "supported": 0,
@@ -4617,7 +4625,7 @@
             "kind": "model",
             "step": 1,
             "label": "activities-strong",
-            "tokens": 280
+            "tokens": 288
           },
           {
             "id": "model2",
@@ -4631,7 +4639,7 @@
             "kind": "answer",
             "step": 3,
             "label": "activities-strong",
-            "chars": 18
+            "chars": 51
           }
         ],
         "edges": [
@@ -4648,8 +4656,8 @@
             "to": "model1",
             "kind": "feeds",
             "step": 1,
-            "overlap": 0.5,
-            "basis": "overlap and adjacent"
+            "overlap": null,
+            "basis": "adjacent"
           },
           {
             "from": "agent",
@@ -4666,17 +4674,9 @@
             "step": 3,
             "overlap": null,
             "basis": "the agent's step"
-          },
-          {
-            "from": "data0",
-            "to": "answer",
-            "kind": "feeds",
-            "step": 3,
-            "overlap": 0.5,
-            "basis": "overlap"
           }
         ],
-        "reading": "1 data node, 2 model nodes and the answer; 2 feeds edges (2 by overlap), 0 data nodes reach the answer with a typed value.",
+        "reading": "1 data node, 2 model nodes and the answer; 1 feeds edge (0 by overlap), 0 data nodes reach the answer with a typed value.",
         "basis": "a data node feeds a model node when the share of the model step's distinct normalised tokens (≥ 3 chars) found in the fetched output is ≥ 0.2 (the overlap), or when the fetch is the step just before it (overlap null when only adjacent); a model node produces the fetch that follows it; the agent produces every model step and the answer; a data node reaches the answer with the share of the answer's typed values it carries"
       },
       "synthetic": false,

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "trace_id": "sparkrun-trip.guide-L1",
-  "started_at": 1794218282.134,
+  "started_at": 1794552634.014,
   "agent": {
     "name": "guide-strong",
     "model": "guide-strong",
@@ -37,7 +37,7 @@
       "tokens": 273,
       "input_tokens": 251,
       "output_tokens": 22,
-      "latency_s": 0.0,
+      "latency_s": 0.001,
       "index": 0
     },
     {
@@ -46,7 +46,7 @@
       "input": "",
       "output": "Portugal uses the euro, and Tram 28 runs through Alfama.",
       "tokens": 349,
-      "latency_s": 0.006,
+      "latency_s": 0.005,
       "index": 1
     },
     {

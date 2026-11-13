@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "trace_id": "sparkrun-trip.activities-L1",
-  "started_at": 1794218282.245,
+  "started_at": 1794552635.004,
   "agent": {
     "name": "activities-strong",
     "model": "activities-strong",
@@ -14,14 +14,14 @@
   },
   "outcome": {
     "success": true,
-    "answer": "Planned activities",
+    "answer": "Planned 4 activities inside the stay, within budget",
     "score": 1.0
   },
   "totals": {
     "input_tokens": 519,
-    "output_tokens": 30,
+    "output_tokens": 38,
     "cost_usd": 0.006,
-    "latency_s": 0.002
+    "latency_s": 0.001
   },
   "tools": [
     {
@@ -44,9 +44,9 @@
       "type": "reason",
       "name": "claimed_done",
       "input": "",
-      "output": "Planned activities",
-      "tokens": 280,
-      "latency_s": 0.002,
+      "output": "Planned 4 activities inside the stay, within budget",
+      "tokens": 288,
+      "latency_s": 0.001,
       "index": 1
     },
     {
@@ -63,7 +63,7 @@
       "type": "answer",
       "name": "answer",
       "input": "",
-      "output": "Planned activities",
+      "output": "Planned 4 activities inside the stay, within budget",
       "tokens": 0,
       "latency_s": 0.0,
       "index": 3

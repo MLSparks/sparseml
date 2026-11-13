@@ -29,7 +29,7 @@
       "final_answer": "Found flights",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 9.0,
+      "elapsed_ms": 7.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -67,7 +67,7 @@
       "final_answer": "Found hotels",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 14.0,
+      "elapsed_ms": 12.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -95,7 +95,7 @@
             "cost": 1.0
           },
           "observation": {
-            "result": "ranked 293,400 combinations on numpy in 82.0 ms; best total $1181",
+            "result": "ranked 293,400 combinations on numpy in 966.7 ms; best total $1181",
             "error": null
           },
           "hypothesis": null
@@ -104,7 +104,7 @@
       "final_answer": "Ranked options",
       "succeeded": true,
       "total_cost": 0.0004,
-      "elapsed_ms": 85.0,
+      "elapsed_ms": 969.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,
@@ -141,10 +141,10 @@
           "hypothesis": null
         }
       ],
-      "final_answer": "Planned activities",
+      "final_answer": "Planned 4 activities inside the stay, within budget",
       "succeeded": true,
       "total_cost": 0.0062,
-      "elapsed_ms": 3.0,
+      "elapsed_ms": 2.0,
       "scores": {
         "verified": 1.0,
         "escalations": 1.0,
@@ -198,7 +198,7 @@
       "final_answer": "Booked flight and hotel",
       "succeeded": true,
       "total_cost": 0.0006,
-      "elapsed_ms": 30.0,
+      "elapsed_ms": 39.0,
       "scores": {
         "verified": 1.0,
         "escalations": 0.0,

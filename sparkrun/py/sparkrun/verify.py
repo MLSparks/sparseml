@@ -69,6 +69,9 @@ def command(cmd: str | Sequence[str], *, cwd: str | Path | None = None, timeout:
         except subprocess.TimeoutExpired:
             return Evidence(label, False, f"timed out after {timeout}s")
         out = (p.stdout + p.stderr).strip()
+        if cwd is not None:  # relative paths read better, and keep prompts identical across runs (cacheable)
+            for prefix in {str(Path(cwd).resolve()), str(cwd)}:
+                out = out.replace(prefix + "/", "./").replace(prefix, ".")
         if p.returncode != 0:
             return Evidence(label, False, f"exit code {p.returncode}: {out[-800:]}")
         if expect_output is not None and expect_output not in out:
